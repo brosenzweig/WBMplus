@@ -16,7 +16,7 @@ wil.wollheim@unh.edu
  
 static int _MDAirTemperatureID;
 static int _MDDischargeID;
-static int _MDRunoffID;
+static int _MDRunoffVolumeID;
 static int _MDVarRiverStorageChangeID;
 static int _MDVarRiverStorageID;
 static int _MDResCapacityID;
@@ -80,14 +80,14 @@ static void _MDBgcRouting (int itemID) {
 /*Parameters */
 	if (MFVarTestMissingVal (_MDAirTemperatureID,          itemID) ||
 		 MFVarTestMissingVal (_MDDischargeID,               itemID) ||
-		 MFVarTestMissingVal (_MDRunoffID,                  itemID) ||
+		 MFVarTestMissingVal (_MDRunoffVolumeID,            itemID) ||
 		 MFVarTestMissingVal (_MDVarRiverStorageChangeID,   itemID) ||
 		 MFVarTestMissingVal (_MDVarRiverStorageID,         itemID) ||
 		 MFVarTestMissingVal (_MDNonPointTNSourcesContID,   itemID) ||
 		 MFVarTestMissingVal (_MDPointTNSourcesID,          itemID)) {
-      MFVarSetFloat (_MDAirTemperatureID,          itemID, 0.0);
+        MFVarSetFloat (_MDAirTemperatureID,          itemID, 0.0);
 		MFVarSetFloat (_MDDischargeID,               itemID, 0.0);
-		MFVarSetFloat (_MDRunoffID,                  itemID, 0.0);
+		MFVarSetFloat (_MDRunoffVolumeID,            itemID, 0.0);
 		MFVarSetFloat (_MDVarRiverStorageChangeID,   itemID, 0.0);
 		MFVarSetFloat (_MDVarRiverStorageID,         itemID, 0.0);
 		MFVarSetFloat (_MDNonPointTNSourcesContID,   itemID, 0.0);
@@ -96,7 +96,7 @@ static void _MDBgcRouting (int itemID) {
 	else {
    airT = MFVarGetFloat (_MDAirTemperatureID, itemID);
 	discharge = MFVarGetFloat (_MDDischargeID, itemID);
-   runoff = MFVarGetFloat (_MDRunoffID, itemID);
+   runoff = MFVarGetFloat (_MDRunoffVolumeID, itemID);
    waterStorageChange = MFVarGetFloat ( _MDVarRiverStorageChangeID, itemID);
    waterStorage = MFVarGetFloat ( _MDVarRiverStorageID, itemID);
 
@@ -109,15 +109,15 @@ static void _MDBgcRouting (int itemID) {
    }
 
 //////////////////////////////  GUTS
-		  if (itemID==6447) printf("tnStoreWater, %f tnFlux %f \n\n", tnStoreWater, tnFlux);
+//		  if (itemID==6447) printf("tnStoreWater, %f tnFlux %f \n\n", tnStoreWater, tnFlux);
 
 		  waterT = 0.8 + ((26.2 - 0.8) / (1 + exp(0.18 * (13.3 - airT))));
 
         channelWidth = 8.3 * pow(discharge,0.5);
         channelDepth = 0.4 * pow(discharge,0.4);
 		  waterStorage = channelWidth * MFModelGetLength(itemID) * channelDepth;
-        
-        tnLocalLoad= runoff / 1000 * MFModelGetArea(itemID) * tnNonpointLoadConc + tnPointLoadFlux; //kg/d
+// The conversion needs attention! Balazs
+        tnLocalLoad= runoff * 86400 * tnNonpointLoadConc + tnPointLoadFlux; //kg/d
 
 		  //waterStorage needs to be corrected to have a positive value (using mean depth across length of stream
 		  tnTotalMassPre = tnLocalLoad + tnStoreWater + tnFlux;  //kg
@@ -150,8 +150,8 @@ static void _MDBgcRouting (int itemID) {
         tnStoreWaterChange = waterStorageChange * MDConst_m3PerSecTOm3PerDay * tnConcPost; //check that this value matches day to day change in tn storage
 		  tnStoreWater = waterStorage * tnConcPost;
 
-		  if (itemID==6447) printf("tnTotalMassPre %f tnNonpointLoadConc %f tnPointLoadFlux %f tnLocalLoad %f WaterTotalVol %f tnStoreWater %f tnStoreWaterChange %f tnConcPre %f tnConcPost %f tnTotalMassPost %f \n waterStorage %f  waterStorageChange %f tnTotalUptake %f runoff %f discharge %f conversion %f tnFlux %f \n\n",
-								tnTotalMassPre,tnNonpointLoadConc, tnPointLoadFlux, tnLocalLoad, waterTotalVol, tnStoreWater, tnStoreWaterChange, tnConcPre, tnConcPost, tnTotalMassPost, waterStorage, waterStorageChange, tnTotalUptake, runoff, discharge, MDConst_m3PerSecTOm3PerDay, tnFlux );
+//  if (itemID==6447) printf("tnTotalMassPre %f tnNonpointLoadConc %f tnPointLoadFlux %f tnLocalLoad %f WaterTotalVol %f tnStoreWater %f tnStoreWaterChange %f tnConcPre %f tnConcPost %f tnTotalMassPost %f \n waterStorage %f  waterStorageChange %f tnTotalUptake %f runoff %f discharge %f conversion %f tnFlux %f \n\n",
+//							tnTotalMassPre,tnNonpointLoadConc, tnPointLoadFlux, tnLocalLoad, waterTotalVol, tnStoreWater, tnStoreWaterChange, tnConcPre, tnConcPost, tnTotalMassPost, waterStorage, waterStorageChange, tnTotalUptake, runoff, discharge, MDConst_m3PerSecTOm3PerDay, tnFlux );
 
 ///////////////////////////////////
 		
@@ -177,7 +177,7 @@ int MDBgcRoutingDef () {
 	if (_MDTNFluxID != CMfailed)	return (_MDTNFluxID);
    //Input
 	if (((_MDAirTemperatureID        = MFVarGetID (MDVarAirTemperature,         "degC",    MFInput, MFState,  false)) == CMfailed) ||
-	    ((_MDRunoffID                = MDRunoffDef ())   == CMfailed) ||
+	    ((_MDRunoffVolumeID          = MDRunoffVolumeDef ()) == CMfailed) ||
 	    ((_MDDischargeID             = MDDischargeDef ()) == CMfailed) ||
 	    ((_MDVarRiverStorageChangeID = MFVarGetID (MDVarRiverStorageChange,     "m3/s",      MFInput, MFState, false))  == CMfailed) ||
 	    ((_MDVarRiverStorageID       = MFVarGetID (MDVarRiverStorage,           "m3",      MFInput, MFState, true))   == CMfailed) ||

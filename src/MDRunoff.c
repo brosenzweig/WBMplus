@@ -39,9 +39,8 @@ enum { MDhelp, MDinput, MDcalculate };
 
 int MDRunoffDef () {
 	int  optID = MDinput;
-	const char *optStr, *optName = "Runoff";
+	const char *optStr, *optName = MDVarRunoff;
 	const char *options [] = { MDHelpStr, MDInputStr, MDCalculateStr, (char *) NULL };
-	
 
 	if (_MDOutRunoffID != CMfailed) return (_MDOutRunoffID);
 
@@ -54,7 +53,7 @@ int MDRunoffDef () {
 		
 			if (((_MDInBaseFlowID  = MDBaseFlowDef ()) == CMfailed) ||
 			    ((_MDInSurfaceROID = MFVarGetID (MDVarSurfaceRO, "mm", MFInput,  MFFlux, false)) == CMfailed) ||
-				 ((_MDOutRunoffID   = MFVarGetID (MDVarRunoff,    "mm", MFOutput, MFFlux, false)) == CMfailed))
+				 ((_MDOutRunoffID  = MFVarGetID (MDVarRunoff,    "mm", MFOutput, MFFlux, false)) == CMfailed))
 				return (CMfailed);
 			_MDOutRunoffID = MFVarSetFunction(_MDOutRunoffID,_MDRunoff);
 			break;

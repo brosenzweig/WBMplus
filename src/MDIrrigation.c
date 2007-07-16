@@ -50,7 +50,7 @@ static int _MDNumGS;
 
 static int _MDGrowingSeasonStartCalcID;
 static int _MDGrowingSeasonEndCalcID;
-static int _MDIrrKonstantKc;
+static int _MDIrrConstantKc;
 //Output
 
 
@@ -296,7 +296,7 @@ static void _MDIrrigationWater(int itemID) {
 
 enum { MDhelp, MDinput, MDnone, MDcalc };
 	 
-int MDIrrigationWaterDef() {
+int MDIrrigationDef() {
 	
 	int i;
    if (_MDOutGrossIrrDemandID != CMfailed)	return (_MDOutGrossIrrDemandID);
@@ -323,13 +323,13 @@ int MDIrrigationWaterDef() {
 			if (((optStr = MFOptionGet(MDParIrrRiceWaterLayerDepth))  != (char *) NULL) && (sscanf(optStr, "%f", &par) == 1))
 				_MDParIrrWaterLayerDepth = par;
 
-			if (((optStr = MFOptionGet(MDIrrKonstantKc))  != (char *) NULL) && (sscanf(optStr, "%f", &par) == 1))
-				_MDIrrKonstantKc = par;
+			if (((optStr = MFOptionGet(MDIrrConstantKc))  != (char *) NULL) && (sscanf(optStr, "%f", &par) == 1))
+				_MDIrrConstantKc = par;
  
  			//if Data for Penman is avaiable"
  			if ((_MDInRefETPID  = MFVarGetID (MDVarPotEvapotrans, "DoY", MFOutput,  MFState, false)) == CMfailed) return (CMfailed);
 		
- 			if  ((_MDInRefETPID      = MFVarGetID (MDVarReferenceEvapotranspiration,  "mm",   MFInput, MFState,  false)) == CMfailed) return (CMfailed);
+ 	//		if ((_MDInRefETPID        = MFVarGetID (MDVarReferenceEvapotranspiration,  "mm",   MFInput, MFState,  false)) == CMfailed) return (CMfailed);
 			if ((_MDInPrecipID        = MDPrecipitationDef ())     == CMfailed) return (CMfailed);
 			//if only TMP and PRE are available:
 	 		if ((_MDInRefETPID        = MDHamonReferenceETPDef ()) == CMfailed) return CMfailed;
@@ -457,7 +457,7 @@ if (stage ==0 && daysSincePlanted > 0) printf ("Stagexx =0? st0 %f st1 %f st1 %f
 static float getCropKc(const MDIrrigatedCrop * pIrrCrop, int daysSincePlanted, int curCropStage)
 {
 	float kc;
-if(_MDIrrKonstantKc==1)return 1.0;
+if(_MDIrrConstantKc==1)return 1.0;
    //Returns kc depending on the current stage of the growing season
 	if (curCropStage == 0) kc = 0.0;		//crop is not currently grown
 	if (curCropStage == 1) kc = pIrrCrop->cropKc[0];

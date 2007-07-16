@@ -18,16 +18,15 @@ extern "C" {
 #endif
 
 #define MDHelpStr      "help"
+#define MDNoneStr      "none"
 #define MDInputStr     "input"
 #define MDCalculateStr "calculate"
 #define MDOnStr        "on"
 #define MDOffStr       "off"
 
-//Debug
-#define MDVarDebug3	"Debug3"
-#define MDVarDebug4 	"Debug4"	
-#define MDVarDebug2	"Debug2"	
-#define MDVarIrrigation	"Irrigation" 	
+// Modules	
+#define MDModIrrigation	"Irrigation"
+#define MDModReservoirs "Reservoirs"	
 
  //MD BGCInput
 # define MDVarNonPointTNSourcesCont				"NonPointTNSourcesCont" 
@@ -46,14 +45,15 @@ extern "C" {
 #define MDConst_m3PerSecTOm3PerDay 86400.0
 
 //MD IrrigationInput
-#define MDIrrKonstantKc                             "IrrKonstantKc"
-#define MDVarIrrEfficiency							"IrrigationEfficiency"
-#define MDVarIrrIntensity							"IrrigationIntensity"
-#define MDVarIrrAreaFraction						"IrrigatedArea_Fraction"
-#define MDVarIrrGrowingSeason1Start					"GrowingSeason1_Start"
-#define MDVarIrrGrowingSeason2Start					"GrowingSeason2_Start"
-#define MDVarIrrGrowingSeason3Start					"GrowingSeason3_Start"
-#define MDVarNumberGrowingSeasons			"NumGrowingSeasons"	
+#define MDIrrConstantKc                             "IrrConstantKc"
+#define MDVarIrrEfficiency                          "IrrigationEfficiency"
+#define MDVarIrrIntensity                           "IrrigationIntensity"
+#define MDVarIrrAreaFraction                        "IrrigatedArea_Fraction"
+#define MDVarIrrGrowingSeason1Start                 "GrowingSeason1_Start"
+#define MDVarIrrGrowingSeason2Start                 "GrowingSeason2_Start"
+#define MDVarIrrGrowingSeason3Start                 "GrowingSeason3_Start"
+#define MDVarNumberGrowingSeasons                   "NumGrowingSeasons"
+
 #define MDVarReservoirCapacity				"ReservoirCapacity"
 #define MDVarReservoirStorage		"ReservoirStorage" 
 #define MDVarReservoirStorageChange "ReservoirStorageChange"
@@ -140,9 +140,8 @@ extern "C" {
 #define MDVarAirTempMinimum                        "AirTempMinimum"
 #define MDVarAirTempMaximum                        "AirTempMaximum"
 #define MDVarAvgNSteps                             "AverageNSteps"
-#define MDVarCParamAlbedo                          "Albedo"
 
-#define MDVarBaseFlow                              "BaseFlow"
+#define MDVarCParamAlbedo                          "Albedo"
 #define MDVarCParamCHeight                         "CanopyHeight"
 #define MDVarCParamLWidth                          "LeafWidth"
 #define MDVarCParamRSS                             "CParamRSS"
@@ -154,9 +153,13 @@ extern "C" {
 #define MDVarCParamZ0g                             "CParamZ0g"
 
 #define MDVarCloudCover                            "CloudCover"
-#define MDVarPrecipitation                         "Precipitation"
-#define MDVarPrecipFraction                        "PrecipitationFraction"
-#define MDVarPrecipMonthly                         "MonthlyPrecipitation"
+#define MDVarBaseFlow                              "BaseFlow"
+
+#define MDVarDischarge                             "Discharge"
+#define MDVarDischObserved                         "ObservedDischarge"
+#define MDVarDischCalculated                       "CalculatedDischarge"
+#define MDVarDischReference	                       "ReferenceDischarge"
+
 #define MDVarEvapotranspiration                    "Evapotranspiration"
 #define MDVarGrossRadiance                         "GrossRadiance"
 #define MDVarGroundWater                           "GroundWater"
@@ -173,23 +176,21 @@ extern "C" {
 #define MDVarMuskingumC1                           "MuskingumC1"
 #define MDVarMuskingumC2                           "MuskingumC2"
 #define MDVarPotEvapotrans                         "PET"
-#define MDVarDummy 								         "Dummy"
-#define MDVarRefDischarge	                        "ReferenceDischarge"
+
+#define MDVarPrecipitation                         "Precipitation"
+#define MDVarPrecipFraction                        "PrecipitationFraction"
+#define MDVarPrecipMonthly                         "MonthlyPrecipitation"
 #define MDVarRelHumidity	                        "RelativeHumidity"
 #define MDVarRiverCrossArea	                     "RiverCross-sectionArea"
-#define MDVarRiverDischarge                        "RiverDischarge"
-#define MDVarRiverDischarge0                       "RiverDischarge0"
-#define MDVarRiverDischarge1                       "RiverDischarge1"
-#define MDVarRiverDischargeObserved                "RiverDischargeObserved"
-#define MDVarRiverDischargeCalculated              "RiverDischargeCalculated"
 #define MDVarRiverSlope	                           "RiverSlope"
 #define MDVarRiverShapeExp	                   "RiverShapeExponent"
 #define MDVarRiverShapeCoeff                       "RiverShapeCoefficient"
 #define MDVarRiverStorage                          "RiverStorage"
 #define MDVarRiverStorageChange                    "RiverStorageChange"
 
-#define MDVarRootingDepth	                        "RootingDepth"
+#define MDVarRootingDepth	                       "RootingDepth"
 #define MDVarRunoff                                "Runoff"
+#define MDVarRunoffVolume                          "RunoffVolume"
 #define MDVarSAGEVegCover                          "SAGEVegCover"
 #define MDVarSnowPack                              "SnowPack"
 #define MDVarSnowPackChange                        "SnowPackChange"
@@ -299,9 +300,14 @@ int MDCParamGLMaxDef ();
 int MDCParamLPMaxDef ();
 int MDCParamZ0gDef ();
 int MDDischargeDef ();
-int MDDischAccumulateDef ();
-int MDDischMuskingumDef ();
-int MDDischCascadeDef ();
+int MDDischCalculate ();
+int MDDischCalcRoute ();
+int MDDischCalcRouteAccumulateDef ();
+int MDDischCalcRouteMuskingumDef ();
+int MDDischCalcRouteCascadeDef ();
+int MDDischReferenceDef ();
+int MDDischSimulatedDef ();
+int MDDischCalculatedDef ();
 int MDGrossRadDef ();
 int MDHamonReferenceETPDef ();
 int MDLandCoverDef ();
@@ -319,10 +325,10 @@ int MDPotETSWGdayDef ();
 int MDPotETSWGdnDef ();
 int MDPotETTurcDef ();
 int MDPotFAOReferenceETDef ();
-int MDRefDischargeDef ();
 int MDRelHumidityDef ();
 //int MDRootDepthDef ();
 int MDRunoffDef ();
+int MDRunoffVolumeDef ();
 int MDSMoistChgDef ();
 int MDSPackChgDef ();
 int MDSolarRadDef ();

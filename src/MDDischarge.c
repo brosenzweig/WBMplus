@@ -15,28 +15,52 @@ balazs.fekete@unh.edu
 #include<MF.h>
 #include<MD.h>
 
-enum { MDhelp, MDaccumulate, MDmuskingum, MDcascade };
+// Input
+static int _MDInDischSimulatedID = MFUnset;
+static int _MDInDischObservedID  = MFUnset;
 
+// Output
+static int _MDOutDischargeID     = MFUnset;
+
+static void _MDDischarge (int itemID) {
+	float discharge;
+
+	if (MFVarTestMissingVal (_MDInDischSimulatedID, itemID)) discharge = 0.0;
+	else discharge = MFVarGetFloat (_MDInDischSimulatedID, itemID);
+
+	if ((_MDInDischObservedID != MFUnset) && (!MFVarTestMissingVal (_MDInDischObservedID, itemID)))
+		discharge = MFVarGetFloat (_MDInDischObservedID, itemID);
+	else if (MFVarTestMissingVal (_MDInDischSimulatedID, itemID)) discharge = 0.0;
+	else discharge = MFVarGetFloat (_MDInDischSimulatedID, itemID);
+
+	MFVarSetFloat (_MDOutDischargeID, itemID, discharge);
+}
+
+enum { MDhelp, MDinput, MDsimulated, MDcorrected };
 
 int MDDischargeDef() {
-	int optID = MDaccumulate, ret;
-	const char *optStr, *optName = MDVarRiverDischarge;
-	const char *options [] = { MDHelpStr, "accumulate", "muskingum", "cascade", (char *) NULL };
-
-	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options,optStr,true);
+	int optID = MDsimulated;
+	const char *optStr, *optName = MDVarDischarge;
+	const char *options [] = { MDHelpStr, MDInputStr, "simulated", "corrected", (char *) NULL };
 
 	MFDefEntering ("Discharge");
-	 
+	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options,optStr,true);
 	switch (optID) {
-		case MDaccumulate: ret = MDDischAccumulateDef (); break;
-		case MDmuskingum:  ret = MDDischMuskingumDef  (); break;
-		case MDcascade:    ret = MDDischCascadeDef    (); break;
+		case MDinput: _MDOutDischargeID = MFVarGetID (MDVarDischarge,     "m3/s",  MFInput,  MFState, false); break;
+		case MDcorrected:
+			if ((_MDInDischObservedID   = MFVarGetID (MDVarDischObserved, "m3/s",  MFInput,  MFState, false)) == CMfailed)
+				return (CMfailed);
+		case MDsimulated:
+			if (((_MDOutDischargeID     = MFVarGetID (MDVarDischarge,     "m3/s",  MFRoute,  MFState, false)) == CMfailed) ||
+				((_MDInDischSimulatedID = MDDischSimulatedDef ()) == CMfailed))
+			    return (CMfailed);
+			break;
 		default:
 			CMmsgPrint (CMmsgInfo,"Help [%s options]:",optName);
 			for (optID = 1;options [optID] != (char *) NULL;++optID) CMmsgPrint (CMmsgInfo," %s",options [optID]);
 			CMmsgPrint (CMmsgInfo,"\n");
 			return (CMfailed);
-		}
+	}
 	MFDefLeaving ("Discharge");
-	return (ret);
+	return (MFVarSetFunction(_MDOutDischargeID,_MDDischarge));
 }

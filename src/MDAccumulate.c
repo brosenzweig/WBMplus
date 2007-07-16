@@ -122,17 +122,17 @@ int MDAccumGrdWatChgDef() {
 	return (_MDOutAccGrdWatChgID);	
 }
 
+
 //Input;
-static int _MDInRunoffID    = CMfailed;
+static int _MDInRunoffVolumeID    = CMfailed;
 
 //Output
-static int _MDOutAccRunoffID = CMfailed;
+static int _MDOutAccRunoffID    = CMfailed;
 
 static void _MDAccumRunoff (int itemID) {
 	float accum;
 	
-	accum = MFVarTestMissingVal (_MDInRunoffID, itemID) ? 0.0 : MFVarGetFloat(_MDInRunoffID, itemID);
-	accum = accum * MFModelGetArea (itemID) / 86400000.0;
+	accum = MFVarTestMissingVal (_MDInRunoffVolumeID, itemID) ? 0.0 : MFVarGetFloat(_MDInRunoffVolumeID, itemID);
 	MFVarSetFloat(_MDOutAccRunoffID, itemID, MFVarGetFloat (_MDOutAccRunoffID, itemID) + accum);
 }
 
@@ -141,8 +141,8 @@ int MDAccumRunoffDef() {
 	if (_MDOutAccRunoffID != CMfailed) return (_MDOutAccRunoffID);
 
 	MFDefEntering ("Accumulate Runoff");
-	if (((_MDInRunoffID     = MDRunoffDef ()) == CMfailed) ||
-	    ((_MDOutAccRunoffID = MFVarGetID (MDVarAccRunoff, "m3/s",     MFRoute, MFState, true))  == CMfailed)) return (CMfailed);
+	if (((_MDInRunoffVolumeID  = MDRunoffVolumeDef ()) == CMfailed) ||
+	    ((_MDOutAccRunoffID    = MFVarGetID (MDVarAccRunoff, "m3/s", MFRoute,  MFState, false)) == CMfailed)) return (CMfailed);
 	_MDOutAccRunoffID = MFVarSetFunction(_MDOutAccRunoffID,_MDAccumRunoff);
 
 	MFDefLeaving ("Accumulate Runoff");

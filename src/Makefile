@@ -17,9 +17,12 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDBaseFlow.o\
        $(OBJ)/MDCParams.o\
        $(OBJ)/MDDischarge.o\
-       $(OBJ)/MDDischAccumulate.o\
-       $(OBJ)/MDDischMuskingum.o\
-       $(OBJ)/MDDischCascade.o\
+       $(OBJ)/MDDischCalculate.o\
+       $(OBJ)/MDDischCalcAccumulate.o\
+       $(OBJ)/MDDischCalcCascade.o\
+       $(OBJ)/MDDischCalcMuskingum.o\
+       $(OBJ)/MDDischReference.o\
+       $(OBJ)/MDDischSimulate.o\
        $(OBJ)/MDLandCover.o\
        $(OBJ)/MDLSAreaIndex.o\
        $(OBJ)/MDHamonReferenceETP.o\
@@ -44,6 +47,7 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDRelHumidity.o\
        $(OBJ)/MDReservoirs.o\
        $(OBJ)/MDRunoff.o\
+       $(OBJ)/MDRunoffVolume.o\
        $(OBJ)/MDSMoistChg.o\
        $(OBJ)/MDSPackChg.o\
        $(OBJ)/MDSoilProp.o\

@@ -1,0 +1,93 @@
+/******************************************************************************
+
+GHAAS Water Balance/Transport Model V3.0
+Global Hydrologic Archive and Analysis System
+Copyright 1994-2007, University of New Hampshire
+
+MDRiverbedShapeExponent.c
+
+balazs.fekete@unh.edu
+
+*******************************************************************************/
+
+// Input
+static int _MDInDischMeanID              = MFUnset;
+static int _MDInRiverbedSlopeID          = MFUnset;
+// Output
+static int _MDOutRiverbedAvgDepthMeanID  = MFUnset;
+static int _MDOutRiverbedWidthMeanID     = MFUnset;
+static int _MDOutRiverbedShapeExponentID = MFUnset;
+
+static void _MDRiverbedGeometry (int itemID) {
+// Input
+	float slope;     // Riverbed slope [m/km]
+	float discharge; // Mean annual discharge [m3/s]
+// Output
+	float yMean;     // River average depth at mean discharge [m]
+	float wMean;     // River width at mean discharge [m]
+// Local
+	float vMean;     // Flow velocity at mean discharge [m/s]
+	float dL;        // Reach length [m]
+	float eta = 0.25, nu = 0.4, tau = 8.0, phi = 0.58;
+
+	if (MFVarTestMissingVal (_MDInDischMeanID, itemID)) {
+		MFVarSetFloat (_MDOutRiverbedAvgDepthMeanID,  itemID, 0.0);
+		MFVarSetFloat (_MDOutRiverbedWidthMeanID,     itemID, 0.0);
+		MFVarSetFloat (_MDOutRiverbedShapeExponentID, itemID, 2.0);
+		return;
+	}
+	discharge = fabs(MFVarGetFloat(_MDInDischargeID,  itemID));
+	dL        = MFModelGetLength (itemID);
+	if (MFMathEqualValues (dL, 0.0) || (_MDInRiverbedSlopeID == MFUnset) || MFVarTestMissingVal (_MDInRiverSlopeID, itemID)) {
+		// Slope independent riverbed geometry
+		yMean = eta * pow (discharge, nu);
+		wMean = tau * pow (discharge, phi);
+		MFVarSetFloat (_MDOutRiverbedAvgDepthMeanID,  itemID, yMean);
+		MFVarSetFloat (_MDOutRiverbedWidthMeanID,     itemID, wMean);
+		MFVarSetFloat (_MDOutRiverbedShapeExponentID, itemID, 2.0);
+		return;	
+	}
+	// Slope dependent riverbed geometry
+	slope     = MFVarGetFloat(_MDInRiverSlopeID,      itemID) / 1000.0;
+
+	yMean = eta * pow (discharge, nu);
+	wMean = tau * pow (discharge, phi);
+	MFVarSetFloat (_MDOutRiverbedAvgDepthMeanID,      itemID, yMean);
+	MFVarSetFloat (_MDOutRiverbedWidthMeanID,         itemID, wMean);
+	MFVarSetFloat (_MDOutRiverbedShapeExponentID,     itemID, 2.0);
+}
+
+enum { MDhelp, MDinput, MDindependent, MDdependent };
+
+int MDRiverbedShapeExponentDef () {
+	int  optID = MDinput;
+	const char *optStr, *optName = "Riverbed";
+	const char *options [] = { MDHelpStr, MDInputStr, "slope-independent", "slope-dependent", (char *) NULL };
+
+	if (_MDOutRiverbedShapeExponentID != MFUnset) return (_MDOutRiverbedShapeExponentID);
+
+	MFDefEntering ("Riverbed Geometry");
+	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options,optStr,true);
+
+	switch (optID) {
+		case MDinput:
+			if (((_MDOutRiverbedAvgDepthMeanID  = MFVarGetID (MDVarRiverbedAvgDepthMean,  "m",      MFInput,  MFState, false)) == CMfailed) ||
+			    ((_MDOutRiverbedWidthMeanID     = MFVarGetID (MDVarRiverbedWidthMean,     "m",      MFInput,  MFState, false)) == CMfailed) ||
+			    ((_MDOutRiverbedShapeExponentID = MFVarGetID (MDVarRiverbedShapeExponent, MFNoUnit, MFInput,  MFState, false)) == CMfailed))
+				return (CMfailed);
+			break;
+		case MDdependent:
+			if ((_MDInRiverbedSlopeID           = MFVarGetID (MDVarRiverbedSlope,         "m/km",   MFInput,  MFState, false)) == CMfailed)
+				return (CMfailed);
+		case MDindependent:
+			if ((_MDInDischMeanID = MDDischReference ()) == CMfailed) ||
+			    (((_MDOutRiverbedAvgDepthMeanID = MFVarGetID (MDVarRiverbedAvgDepthMean,  "m",      MFOutput, MFState, false)) == CMfailed) ||
+			    ((_MDOutRiverbedWidthMeanID     = MFVarGetID (MDVarRiverbedWidthMean,     "m",      MFOutput, MFState, false)) == CMfailed) ||
+			    ((_MDOutRiverbedShapeExponentID = MFVarGetID (MDVarRiverbedShapeExponent, MFNoUnit, MFOutput, MFState, false)) == CMfailed))
+				return (CMfailed);
+			_MDOutRiverbedShapeExponentID = MFVarSetFunction(_MDOutRiverbedShapeExponentID, _MDRiverbedGeometry);
+			break;
+	}
+	MFDefLeaving ("Riverbed Geometry");
+	return (_MDOutRiverbedShapeExponentID);
+}

@@ -31,13 +31,11 @@ static float _MDInfiltrationFrac = 0.5;
 
 static void _MDInfiltrationSimple (int itemID) {
 
- if ( MFVarTestMissingVal (_MDInIrrAreaID,      itemID)) MFVarSetFloat(_MDInIrrAreaID,itemID, 0.0);//MF{printf ("the framework must die!\n");}
-//  if (MFVarTestMissingVal (_MDInWaterSurplusID, itemID))  {printf ("the framework must die!\n");}	
 	float surplus;
-//	float irrAreaFraction;
+	if (MFVarTestMissingVal (_MDInIrrAreaID,      itemID)) MFVarSetFloat(_MDInIrrAreaID,itemID, 0.0);
+
 	if (MFVarTestMissingVal (_MDInWaterSurplusID, itemID) ||
-	    MFVarTestMissingVal (_MDInIrrAreaID,      itemID)) 
-	   {
+	    MFVarTestMissingVal (_MDInIrrAreaID,      itemID)) {
 		MFVarSetMissingVal (_MDOutSurfaceROID, itemID);
 		MFVarSetMissingVal (_MDOutInfiltrationID, itemID);
 // 		printf ("Missing vares in MDinfiltration\n");		
