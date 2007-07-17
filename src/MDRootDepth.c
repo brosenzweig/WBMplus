@@ -25,8 +25,8 @@
 //~ #include<MF.h>
 //~ #include<MD.h>
 
-//~ static int _MDInSoilTextID;
-//~ static int _MDOutRootDepthID = CMfailed;
+//~ static int _MDInSoilTextID   = MFUnset;
+//~ static int _MDOutRootDepthID = MFUnset;
 
 //~ static int _MDSoilTextNum = 9;
 
@@ -83,14 +83,14 @@
 	//~ MFVarSetFloat (_MDOutRootDepthID,itemID,rootDepth);
 //~ }
 
-//~ enum { MDhelp, MDinput, MD1DLookup, MD2DLookup };
+//~ enum { MDinput, MD1DLookup, MD2DLookup };
 
 //~ int MDRootDepthDef () {
 	//~ int optID = MDinput;
 	//~ const char *optStr, *optName = MDVarRootingDepth;
-	//~ const char *options [] = { MDHelpStr, MDInputStr, "1Dlookup", "2Dlookup", (char *) NULL };
+	//~ const char *options [] = { MDInputStr, "1Dlookup", "2Dlookup", (char *) NULL };
 
-	//~ if (_MDOutRootDepthID != CMfailed) return (_MDOutRootDepthID);
+	//~ if (_MDOutRootDepthID != MFUnset) return (_MDOutRootDepthID);
 
 	//~ MFDefEntering ("Rooting Depth");
 	//~ if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options,optStr,true);
@@ -110,11 +110,7 @@
 				//~ return (CMfailed);
 			//~ _MDOutRootDepthID = MFVarSetFunction (_MDOutRootDepthID,_MDRootDepth2DLookup);
 			//~ break;
-		//~ default:
-			//~ CMmsgPrint (CMmsgInfo,"Help [%s options]:",optName);
-			//~ for (optID = 1;options [optID] != (char *) NULL;++optID) CMmsgPrint (CMmsgInfo," %s",options [optID]);
-			//~ CMmsgPrint (CMmsgInfo,"\n");
-			//~ return (CMfailed);
+		//~ default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	//~ }
 	//~ MFDefLeaving ("Rooting Depth");
 	//~ return (_MDOutRootDepthID);

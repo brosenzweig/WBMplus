@@ -4,11 +4,17 @@ GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
 Copyright 1994-2007, University of New Hampshire
 
-MDRiverbedShapeExponent.c
+MDRiverbedShapeExp.c
 
 balazs.fekete@unh.edu
 
 *******************************************************************************/
+
+#include<stdio.h>
+#include<math.h>
+#include<cm.h>
+#include<MF.h>
+#include<MD.h>
 
 // Input
 static int _MDInDischMeanID              = MFUnset;
@@ -18,7 +24,7 @@ static int _MDOutRiverbedAvgDepthMeanID  = MFUnset;
 static int _MDOutRiverbedWidthMeanID     = MFUnset;
 static int _MDOutRiverbedShapeExponentID = MFUnset;
 
-static void _MDRiverbedGeometry (int itemID) {
+static void _MDRiverbedShapeExponent (int itemID) {
 // Input
 	float slope;     // Riverbed slope [m/km]
 	float discharge; // Mean annual discharge [m3/s]
@@ -26,7 +32,6 @@ static void _MDRiverbedGeometry (int itemID) {
 	float yMean;     // River average depth at mean discharge [m]
 	float wMean;     // River width at mean discharge [m]
 // Local
-	float vMean;     // Flow velocity at mean discharge [m/s]
 	float dL;        // Reach length [m]
 	float eta = 0.25, nu = 0.4, tau = 8.0, phi = 0.58;
 
@@ -36,9 +41,9 @@ static void _MDRiverbedGeometry (int itemID) {
 		MFVarSetFloat (_MDOutRiverbedShapeExponentID, itemID, 2.0);
 		return;
 	}
-	discharge = fabs(MFVarGetFloat(_MDInDischargeID,  itemID));
+	discharge = fabs(MFVarGetFloat(_MDInDischMeanID,  itemID));
 	dL        = MFModelGetLength (itemID);
-	if (MFMathEqualValues (dL, 0.0) || (_MDInRiverbedSlopeID == MFUnset) || MFVarTestMissingVal (_MDInRiverSlopeID, itemID)) {
+	if (MFMathEqualValues (dL, 0.0) || (_MDInRiverbedSlopeID == MFUnset) || MFVarTestMissingVal (_MDInRiverbedSlopeID, itemID)) {
 		// Slope independent riverbed geometry
 		yMean = eta * pow (discharge, nu);
 		wMean = tau * pow (discharge, phi);
@@ -48,7 +53,7 @@ static void _MDRiverbedGeometry (int itemID) {
 		return;	
 	}
 	// Slope dependent riverbed geometry
-	slope     = MFVarGetFloat(_MDInRiverSlopeID,      itemID) / 1000.0;
+	slope     = MFVarGetFloat(_MDInRiverbedSlopeID,      itemID) / 1000.0;
 
 	yMean = eta * pow (discharge, nu);
 	wMean = tau * pow (discharge, phi);
@@ -57,12 +62,12 @@ static void _MDRiverbedGeometry (int itemID) {
 	MFVarSetFloat (_MDOutRiverbedShapeExponentID,     itemID, 2.0);
 }
 
-enum { MDhelp, MDinput, MDindependent, MDdependent };
+enum { MDinput, MDindependent, MDdependent };
 
 int MDRiverbedShapeExponentDef () {
 	int  optID = MDinput;
-	const char *optStr, *optName = "Riverbed";
-	const char *options [] = { MDHelpStr, MDInputStr, "slope-independent", "slope-dependent", (char *) NULL };
+	const char *optStr, *optName = MDOptRiverbed;
+	const char *options [] = { MDInputStr, "slope-independent", "slope-dependent", (char *) NULL };
 
 	if (_MDOutRiverbedShapeExponentID != MFUnset) return (_MDOutRiverbedShapeExponentID);
 
@@ -71,22 +76,23 @@ int MDRiverbedShapeExponentDef () {
 
 	switch (optID) {
 		case MDinput:
-			if (((_MDOutRiverbedAvgDepthMeanID  = MFVarGetID (MDVarRiverbedAvgDepthMean,  "m",      MFInput,  MFState, false)) == CMfailed) ||
-			    ((_MDOutRiverbedWidthMeanID     = MFVarGetID (MDVarRiverbedWidthMean,     "m",      MFInput,  MFState, false)) == CMfailed) ||
-			    ((_MDOutRiverbedShapeExponentID = MFVarGetID (MDVarRiverbedShapeExponent, MFNoUnit, MFInput,  MFState, false)) == CMfailed))
+			if (((_MDOutRiverbedAvgDepthMeanID  = MFVarGetID (MDVarRiverbedAvgDepthMean,  "m",      MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDOutRiverbedWidthMeanID     = MFVarGetID (MDVarRiverbedWidthMean,     "m",      MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDOutRiverbedShapeExponentID = MFVarGetID (MDVarRiverbedShapeExponent, MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed))
 				return (CMfailed);
 			break;
 		case MDdependent:
-			if ((_MDInRiverbedSlopeID           = MFVarGetID (MDVarRiverbedSlope,         "m/km",   MFInput,  MFState, false)) == CMfailed)
+			if ((_MDInRiverbedSlopeID           = MFVarGetID (MDVarRiverbedSlope,         "m/km",   MFInput,  MFState, MFBoundary)) == CMfailed)
 				return (CMfailed);
 		case MDindependent:
-			if ((_MDInDischMeanID = MDDischReference ()) == CMfailed) ||
-			    (((_MDOutRiverbedAvgDepthMeanID = MFVarGetID (MDVarRiverbedAvgDepthMean,  "m",      MFOutput, MFState, false)) == CMfailed) ||
-			    ((_MDOutRiverbedWidthMeanID     = MFVarGetID (MDVarRiverbedWidthMean,     "m",      MFOutput, MFState, false)) == CMfailed) ||
-			    ((_MDOutRiverbedShapeExponentID = MFVarGetID (MDVarRiverbedShapeExponent, MFNoUnit, MFOutput, MFState, false)) == CMfailed))
+			if (((_MDInDischMeanID = MDDischMeanDef ()) == CMfailed) ||
+			    ((_MDOutRiverbedAvgDepthMeanID = MFVarGetID (MDVarRiverbedAvgDepthMean,  "m",      MFOutput, MFState, MFBoundary)) == CMfailed)  ||
+			    ((_MDOutRiverbedWidthMeanID     = MFVarGetID (MDVarRiverbedWidthMean,     "m",      MFOutput, MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDOutRiverbedShapeExponentID = MFVarGetID (MDVarRiverbedShapeExponent, MFNoUnit, MFOutput, MFState, MFBoundary)) == CMfailed))
 				return (CMfailed);
-			_MDOutRiverbedShapeExponentID = MFVarSetFunction(_MDOutRiverbedShapeExponentID, _MDRiverbedGeometry);
+			_MDOutRiverbedShapeExponentID = MFVarSetFunction(_MDOutRiverbedShapeExponentID, _MDRiverbedShapeExponent);
 			break;
+		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
 	MFDefLeaving ("Riverbed Geometry");
 	return (_MDOutRiverbedShapeExponentID);

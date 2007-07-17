@@ -17,17 +17,17 @@ balazs.fekete@unh.edu
 #include<MD.h>
 
 // Input
-static int _MDInMuskingumC0ID          = MFUnset;
-static int _MDInMuskingumC1ID          = MFUnset;
-static int _MDInMuskingumC2ID          = MFUnset;
-static int _MDInRunoffID               = MFUnset;
-static int _MDInDischargeID            = MFUnset;
+static int _MDInMuskingumC0ID  = MFUnset;
+static int _MDInMuskingumC1ID  = MFUnset;
+static int _MDInMuskingumC2ID  = MFUnset;
+static int _MDInRunoffVolumeID = MFUnset;
+static int _MDInDischargeID    = MFUnset;
 // Output
-static int _MDOutDischAux0ID           = MFUnset;
-static int _MDOutDischAux1ID           = MFUnset;
-static int _MDOutDischRoutedID         = MFUnset;
+static int _MDOutDischAux0ID   = MFUnset;
+static int _MDOutDischAux1ID   = MFUnset;
+static int _MDOutDischLevel3ID = MFUnset;
 
-static void _MDDischRouteMuskingum (int itemID) {
+static void _MDDischLevel3Muskingum (int itemID) {
 // Input
 	float C0;              // Muskingum C0 coefficient (current inflow)
 	float C1;              // Muskingum C1 coefficient (previous inflow)
@@ -44,7 +44,7 @@ static void _MDDischRouteMuskingum (int itemID) {
 		MFVarTestMissingVal (_MDInMuskingumC2ID,   itemID)) {
 		MFVarSetFloat (_MDOutDischAux0ID,    itemID, 0.0);
 		MFVarSetFloat (_MDOutDischAux1ID,    itemID, 0.0);
-		MFVarSetFloat (_MDOutDischRoutedID,  itemID, 0.0);
+		MFVarSetFloat (_MDOutDischLevel3ID,  itemID, 0.0);
 		return;
 	}
 	C0 = MFVarGetFloat (_MDInMuskingumC0ID,   itemID);
@@ -63,23 +63,23 @@ static void _MDDischRouteMuskingum (int itemID) {
 	outDisch = C0 * inDischCurrent + C1 * inDischPrevious + C2 * outDisch;
 	MFVarSetFloat (_MDOutDischAux0ID,    itemID, inDischCurrent);
 	MFVarSetFloat (_MDOutDischAux1ID,    itemID, outDisch);
-	MFVarSetFloat (_MDOutDischRoutedID,  itemID, outDisch);
+	MFVarSetFloat (_MDOutDischLevel3ID,  itemID, outDisch);
 }
 
-int MDDischRouteMuskingumDef () {
+int MDDischLevel3MuskingumDef () {
 
-	if (_MDOutDischRoutedID != CMfailed) return (_MDOutDischRoutedID);
+	if (_MDOutDischLevel3ID != CMfailed) return (_MDOutDischLevel3ID);
 
 	MFDefEntering ("Discharge Muskingum");
 
-	if (((_MDInRunoffID = MDRunoffVolumeDef ()) == CMfailed) ||
-	    ((_MDInMuskingumC0ID   = MDDischRouteMuskingumCoeffDef ()) == CMfailed) ||
-	    ((_MDInMuskingumC1ID   = MFVarGetID (MDVarMuskingumC1,      MFNoUnit, MFInput,  MFState, false)) == CMfailed) ||
-	    ((_MDInMuskingumC2ID   = MFVarGetID (MDVarMuskingumC2,      MFNoUnit, MFInput,  MFState, false)) == CMfailed) ||
-	    ((_MDInDischargeID     = MFVarGetID (MDVarDischarge,          "m3/s", MFInput,  MFState, false)) == CMfailed) ||
-	    ((_MDOutDischroutedID  = MFVarGetID (MDVarDischRouted,        "m3/s", MFOutput, MFState, false)) == CMfailed))
+	if (((_MDInRunoffVolumeID  = MDRunoffVolumeDef ()) == CMfailed) ||
+	    ((_MDInMuskingumC0ID   = MDDischLevel3MuskingumCoeffDef ()) == CMfailed) ||
+	    ((_MDInMuskingumC1ID   = MFVarGetID (MDVarMuskingumC1,      MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInMuskingumC2ID   = MFVarGetID (MDVarMuskingumC2,      MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInDischargeID     = MFVarGetID (MDVarDischarge,          "m3/s", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDOutDischLevel3ID  = MFVarGetID (MDVarDischLevel3,        "m3/s", MFOutput, MFState, MFBoundary)) == CMfailed))
 		return (CMfailed);
-	_MDOutDischRoutedID = MFVarSetFunction(_MDOutDischRoutedID,_MDDischRouteMuskingum);
 	MFDefLeaving ("Discharge Muskingum");
-	return (_MDOutDischRoutedID);
+	return (MFVarSetFunction(_MDOutDischLevel3ID,_MDDischLevel3Muskingum));
 }
+

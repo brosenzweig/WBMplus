@@ -1,8 +1,8 @@
 /******************************************************************************
 
-GHAAS Water Balance Model Library V1.0
+GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
-Copyright 1994-2004, University of New Hampshire
+Copyright 1994-2007, University of New Hampshire
 
 MDPotETlib.c
 
@@ -208,7 +208,7 @@ float MDSRadNETLong (float i0hDay,float airT,float solRad,float ea) {
 	Brunt method
 
 	bruntA = .44;    - Brunt intercept
-	bruntB = .253;   - Brunt EA coefficient, for kPa (value for mb * û10)
+	bruntB = .253;   - Brunt EA coefficient, for kPa (value for mb * ï¿½10)
 	effem = bruntA + bruntB * sqrt(ea);
 
 	Satterlund method

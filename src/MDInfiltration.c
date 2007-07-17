@@ -1,6 +1,6 @@
 /******************************************************************************
 
-GHAAS Water Balance Model Library V1.0
+GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
 Copyright 1994-2007, University of New Hampshire
 
@@ -16,16 +16,13 @@ balazs.fekete@unh.edu
 #include<MF.h>
 #include<MD.h>
 
-/* Input */
+// Input
 // Only from non-irrigated Areas!
-static int _MDInIrrAreaID;
-
-static int _MDInWaterSurplusID;
-
-
-/* Output */
-static int _MDOutSurfaceROID;
-static int _MDOutInfiltrationID = CMfailed;
+static int _MDInIrrAreaID       = MFUnset;
+static int _MDInWaterSurplusID  = MFUnset;
+// Output
+static int _MDOutSurfaceROID    = MFUnset;
+static int _MDOutInfiltrationID = MFUnset;
 
 static float _MDInfiltrationFrac = 0.5;
 
@@ -47,26 +44,26 @@ static void _MDInfiltrationSimple (int itemID) {
 	}
 }
 
-enum { MDhelp, MDsimple, MDvarying };
+enum { MDsimple, MDvarying };
 
 
 int MDInfiltrationDef () {
 	int  optID = MDsimple;
 	const char *optStr, *optName = "Infiltration";
-	const char *options [] = { MDHelpStr, "simple", "varying", (char *) NULL };
+	const char *options [] = { "simple", "varying", (char *) NULL };
 	float par;
 
-	if (_MDOutInfiltrationID != CMfailed) return (_MDOutInfiltrationID);
+	if (_MDOutInfiltrationID != MFUnset) return (_MDOutInfiltrationID);
 	
 	MFDefEntering ("Infiltration");
  	
 	const char *optIrrStr, *optIrrName = "Irrigation";
-	const char *optionsIrr [] = { MDHelpStr, MDInputStr, "none", MDCalculateStr, (char *) NULL };
+	const char *optionsIrr [] = { MDInputStr, MDNoneStr, MDCalculateStr, (char *) NULL };
 	int optIrrID ;
  	if ((optIrrStr = MFOptionGet (optIrrName)) != (char *) NULL) optIrrID = CMoptLookup (optionsIrr,optIrrStr,true);
  	if (strcmp(optIrrStr, "calculate") == 0) 
 	{
-	 if ((_MDInIrrAreaID       = MFVarGetID (MDVarIrrAreaFraction,        "%",  MFInput,  MFState, false))  == CMfailed) return (CMfailed);
+	 if ((_MDInIrrAreaID       = MFVarGetID (MDVarIrrAreaFraction,        "%",  MFInput,  MFState, MFBoundary))  == CMfailed) return (CMfailed);
  	}
 	if ((_MDInWaterSurplusID = MDWaterSurplusDef ()) == CMfailed) return (CMfailed);
 	
@@ -76,17 +73,13 @@ int MDInfiltrationDef () {
 		case MDsimple: 		
 			if (((optStr = MFOptionGet (MDParInfiltrationFrac))  != (char *) NULL) && (sscanf (optStr,"%f",&par) == 1))
 				_MDInfiltrationFrac = par;
-			if (((_MDOutSurfaceROID    = MFVarGetID (MDVarSurfaceRO,    "mm", MFOutput, MFFlux, false)) == CMfailed) ||
-		       ((_MDOutInfiltrationID = MFVarGetID (MDVarInfiltration, "mm", MFOutput, MFFlux, false)) == CMfailed))
+			if (((_MDOutSurfaceROID    = MFVarGetID (MDVarSurfaceRO,    "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+		       ((_MDOutInfiltrationID = MFVarGetID (MDVarInfiltration, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed))
 				return (CMfailed);
 			_MDOutInfiltrationID = MFVarSetFunction (_MDOutInfiltrationID,_MDInfiltrationSimple);
 		case MDvarying:
 			break;
-		default:
-			CMmsgPrint (CMmsgInfo,"Help [%s options]:",optName);
-			for (optID = 1;options [optID] != (char *) NULL;++optID) CMmsgPrint (CMmsgInfo," %s",options [optID]);
-			CMmsgPrint (CMmsgInfo,"\n");
-			return (CMfailed);
+		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
 	MFDefLeaving  ("Infiltration");
 	return (_MDOutInfiltrationID);

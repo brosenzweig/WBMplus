@@ -1,8 +1,8 @@
 /******************************************************************************
 
-GHAAS Water Balance Model Library V1.0
+GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
-Copyright 1994-2004, University of New Hampshire
+Copyright 1994-2007, University of New Hampshire
 
 MDPotETJensen.c
 
@@ -15,15 +15,16 @@ balazs.fekete@unh.edu
 #include<MF.h>
 #include<MD.h>
 
-static int _MDInAtMeanID, _MDInSolRadID;
-static int _MDOutPetID = CMfailed;
+static int _MDInAtMeanID = MFUnset;
+static int _MDInSolRadID = MFUnset;
+static int _MDOutPetID   = MFUnset;
 
 static void _MDPotETJensen (int itemID) {
-/* Jensen-Haise (1963) PE in mm for day  */
-/* Input */
-	float airT;		/* air temperatur [degree C] */
-	float solRad;  /* daily solar radiation on horizontal [MJ/m2] */
-/* Output */ 
+// Jensen-Haise (1963) PE in mm for day
+// Input
+	float airT;		// air temperatur [degree C]
+	float solRad;  // daily solar radiation on horizontal [MJ/m2]
+// Output 
 	float pet;
 	
 	if ((MFVarTestMissingVal (_MDInAtMeanID, itemID)) ||
@@ -37,12 +38,12 @@ static void _MDPotETJensen (int itemID) {
 }
 
 int MDPotETJensenDef () {
-	if (_MDOutPetID != CMfailed) return (_MDOutPetID);
+	if (_MDOutPetID != MFUnset) return (_MDOutPetID);
 
 	MFDefEntering ("PotET Jensen");
 	if (((_MDInSolRadID = MDSolarRadDef ()) == CMfailed) ||
-		 ((_MDInAtMeanID = MFVarGetID (MDVarAirTemperature, "degC",  MFInput,  MFState, false)) == CMfailed) ||
-		 ((_MDOutPetID   = MFVarGetID (MDVarPotEvapotrans,  "mm",    MFOutput, MFFlux,  false)) == CMfailed)) return (CMfailed);
+		 ((_MDInAtMeanID = MFVarGetID (MDVarAirTemperature, "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
+		 ((_MDOutPetID   = MFVarGetID (MDVarPotEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("PotET Jensen");
 	return (MFVarSetFunction (_MDOutPetID,_MDPotETJensen));
 }

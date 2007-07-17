@@ -1,6 +1,6 @@
 /******************************************************************************
 
-GHAAS Water Balance Model Library V1.0
+GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
 Copyright 1994-2007, University of New Hampshire
 
@@ -14,29 +14,29 @@ wil.wollheim@unh.edu
 #include<MD.h>
 #include<math.h>
  
-static int _MDAirTemperatureID;
-static int _MDDischargeID;
-static int _MDRunoffVolumeID;
-static int _MDVarRiverStorageChangeID;
-static int _MDVarRiverStorageID;
-static int _MDResCapacityID;
-static int _MDResStorageID;
+static int _MDAirTemperatureID        = MFUnset;
+static int _MDDischargeID             = MFUnset;
+static int _MDRunoffVolumeID          = MFUnset;
+static int _MDVarRiverStorageChangeID = MFUnset;
+static int _MDVarRiverStorageID       = MFUnset;
+static int _MDResCapacityID           = MFUnset;
+static int _MDResStorageID            = MFUnset;
 
-static int _MDNonPointTNSourcesContID;
-static int _MDPointTNSourcesID;
+static int _MDNonPointTNSourcesContID = MFUnset;
+static int _MDPointTNSourcesID        = MFUnset;
 
-static int _MDTNFluxID = CMfailed; // this differs because it is MDTNFlux is output of the function
+static int _MDTNFluxID                = MFUnset;
 
-static int _MDTNLocalLoadID;
-static int _MDTNStoreWaterID;
-static int _MDTNStoreWaterChangeID ;
-static int _MDTNStoreSedsID;
-static int _MDTNStoreSedsChangeID;
-static int _MDTNTotalUptakeID;
-static int _MDTNConcID;
+static int _MDTNLocalLoadID           = MFUnset;
+static int _MDTNStoreWaterID          = MFUnset;
+static int _MDTNStoreWaterChangeID    = MFUnset;
+static int _MDTNStoreSedsID           = MFUnset;
+static int _MDTNStoreSedsChangeID     = MFUnset;
+static int _MDTNTotalUptakeID         = MFUnset;
+static int _MDTNConcID                = MFUnset;
 
 static void _MDBgcRouting (int itemID) {
-   //input	
+//input	
 	float airT;
 	float discharge;
 	float runoff;
@@ -48,10 +48,10 @@ static void _MDBgcRouting (int itemID) {
 	float tnNonpointLoadConc; 
 	float tnPointLoadFlux; 
 
-	//route
+//route
 	float tnFlux;
 
-	//output
+//output
 	float tnLocalLoad;
    float tnStoreWater;
    float tnStoreWaterChange;
@@ -59,7 +59,7 @@ static void _MDBgcRouting (int itemID) {
    float tnStoreSedsChange;
    float tnTotalUptake;
 
-   /* Local */
+// Local
    float tnTotalMassPre;
    float tnTotalMassPost;
    float tnConcPre;
@@ -77,15 +77,15 @@ static void _MDBgcRouting (int itemID) {
 	 float tnVfref = 35;
 	 float tnTref = 20;
 
-/*Parameters */
+
 	if (MFVarTestMissingVal (_MDAirTemperatureID,          itemID) ||
-		 MFVarTestMissingVal (_MDDischargeID,               itemID) ||
-		 MFVarTestMissingVal (_MDRunoffVolumeID,            itemID) ||
-		 MFVarTestMissingVal (_MDVarRiverStorageChangeID,   itemID) ||
-		 MFVarTestMissingVal (_MDVarRiverStorageID,         itemID) ||
-		 MFVarTestMissingVal (_MDNonPointTNSourcesContID,   itemID) ||
-		 MFVarTestMissingVal (_MDPointTNSourcesID,          itemID)) {
-        MFVarSetFloat (_MDAirTemperatureID,          itemID, 0.0);
+	    MFVarTestMissingVal (_MDDischargeID,               itemID) ||
+	    MFVarTestMissingVal (_MDRunoffVolumeID,            itemID) ||
+	    MFVarTestMissingVal (_MDVarRiverStorageChangeID,   itemID) ||
+	    MFVarTestMissingVal (_MDVarRiverStorageID,         itemID) ||
+	    MFVarTestMissingVal (_MDNonPointTNSourcesContID,   itemID) ||
+	    MFVarTestMissingVal (_MDPointTNSourcesID,          itemID)) {
+		MFVarSetFloat (_MDAirTemperatureID,          itemID, 0.0);
 		MFVarSetFloat (_MDDischargeID,               itemID, 0.0);
 		MFVarSetFloat (_MDRunoffVolumeID,            itemID, 0.0);
 		MFVarSetFloat (_MDVarRiverStorageChangeID,   itemID, 0.0);
@@ -174,27 +174,26 @@ int MDBgcRoutingDef () {
   
 	MFDefEntering ("Nutrient Calculation");
 			
-	if (_MDTNFluxID != CMfailed)	return (_MDTNFluxID);
-   //Input
-	if (((_MDAirTemperatureID        = MFVarGetID (MDVarAirTemperature,         "degC",    MFInput, MFState,  false)) == CMfailed) ||
+	if (_MDTNFluxID != MFUnset)	return (_MDTNFluxID);
+   // Input
+	if (((_MDAirTemperatureID        = MFVarGetID (MDVarAirTemperature,         "degC",    MFInput, MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDRunoffVolumeID          = MDRunoffVolumeDef ()) == CMfailed) ||
 	    ((_MDDischargeID             = MDDischargeDef ()) == CMfailed) ||
-	    ((_MDVarRiverStorageChangeID = MFVarGetID (MDVarRiverStorageChange,     "m3/s",      MFInput, MFState, false))  == CMfailed) ||
-	    ((_MDVarRiverStorageID       = MFVarGetID (MDVarRiverStorage,           "m3",      MFInput, MFState, true))   == CMfailed) ||
-	    ((_MDResCapacityID           = MFVarGetID (MDVarReservoirCapacity,      "km3",     MFInput, MFState, false))  == CMfailed) ||
-	    ((_MDResStorageID            = MFVarGetID (MDVarReservoirStorage,       "km3",     MFInput, MFState, true))   == CMfailed) ||
-	    ((_MDNonPointTNSourcesContID = MFVarGetID (MDVarNonPointTNSourcesCont,  "kg/m3",   MFInput, MFState, false))  == CMfailed) ||
-	    ((_MDPointTNSourcesID        = MFVarGetID (MDVarPointTNSources,         "kg/day",  MFInput, MFState, false))  == CMfailed) ||
-
-	//OUTPUT
-	    ((_MDTNLocalLoadID           = MFVarGetID (MDVarBgcTNLocalLoad,         "kg/day",  MFOutput, MFState, false))  == CMfailed) ||
-	    ((_MDTNStoreWaterID          = MFVarGetID (MDVarBgcTNStoreWater,        "kg",      MFOutput, MFState, true))   == CMfailed) ||
-	    ((_MDTNStoreWaterChangeID    = MFVarGetID (MDVarBgcTNStoreWaterChange,  "kg/day",  MFOutput, MFState, true))   == CMfailed) ||
-	    ((_MDTNStoreSedsID           = MFVarGetID (MDVarBgcTNStoreSeds,         "kg",      MFOutput, MFState, true))   == CMfailed) ||
-	    ((_MDTNStoreSedsChangeID     = MFVarGetID (MDVarBgcTNStoreSedsChange,   "kg/day",  MFOutput, MFState, true))   == CMfailed) ||
-	    ((_MDTNTotalUptakeID         = MFVarGetID (MDVarBgcTNTotalUptake,       "kg/day",  MFOutput, MFState, false))  == CMfailed) ||
-	    ((_MDTNConcID                = MFVarGetID (MDVarBgcTNConc,              "kg/m3",   MFOutput, MFState, false))  == CMfailed) ||
-	    ((_MDTNFluxID                = MFVarGetID (MDVarBgcTNFlux  ,            "kg/day",  MFRoute,  MFState, false))  == CMfailed))
+	    ((_MDVarRiverStorageChangeID = MFVarGetID (MDVarRiverStorageChange,     "m3/s",    MFInput, MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDVarRiverStorageID       = MFVarGetID (MDVarRiverStorage,           "m3",      MFInput, MFState, MFInitial))   == CMfailed) ||
+	    ((_MDResCapacityID           = MFVarGetID (MDVarReservoirCapacity,      "km3",     MFInput, MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDResStorageID            = MFVarGetID (MDVarReservoirStorage,       "km3",     MFInput, MFState, MFInitial))   == CMfailed) ||
+	    ((_MDNonPointTNSourcesContID = MFVarGetID (MDVarNonPointTNSourcesCont,  "kg/m3",   MFInput, MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDPointTNSourcesID        = MFVarGetID (MDVarPointTNSources,         "kg/day",  MFInput, MFState, MFBoundary))  == CMfailed) ||
+	// Output
+	    ((_MDTNLocalLoadID           = MFVarGetID (MDVarBgcTNLocalLoad,         "kg/day",  MFOutput, MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDTNStoreWaterID          = MFVarGetID (MDVarBgcTNStoreWater,        "kg",      MFOutput, MFState, MFInitial))   == CMfailed) ||
+	    ((_MDTNStoreWaterChangeID    = MFVarGetID (MDVarBgcTNStoreWaterChange,  "kg/day",  MFOutput, MFState, MFInitial))   == CMfailed) ||
+	    ((_MDTNStoreSedsID           = MFVarGetID (MDVarBgcTNStoreSeds,         "kg",      MFOutput, MFState, MFInitial))   == CMfailed) ||
+	    ((_MDTNStoreSedsChangeID     = MFVarGetID (MDVarBgcTNStoreSedsChange,   "kg/day",  MFOutput, MFState, MFInitial))   == CMfailed) ||
+	    ((_MDTNTotalUptakeID         = MFVarGetID (MDVarBgcTNTotalUptake,       "kg/day",  MFOutput, MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDTNConcID                = MFVarGetID (MDVarBgcTNConc,              "kg/m3",   MFOutput, MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDTNFluxID                = MFVarGetID (MDVarBgcTNFlux  ,            "kg/day",  MFRoute,  MFState, MFBoundary))  == CMfailed))
 	  		return (CMfailed); 
 	_MDTNFluxID = MFVarSetFunction(_MDTNFluxID,_MDBgcRouting);
 	MFDefLeaving ("Nutrient Calculation");

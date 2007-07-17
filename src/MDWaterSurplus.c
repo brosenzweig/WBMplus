@@ -1,8 +1,8 @@
 /******************************************************************************
 
-GHAAS Water Balance Model Library V1.0
+GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
-Copyright 1994-2004, University of New Hampshire
+Copyright 1994-2007, University of New Hampshire
 
 MDWaterSurplus.c
 
@@ -15,18 +15,24 @@ balazs.fekete@unh.edu
 #include<MF.h>
 #include<MD.h>
 
-static int _MDInSPackChgID, _MDInSMoistChgID, _MDInEvapoTransID, _MDInPrecipID;
-static int _MDOutWaterSurplusID = CMfailed;
-static int _MDInActIrrAreaID;
-static int _MDInGrossIrrigationDemandID; 
+// Input
+static int _MDInSPackChgID              = MFUnset;
+static int _MDInSMoistChgID             = MFUnset;
+static int _MDInEvapoTransID            = MFUnset;
+static int _MDInPrecipID                = MFUnset;
+static int _MDInActIrrAreaID            = MFUnset;
+static int _MDInGrossIrrigationDemandID = MFUnset;
+// Output
+static int _MDOutWaterSurplusID         = MFUnset;
+
 static void _MDWaterSurplus (int itemID) {
-/* Input */
+// Input
 	float sPackChg;
 	float sMoistChg;
 	float evapoTrans; 
 	float precip;
 	float actIrrArea;
-/* Output */
+// Output
 	float surplus;
 
 	if (MFVarTestMissingVal (_MDInPrecipID,        itemID)) {
@@ -64,17 +70,17 @@ static void _MDWaterSurplus (int itemID) {
 }
 
 int MDWaterSurplusDef () {
-	if (_MDOutWaterSurplusID != CMfailed) return (_MDOutWaterSurplusID);
+	if (_MDOutWaterSurplusID != MFUnset) return (_MDOutWaterSurplusID);
 	MFDefEntering ("Water Surplus");
 	
-	if ((_MDInGrossIrrigationDemandID = MDIrrigationWaterDef()) == CMfailed)return CMfailed;
-      if ((_MDInActIrrAreaID	= MFVarGetID (MDVarActuallyIrrArea,			    "-", MFOutput,MFState,false))==CMfailed)return (CMfailed);
-	if (((_MDInSPackChgID      = MDSPackChgDef    ()) == CMfailed) ||
-		 ((_MDInSMoistChgID     = MDSMoistChgDef   ()) == CMfailed) ||
-	    ((_MDInPrecipID        = MFVarGetID(MDVarPrecipitation,       "mm", MFInput,  MFFlux, false)) == CMfailed) ||
-		 ((_MDInEvapoTransID    = MFVarGetID (MDVarEvapotranspiration, "mm", MFInput,  MFFlux, false)) == CMfailed) ||
+	if ((_MDInGrossIrrigationDemandID = MDIrrigationDef()) == CMfailed) return CMfailed;
+    if ((_MDInActIrrAreaID	= MFVarGetID (MDVarActuallyIrrArea,    "-",  MFOutput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
+	if (((_MDInSPackChgID   = MDSPackChgDef    ()) == CMfailed) ||
+	    ((_MDInSMoistChgID  = MDSMoistChgDef   ()) == CMfailed) ||
+	    ((_MDInPrecipID     = MFVarGetID (MDVarPrecipitation,      "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+	    ((_MDInEvapoTransID = MFVarGetID (MDVarEvapotranspiration, "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
 	
-	    ((_MDOutWaterSurplusID = MFVarGetID (MDVarWaterSurplus,       "mm", MFOutput, MFFlux, false)) == CMfailed)) {
+	    ((_MDOutWaterSurplusID = MFVarGetID (MDVarWaterSurplus,    "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed)) {
 		return (CMfailed);
 	}
 	MFDefLeaving ("Water Surplus");

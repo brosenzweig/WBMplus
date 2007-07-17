@@ -16,13 +16,13 @@ balazs.fekete@unh.edu
 #include<MD.h>
 
 // Input
-static int _MDInDischLevel2ID = MFUnset;
+static int _MDInDischLevel2ID   = MFUnset;
 static int _MDInDischReleasedID = MFUnset;
 
 // Output
 static int _MDOutDischLevel1ID = MFUnset;
 
-static void _MDDischLevelOne (int itemID) {
+static void _MDDischLevel1 (int itemID) {
 	float discharge;
 
 	if ((_MDInDischReleasedID != MFUnset) && (!MFVarTestMissingVal (_MDInDischReleasedID, itemID)))
@@ -33,17 +33,17 @@ static void _MDDischLevelOne (int itemID) {
 	MFVarSetFloat (_MDOutDischLevel1ID, itemID, discharge);
 }
 
-int MDDischLevelOneDef() {
-	const char *optStr, *optName = MDModReservoirs;
-	const char *options [] = { MDnoneStr, (char *) NULL };
+int MDDischLevel1Def() {
+	const char *optStr;
+	const char *options [] = { MDNoneStr, (char *) NULL };
 
 	MFDefEntering ("Discharge Level 1");
 	if ((_MDInDischLevel2ID = MDDischLevel2Def ()) == CMfailed) return (CMfailed);
 
-	if (((optStr = MFOptionGet (optName)) != (char *) NULL) && (CMoptLookup (options,optStr,true) != CMfailed)) {
-		if ((_MDInDischRelaseID = _MDReservoirDef ()) == CMfailed) return (CMfailed);
+	if (((optStr = MFOptionGet (MDOptReservoirs)) != (char *) NULL) && (CMoptLookup (options,optStr,true) == CMfailed)) {
+		if ((_MDInDischReleasedID = MDReservoirDef ()) == CMfailed) return (CMfailed);
 	}
-	if ((_MDOutDischLevel1ID = MFVarGetID (MDVarRiverDischLevelOne, "m3/s",  MFOutput,  MFState, false)) == CMfailed) return (CMfailed);
+	if ((_MDOutDischLevel1ID = MFVarGetID (MDVarDischLevel1, "m3/s",  MFOutput,  MFState, MFBoundary)) == CMfailed) return (CMfailed);
 	MFDefLeaving ("Discharge Level 1");
 	return (MFVarSetFunction (_MDOutDischLevel1ID,_MDDischLevel1));
 }

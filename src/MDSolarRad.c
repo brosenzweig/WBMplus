@@ -1,8 +1,8 @@
 /******************************************************************************
 
-GHAAS Water Balance Model Library V1.0
+GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
-Copyright 1994-2004, University of New Hampshire
+Copyright 1994-2007, University of New Hampshire
 
 MDSolarRad.c
 
@@ -41,7 +41,7 @@ static float _MDSRadH (float lat,int doy,float dec) {
 	return (h);
 }
 
-static int _MDOutSRadDayLengthID = CMfailed;
+static int _MDOutSRadDayLengthID = MFUnset;
 
 static void _MDSRadDayLength (int itemID) {
 /* daylength fraction of day */
@@ -65,7 +65,7 @@ static void _MDSRadDayLength (int itemID) {
 }
 
 int MDSRadDayLengthDef () {
-	if (_MDOutSRadDayLengthID != CMfailed) return (_MDOutSRadDayLengthID);
+	if (_MDOutSRadDayLengthID != MFUnset) return (_MDOutSRadDayLengthID);
 
 	MFDefEntering ("Day length");
 	if ((_MDOutSRadDayLengthID   = MFVarGetID (MDVarSRadDayLength, "1/d", MFOutput, MFState, false)) == CMfailed) return (CMfailed);
@@ -73,7 +73,7 @@ int MDSRadDayLengthDef () {
 	return (MFVarSetFunction (_MDOutSRadDayLengthID,_MDSRadDayLength));
 }
 
-static int _MDOutSRadI0HDayID = CMfailed;
+static int _MDOutSRadI0HDayID = MFUnset;
 
 static void _MDSRadI0HDay (int itemID) {
 /* daily potential solar radiation from Sellers (1965) */
@@ -99,7 +99,7 @@ static void _MDSRadI0HDay (int itemID) {
 }
 
 int MDSRadI0HDayDef () {
-	if (_MDOutSRadI0HDayID != CMfailed) return (_MDOutSRadI0HDayID);
+	if (_MDOutSRadI0HDayID != MFUnset) return (_MDOutSRadI0HDayID);
 
 	MFDefEntering ("I0H Day");
 	if ((_MDOutSRadI0HDayID   = MFVarGetID (MDVarSRadI0HDay, "MJ/m2", MFOutput, MFState, false)) == CMfailed) return (CMfailed);
@@ -109,7 +109,7 @@ int MDSRadI0HDayDef () {
 
 static int _MDInputID, _MDGrossRadID;
 
-static int _MDOutSolarRadID = CMfailed;
+static int _MDOutSolarRadID = MFUnset;
 
 static void _MDSolarRadiationCloud (int itemID) {
 /* Input */
@@ -154,41 +154,37 @@ printf ("Hier \n");
 }
  
 
-enum { MDhelp, MDinput, MDcloud, MDsun };
+enum { MDinput, MDcloud, MDsun };
 enum { MDstandard = 1,  MDOtto = 2 }; 
 
 int MDSolarRadDef () {
 	int optID = MDinput;
 	const char *optStr, *optName = MDVarSolarRadiation;
-	const char *options [] = { MDHelpStr, "input", "cloud", "sun", (char *) NULL };
+	const char *options [] = { MDInputStr, "cloud", "sun", (char *) NULL };
 
-	if (_MDOutSolarRadID != CMfailed) return (_MDOutSolarRadID);
+	if (_MDOutSolarRadID != MFUnset) return (_MDOutSolarRadID);
 
 	MFDefEntering ("Solar Radiation");
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);
 
 	switch (optID) {
-		case MDinput: _MDOutSolarRadID = MFVarGetID (MDVarSolarRadiation, "MJ/m^2", MFInput,  MFFlux,  false); break;
+		case MDinput: _MDOutSolarRadID = MFVarGetID (MDVarSolarRadiation, "MJ/m^2", MFInput,  MFFlux,  MFBoundary); break;
 		case MDcloud:
 		//	printf ("Option: Cloud!!!");
 			if (((_MDGrossRadID      = MDGrossRadDef ()) == CMfailed) ||
-				 ((_MDInputID         = MFVarGetID (MDVarCloudCover,     "Pro%",      MFInput,  MFState, false)) == CMfailed) ||
-			    ((_MDOutSolarRadID   = MFVarGetID (MDVarSolarRadiation, "MJ/m^2", MFOutput, MFFlux,  false)) == CMfailed))
+			    ((_MDInputID         = MFVarGetID (MDVarCloudCover,     "Pro%",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDOutSolarRadID   = MFVarGetID (MDVarSolarRadiation, "MJ/m^2", MFOutput, MFFlux,  MFBoundary)) == CMfailed))
 				return (CMfailed);
 			_MDOutSolarRadID = MFVarSetFunction (_MDOutSolarRadID,_MDSolarRadiationCloud);
 			break;
 		case MDsun:
 			if (((_MDGrossRadID      = MDGrossRadDef ()) == CMfailed) ||
-			    ((_MDInputID         = MFVarGetID (MDVarSunShine,       "%",      MFInput,  MFState, false)) == CMfailed) ||
-			    ((_MDOutSolarRadID   = MFVarGetID (MDVarSolarRadiation, "MJ/m^2", MFOutput, MFFlux,  false)) == CMfailed))
+			    ((_MDInputID         = MFVarGetID (MDVarSunShine,       "%",      MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDOutSolarRadID   = MFVarGetID (MDVarSolarRadiation, "MJ/m^2", MFOutput, MFFlux,  MFBoundary)) == CMfailed))
 				return (CMfailed);
 			_MDOutSolarRadID = MFVarSetFunction (_MDOutSolarRadID,_MDSolarRadiationSun);
 			break;
-		default:
-			CMmsgPrint (CMmsgInfo,"Help [%s options]:",optName);
-			for (optID = 1;options [optID] != (char *) NULL;++optID) CMmsgPrint (CMmsgInfo," %s",options [optID]);
-			CMmsgPrint (CMmsgInfo,"\n");
-			return (CMfailed);
+		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
 	MFDefLeaving ("Solar Radiation");
 	return (_MDOutSolarRadID);

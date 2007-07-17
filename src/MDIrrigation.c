@@ -1,13 +1,15 @@
-/*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *******************************************************************************/
+/******************************************************************************
+
+GHAAS Water Balance/Transport Model V3.0
+Global Hydrologic Archive and Analysis System
+Copyright 1994-2007, University of New Hampshire
+
+MDIrrigation.c
+
+dominik.wisser@unh.edu
+
+*******************************************************************************/
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
@@ -56,7 +58,7 @@ static int _MDIrrConstantKc;
 
 // The following Outputs are given in mm/d and related to the total cell area!! Module is called from MDRunoff!
 static int _MDOutNetIrrDemandID, _MDOutIrrigationDrainageID, _MDOutTotalCropETPDepthID;
-static int _MDOutGrossIrrDemandID = CMfailed;
+static int _MDOutGrossIrrDemandID = MFUnset;
 static int _MDOutIrrAreaSMChangeID;
 static int _MDInAirTemperatureID;
 static int _MDOutActIrrAreaID;		  	
@@ -294,26 +296,26 @@ static void _MDIrrigationWater(int itemID) {
 	}
 }
 
-enum { MDhelp, MDinput, MDnone, MDcalc };
+enum { MDinput, MDnone, MDcalc };
 	 
 int MDIrrigationDef() {
 	
 	int i;
-   if (_MDOutGrossIrrDemandID != CMfailed)	return (_MDOutGrossIrrDemandID);
+   if (_MDOutGrossIrrDemandID != MFUnset)	return (_MDOutGrossIrrDemandID);
 	float par;
 	int optID = MDinput;
 	const char *optStr, *optName = "Irrigation";
-	const char *options [] = { MDHelpStr, MDInputStr, "none", MDCalculateStr, (char *) NULL };
+	const char *options [] = { MDInputStr, "none", MDCalculateStr, (char *) NULL };
 
-	if (_MDOutGrossIrrDemandID != CMfailed) return (_MDOutGrossIrrDemandID);
+	if (_MDOutGrossIrrDemandID != MFUnset) return (_MDOutGrossIrrDemandID);
 
 	MFDefEntering("Irrigation");
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options,optStr,true);
    
 	switch (optID) {
- 		case MDinput:	 _MDOutGrossIrrDemandID = MFVarGetID (MDVarIrrGrossIrrigationWaterDemand, "mm", MFInput,  MFFlux, false);break;
+ 		case MDinput:	 _MDOutGrossIrrDemandID = MFVarGetID (MDVarIrrGrossIrrigationWaterDemand, "mm", MFInput,  MFFlux, MFBoundary);break;
 		case MDnone:
-			if	((_MDOutGrossIrrDemandID = MFVarGetID (MDVarIrrGrossIrrigationWaterDemand,         "mm", MFOutput, MFFlux, false)) == CMfailed)
+			if	((_MDOutGrossIrrDemandID = MFVarGetID (MDVarIrrGrossIrrigationWaterDemand,        "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed)
 				return (CMfailed);
 			_MDOutGrossIrrDemandID      = MFVarSetFunction (_MDOutGrossIrrDemandID,_MDIrrigationDummy); 
 			break;
@@ -327,40 +329,40 @@ int MDIrrigationDef() {
 				_MDIrrConstantKc = par;
  
  			//if Data for Penman is avaiable"
- 			if ((_MDInRefETPID  = MFVarGetID (MDVarPotEvapotrans, "DoY", MFOutput,  MFState, false)) == CMfailed) return (CMfailed);
+ 			if ((_MDInRefETPID  = MFVarGetID (MDVarPotEvapotrans, "DoY", MFOutput,  MFState, MFBoundary)) == CMfailed) return (CMfailed);
 		
  	//		if ((_MDInRefETPID        = MFVarGetID (MDVarReferenceEvapotranspiration,  "mm",   MFInput, MFState,  false)) == CMfailed) return (CMfailed);
 			if ((_MDInPrecipID        = MDPrecipitationDef ())     == CMfailed) return (CMfailed);
 			//if only TMP and PRE are available:
 	 		if ((_MDInRefETPID        = MDHamonReferenceETPDef ()) == CMfailed) return CMfailed;
 	 		 
-			if ((_MDInWltPntID        = MFVarGetID(MDVarWiltingPoint,            "mm/m", MFInput,  MFState, false)) == CMfailed) return (CMfailed);	
-			if ((_MDInFldCapaID       = MFVarGetID (MDVarFieldCapacity,          "mm/m",   MFInput,  MFState, false)) == CMfailed) return (CMfailed);	
-			if ((_MDGrowingSeason1ID  = MFVarGetID (MDVarIrrGrowingSeason1Start, "DoY",  MFInput,  MFState, false)) == CMfailed) return (CMfailed);
-			if ((_MDGrowingSeason2ID  = MFVarGetID (MDVarIrrGrowingSeason2Start, "DoY",  MFInput,  MFState, false)) == CMfailed) return (CMfailed);
+			if ((_MDInWltPntID        = MFVarGetID(MDVarWiltingPoint,            "mm/m", MFInput,  MFState, MFBoundary)) == CMfailed) return (CMfailed);	
+			if ((_MDInFldCapaID       = MFVarGetID (MDVarFieldCapacity,          "mm/m", MFInput,  MFState, MFBoundary)) == CMfailed) return (CMfailed);	
+			if ((_MDGrowingSeason1ID  = MFVarGetID (MDVarIrrGrowingSeason1Start, "DoY",  MFInput,  MFState, MFBoundary)) == CMfailed) return (CMfailed);
+			if ((_MDGrowingSeason2ID  = MFVarGetID (MDVarIrrGrowingSeason2Start, "DoY",  MFInput,  MFState, MFBoundary)) == CMfailed) return (CMfailed);
 			
 			
 		 
-			if ((_MDGrowingSeason3ID  = MFVarGetID (MDVarIrrGrowingSeason3Start, "DoY",  MFInput,  MFState, false)) == CMfailed) return (CMfailed);
-			if ((_MDGrowingSeasonStartCalcID  = MFVarGetID (MDVarStartGrowingSeasonCalc, "DoY",  MFOutput,  MFState, false)) == CMfailed) return (CMfailed);
-			if ((_MDGrowingSeasonEndCalcID  = MFVarGetID (MDVarEndGrowingSeasonCalc, "DoY",  MFOutput,  MFState, false)) == CMfailed) return (CMfailed);
-			if ((_MDInAirTemperatureID  = MFVarGetID (MDVarAirTemperature, "degC",  MFInput,  MFState, false)) == CMfailed) return (CMfailed);
-			if ((_MDInIrrIntensityID  = MFVarGetID (MDVarIrrIntensity,           "-",    MFInput,  MFState, false)) == CMfailed) return (CMfailed);
-			if ((_MDInIrrEfficiencyID = MFVarGetID (MDVarIrrEfficiency,          "-",    MFInput,  MFState, false)) == CMfailed) return (CMfailed);
-			if ((_MDInIrrAreaID       = MFVarGetID (MDVarIrrAreaFraction,        "%",    MFInput,  MFState, false)) == CMfailed) return (CMfailed);
+			if ((_MDGrowingSeason3ID  = MFVarGetID (MDVarIrrGrowingSeason3Start, "DoY",  MFInput,  MFState, MFBoundary)) == CMfailed) return (CMfailed);
+			if ((_MDGrowingSeasonStartCalcID  = MFVarGetID (MDVarStartGrowingSeasonCalc, "DoY",  MFOutput,  MFState, MFBoundary)) == CMfailed) return (CMfailed);
+			if ((_MDGrowingSeasonEndCalcID  = MFVarGetID (MDVarEndGrowingSeasonCalc, "DoY",  MFOutput,  MFState, MFBoundary)) == CMfailed) return (CMfailed);
+			if ((_MDInAirTemperatureID  = MFVarGetID (MDVarAirTemperature, "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) return (CMfailed);
+			if ((_MDInIrrIntensityID  = MFVarGetID (MDVarIrrIntensity,           "-",    MFInput,  MFState, MFBoundary)) == CMfailed) return (CMfailed);
+			if ((_MDInIrrEfficiencyID = MFVarGetID (MDVarIrrEfficiency,          "-",    MFInput,  MFState, MFBoundary)) == CMfailed) return (CMfailed);
+			if ((_MDInIrrAreaID       = MFVarGetID (MDVarIrrAreaFraction,        "%",    MFInput,  MFState, MFBoundary)) == CMfailed) return (CMfailed);
 			if ((optStr = MFOptionGet (MDParIrrigationCropFileName)) != (char *) NULL) CropParameterFileName = optStr;
   			if (readCropParameters (CropParameterFileName) == CMfailed) {
 				CMmsgPrint(CMmsgUsrError,"Error reading crop parameter file   : %s \n", CropParameterFileName);
 				return CMfailed;
 			}
 			//Ouputs
-			if ((_MDAbstrVolume             = MFVarGetID (MDVarIrrGrossIrrigationWaterAbstractionVol, "km3", MFOutput, MFState, true))  == CMfailed) return (CMfailed);
- 			if ((_MDOutGrossIrrDemandID     = MFVarGetID (MDVarIrrGrossIrrigationWaterDemand,          "mm", MFOutput, MFState, false)) == CMfailed) return (CMfailed);
-			if ((_MDOutNetIrrDemandID       = MFVarGetID (MDVarIrrNetIrrigationWaterDemand,            "mm", MFOutput, MFState, false)) == CMfailed) return (CMfailed);
-			if ((_MDOutIrrAreaSMChangeID    = MFVarGetID (MDVarIrrSoilMoistureChange,                  "mm", MFOutput, MFState, false)) == CMfailed) return (CMfailed);
-			if ((_MDOutIrrigationDrainageID = MFVarGetID (MDVarIrrPercolationWater,                    "mm", MFOutput, MFState, false)) == CMfailed) return (CMfailed);
-			if ((_MDOutTotalCropETPDepthID  = MFVarGetID (MDVarIrrCropETP,                             "mm", MFOutput, MFState, false)) == CMfailed) return (CMfailed);
-			if ((_MDOutActIrrAreaID	= MFVarGetID (MDVarActuallyIrrArea,			    "-", MFOutput,MFState,false))==CMfailed)return (CMfailed);
+			if ((_MDAbstrVolume             = MFVarGetID (MDVarIrrGrossIrrigationWaterAbstractionVol, "km3", MFOutput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
+ 			if ((_MDOutGrossIrrDemandID     = MFVarGetID (MDVarIrrGrossIrrigationWaterDemand,          "mm", MFOutput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
+			if ((_MDOutNetIrrDemandID       = MFVarGetID (MDVarIrrNetIrrigationWaterDemand,            "mm", MFOutput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
+			if ((_MDOutIrrAreaSMChangeID    = MFVarGetID (MDVarIrrSoilMoistureChange,                  "mm", MFOutput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
+			if ((_MDOutIrrigationDrainageID = MFVarGetID (MDVarIrrPercolationWater,                    "mm", MFOutput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
+			if ((_MDOutTotalCropETPDepthID  = MFVarGetID (MDVarIrrCropETP,                             "mm", MFOutput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
+			if ((_MDOutActIrrAreaID	        = MFVarGetID (MDVarActuallyIrrArea,			               "-",  MFOutput, MFState, MFBoundary)) == CMfailed)return (CMfailed);
  			MDParNumberOfCrops = _MDNumberOfIrrCrops;
 			CMmsgPrint(CMmsgInfo,"Number of crops read: %i \n", _MDNumberOfIrrCrops);
 			for (i=0;i<_MDNumberOfIrrCrops;i++) {
@@ -370,18 +372,19 @@ int MDIrrigationDef() {
 				sprintf (def  + 10,"%02d", i + 1);
 		
 				//Input Fraction of crop type per cell
-				if (CMfailed == (_MDInCropFractionID[i] = MFVarGetID (frac,"mm", MFInput,MFState,false))) {
+				if (CMfailed == (_MDInCropFractionID[i] = MFVarGetID (frac,"mm", MFInput, MFState, MFBoundary))) {
 					CMmsgPrint (CMmsgUsrError, "CMfailed in MDInCropFractionID \n");
 					return CMfailed;
 				}
 				//Output Soil Moisture Deficit per croptype
-				if ((_MDOutCropDeficitID[i]=MFVarGetID (def,"mm", MFOutput,MFState,true))==CMfailed) {
+				if ((_MDOutCropDeficitID[i]=MFVarGetID (def,"mm", MFOutput,MFState, MFInitial))==CMfailed) {
 					CMmsgPrint (CMmsgUsrError,"MFFAult in MDCropDeficit\n");
 					return CMfailed;
 				}
 			}
 			_MDOutGrossIrrDemandID = MFVarSetFunction (_MDOutGrossIrrDemandID,_MDIrrigationWater);
-			//break;
+			break;
+		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
 	MFDefLeaving("Irrigation");
 	return (_MDOutGrossIrrDemandID);

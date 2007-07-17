@@ -15,14 +15,14 @@ balazs.fekete@unh.edu
 #include<MF.h>
 #include<MD.h>
 
-enum { MDhelp, MDaccumulate, MDmuskingum, MDcascade };
+enum { MDaccumulate, MDmuskingum, MDcascade };
 
 static int _MDDischLevel3ID = MFUnset;
 
 int MDDischLevel3Def() {
 	int optID = MDaccumulate;
-	const char *optStr, *optName = MDModDischRoute;
-	const char *options []    = { MDHelpStr, "accumulate", "muskingum", "cascade", (char *) NULL };
+	const char *optStr, *optName = MDOptRouting;
+	const char *options []    = { "accumulate", "muskingum", "cascade", (char *) NULL };
 
 	if (_MDDischLevel3ID != MFUnset) return (_MDDischLevel3ID);
 
@@ -33,12 +33,9 @@ int MDDischLevel3Def() {
 		case MDaccumulate: _MDDischLevel3ID = MDDischLevel3AccumulateDef (); break;
 		case MDmuskingum:  _MDDischLevel3ID = MDDischLevel3MuskingumDef  (); break;
 		case MDcascade:    _MDDischLevel3ID = MDDischLevel3CascadeDef    (); break;
-		default:
-			CMmsgPrint (CMmsgInfo,"Help [%s options]:",optName);
-			for (optID = 1;options [optID] != (char *) NULL;++optID) CMmsgPrint (CMmsgInfo," %s",options [optID]);
-			CMmsgPrint (CMmsgInfo,"\n");
-			return (CMfailed);
+		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
+	if (_MDDischLevel3ID == CMfailed) return (CMfailed);
 	MFDefLeaving ("Discharge Level 3");
-	return (_MDDischLevel3ID));
+	return (_MDDischLevel3ID);
 }

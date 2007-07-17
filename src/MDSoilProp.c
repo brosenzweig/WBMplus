@@ -29,7 +29,7 @@
 
 
 //~ static int _MDInSoilTextID, _MDInRootDepthID;
-//~ static int _MDOutSPorosID, _MDOutWltPntID, _MDOutAWCapID = CMfailed;
+//~ static int _MDOutSPorosID, _MDOutWltPntID, _MDOutAWCapID = MFUnset;
 //~ static int _MDOutFieldCapID;
 //~ static int _MDSoilTextNum;
 //~ static float _MDSoilPorosity  [] = { 39.0, 47.0, 55.0, 43.0, 47.0, 51.0, 47.0, 47.0, 39.0 };
@@ -74,7 +74,7 @@
 //~ }
 
 //~ int MDSoilPropDef () {
-	//~ if (_MDOutAWCapID != CMfailed) return (_MDOutAWCapID);
+	//~ if (_MDOutAWCapID != MFUnset) return (_MDOutAWCapID);
 
 	//~ MFDefEntering ("Soil Proporties");
 	//~ _MDSoilTextNum = sizeof (_MDSoilPorosity) / sizeof (_MDSoilPorosity [0]);

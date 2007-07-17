@@ -32,7 +32,7 @@ static void _MDDischRouteMuskingumCoeff (int itemID) {
 	float discharge;        // Discharge [m3/s]
 	float yMean;            // Average depth at mean discharge [m]
 	float wMean;            // River width at mean discharge [m]
-	float shapeExp;         // Riverbed shape exponent []
+	float beta;             // Riverbed shape exponent []
 	float slope;            // Riverbed slope [m/km]
 // Output
 	float C0;               // Muskingum C0 coefficient (current inflow)
@@ -56,7 +56,7 @@ static void _MDDischRouteMuskingumCoeff (int itemID) {
 	    MFMathEqualValues (slope = MFVarGetFloat(_MDInRiverbedSlopeID, itemID) / 1000.0,  0.0) || // Zero slope
 	    MFMathEqualValues (yMean = MFVarGetFloat(_MDInRiverbedAvgDepthMeanID,    itemID), 0.0) || // Zero average depth at mean discharge
 	    MFMathEqualValues (wMean = MFVarGetFloat(_MDInRiverbedWidthMeanID,       itemID), 0.0) || // Zero width at mean discharge
-	    ((xi = MFVarGetFloat(_MDInRiverbedShapeExponentID, itemID)) < 0.0)) {                  // Negative riverbed shape exponent
+	    ((beta = MFVarGetFloat(_MDInRiverbedShapeExponentID, itemID)) < 0.0)) {                   // Negative riverbed shape exponent
 	    // Falling back to flow-accumulation
 		MFVarSetFloat (_MDOutMuskingumC0ID, itemID, 1.0);
 		MFVarSetFloat (_MDOutMuskingumC1ID, itemID, 0.0);
@@ -65,8 +65,9 @@ static void _MDDischRouteMuskingumCoeff (int itemID) {
 	}
 	dt = MFModelGet_dt (); 
 
+	xi = 1 + beta * (2.0 / 3.0) / (beta + 1);
 	C = xi * (discharge / (yMean * wMean)) * dt / dL;
-	D = yMean / (dL * slope * (xi / (xi + xi * 2/3 + 1)));
+	D = yMean / (dL * slope * xi);
 
 	C0 = (-1 + C + D) / (1 + C + D);
 	C1 = ( 1 + C - D) / (1 + C + D);
@@ -78,12 +79,12 @@ static void _MDDischRouteMuskingumCoeff (int itemID) {
 	MFVarSetFloat (_MDOutMuskingumC2ID, itemID, C2);
 }
 
-enum { MDhelp, MDinput, MDstatic, MDdynamic };
+enum { MDinput, MDstatic, MDdynamic };
 
-int MDDischRouteMuskingumCoeffDef () {
+int MDDischLevel3MuskingumCoeffDef () {
 	int  optID = MDinput;
-	const char *optStr, *optName = "Muskingum";
-	const char *options [] = { MDHelpStr, MDInputStr, "static", "dynamic", (char *) NULL };
+	const char *optStr, *optName = MDOptMuskingum;
+	const char *options [] = { MDInputStr, "static", "dynamic", (char *) NULL };
 
 	if (_MDOutMuskingumC0ID != MFUnset) return (_MDOutMuskingumC0ID);
 
@@ -91,35 +92,30 @@ int MDDischRouteMuskingumCoeffDef () {
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);
 	switch (optID) {
 		case MDinput:
-			if (((_MDOutMuskingumC0ID = MFVarGetID (MDVarMuskingumC0, MFNoUnit,   MFInput,  MFState,  false)) == CMfailed) ||
-			    ((_MDOutMuskingumC1ID = MFVarGetID (MDVarMuskingumC1, MFNoUnit,   MFInput,  MFState,  false)) == CMfailed) ||
-			    ((_MDOutMuskingumC2ID = MFVarGetID (MDVarMuskingumC2, MFNoUnit,   MFInput,  MFState,  false)) == CMfailed))
+			if (((_MDOutMuskingumC0ID = MFVarGetID (MDVarMuskingumC0, MFNoUnit,   MFInput,  MFState,  MFBoundary)) == CMfailed) ||
+			    ((_MDOutMuskingumC1ID = MFVarGetID (MDVarMuskingumC1, MFNoUnit,   MFInput,  MFState,  MFBoundary)) == CMfailed) ||
+			    ((_MDOutMuskingumC2ID = MFVarGetID (MDVarMuskingumC2, MFNoUnit,   MFInput,  MFState,  MFBoundary)) == CMfailed))
 				return (CMfailed);
 			break;
 		case MDstatic:
 			if ((_MDInDischargeID = MDDischMeanDef ()) == CMfailed) return (CMfailed);
 		case MDdynamic:
 			if (_MDInDischargeID == MFUnset) {
-				_MDInDischargeID = MFVarGetID (MDVarRiverDischarge,     "m3/s",  MFInput,  MFState, false);
+				_MDInDischargeID = MFVarGetID (MDVarDischarge,                      "m3/s", MFInput,  MFState, false);
 			}
 			if ((_MDInDischargeID == CMfailed) || 
-			    ((_MDInRiverbedShapeExponent  = MDRiverbedShapeExponentDef ()) == CMfailed) ||
-			    ((_MDInRiverbedWidthMeanID    = MFVarGetID (MDVarRiverbedWidthMean,    "m", MFInput,  MFState, false)) == CMfailed) ||
-			    ((_MDInRiverbedAvgDepthMeanID = MFVarGetID (MDVarRiverbedAvgDepthMean, "m", MFInput,  MFState, false)) == CMfailed) ||
-			    ((_MDInRiverbedSlopeID        = MFVarGetID (MDVarRiverSlope,        "m/km", MFInput,  MFState, false)) == CMfailed) ||
-			    ((_MDOutMuskingumC0ID         = MFVarGetID (MDVarMuskingumC0,     MFNoUnit, MFOutput, MFState, false)) == CMfailed) ||
-			    ((_MDOutMuskingumC1ID         = MFVarGetID (MDVarMuskingumC1,     MFNoUnit, MFOutput, MFState, false)) == CMfailed) ||
-			    ((_MDOutMuskingumC2ID         = MFVarGetID (MDVarMuskingumC2,     MFNoUnit, MFOutput, MFState, false)) == CMfailed))
+			    ((_MDInRiverbedShapeExponentID  = MDRiverbedShapeExponentDef ()) == CMfailed) ||
+			    ((_MDInRiverbedWidthMeanID      = MFVarGetID (MDVarRiverbedWidthMean,    "m", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDInRiverbedAvgDepthMeanID   = MFVarGetID (MDVarRiverbedAvgDepthMean, "m", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDInRiverbedSlopeID          = MFVarGetID (MDVarRiverbedSlope,     "m/km", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDOutMuskingumC0ID           = MFVarGetID (MDVarMuskingumC0,     MFNoUnit, MFOutput, MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDOutMuskingumC1ID           = MFVarGetID (MDVarMuskingumC1,     MFNoUnit, MFOutput, MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDOutMuskingumC2ID           = MFVarGetID (MDVarMuskingumC2,     MFNoUnit, MFOutput, MFState, MFBoundary)) == CMfailed))
 				return (CMfailed);
 				_MDOutMuskingumC0ID = MFVarSetFunction(_MDOutMuskingumC0ID,_MDDischRouteMuskingumCoeff);
 			break;
-		default:
-			CMmsgPrint (CMmsgInfo,"Help [%s options]:",optName);
-			for (optID = 1;options [optID] != (char *) NULL;++optID) CMmsgPrint (CMmsgInfo," %s",options [optID]);
-			CMmsgPrint (CMmsgInfo,"\n");
-			return (CMfailed);
+		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
 	MFDefLeaving ("Muskingum Coefficients");
 	return (_MDOutMuskingumC0ID);
 }
-

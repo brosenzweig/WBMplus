@@ -1,8 +1,8 @@
 /******************************************************************************
 
-GHAAS Water Balance Model Library V1.0
+GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
-Copyright 1994-2004, University of New Hampshire
+Copyright 1994-2007, University of New Hampshire
 
 MDPrecipitation.c
 
@@ -33,8 +33,10 @@ bool MDEvent (int nSteps,int nEvents,int step)
 	return (inv ? true : false);
 	}
 
-static int _MDInPrecipID, _MDInWetDaysID, _MDInPrecipFracID;
-static int _MDOutPrecipID = CMfailed;
+static int _MDInPrecipID     = MFUnset;
+static int _MDInWetDaysID    = MFUnset;
+static int _MDInPrecipFracID = MFUnset;
+static int _MDOutPrecipID    = MFUnset;
 
 static void _MDPrecipWetDays (int itemID)
 	{
@@ -82,42 +84,38 @@ static void _MDPrecipFraction (int itemID)
 	MFVarSetFloat (_MDOutPrecipID,itemID,precipOut);
 	}
 
-enum { MDhelp, MDinput, MDwetdays, MDfraction };
+enum { MDinput, MDwetdays, MDfraction };
 
 int MDPrecipitationDef ()
 
 	{
 	int optID = MDinput;
 	const char *optStr, *optName = MDVarPrecipitation;
-	const char *options [] = { MDHelpStr, MDInputStr, "wetdays", "fraction",(char *) NULL };
+	const char *options [] = { MDInputStr, "wetdays", "fraction",(char *) NULL };
 
-	if (_MDOutPrecipID != CMfailed) return (_MDOutPrecipID);
+	if (_MDOutPrecipID != MFUnset) return (_MDOutPrecipID);
 
 	MFDefEntering ("Precipitation");
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options,optStr,true);
 
 	switch (optID)
 		{
-		case MDinput: _MDOutPrecipID = MFVarGetID (MDVarPrecipitation, "mm", MFInput,  MFFlux,  false); break;
+		case MDinput: _MDOutPrecipID = MFVarGetID (MDVarPrecipitation, "mm", MFInput,  MFFlux,  MFBoundary); break;
 		case MDwetdays:
 			if (((_MDInWetDaysID    = MDWetDaysDef ()) == CMfailed) ||
-				 ((_MDInPrecipID     = MFVarGetID (MDVarPrecipMonthly,  "mm", MFInput,  MFFlux,  false)) == CMfailed) ||
-				 ((_MDOutPrecipID    = MFVarGetID (MDVarPrecipitation,  "mm", MFOutput, MFFlux,  false)) == CMfailed))
+				 ((_MDInPrecipID     = MFVarGetID (MDVarPrecipMonthly,  "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+				 ((_MDOutPrecipID    = MFVarGetID (MDVarPrecipitation,  "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed))
 				return (CMfailed);
 			_MDOutPrecipID = MFVarSetFunction (_MDOutPrecipID,_MDPrecipWetDays);
 			break;
 		case MDfraction:
-			if (((_MDInPrecipID     = MFVarGetID (MDVarPrecipMonthly,  "mm", MFInput,  MFFlux,  false)) == CMfailed) ||
-			    ((_MDInPrecipFracID = MFVarGetID (MDVarPrecipFraction, "mm", MFInput,  MFState, false)) == CMfailed) ||
-				 ((_MDOutPrecipID    = MFVarGetID (MDVarPrecipitation,  "mm", MFOutput, MFFlux,  false)) == CMfailed))
+			if (((_MDInPrecipID     = MFVarGetID (MDVarPrecipMonthly,  "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+			    ((_MDInPrecipFracID = MFVarGetID (MDVarPrecipFraction, "mm", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+				 ((_MDOutPrecipID    = MFVarGetID (MDVarPrecipitation,  "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed))
 				return (CMfailed);
 			_MDOutPrecipID = MFVarSetFunction (_MDOutPrecipID,_MDPrecipFraction);
 			break;
-		default:
-			fprintf (stderr,"Help [%s options]:",optName);
-			for (optID = 1;options [optID] != (char *) NULL;++optID) fprintf (stderr," %s",options [optID]);
-			fprintf (stderr,"\n");
-			return (CMfailed);
+		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 		}
 	MFDefLeaving ("Precipitation");
 	return (_MDOutPrecipID);

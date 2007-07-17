@@ -1,8 +1,8 @@
 /******************************************************************************
 
-GHAAS Water Balance Model Library V1.0
+GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
-Copyright 1994-2004, University of New Hampshire
+Copyright 1994-2007, University of New Hampshire
 
 MDPotETPMdn.c
 
@@ -16,13 +16,25 @@ balazs.fekete@unh.edu
 #include<MF.h>
 #include<MD.h>
 
-static int _MDInDayLengthID, _MDInI0HDayID;
-static int _MDInCParamAlbedoID,  _MDInCParamCHeightID;
-static int _MDInCParamR5ID,      _MDInCParamCDID,     _MDInCParamCRID,  _MDInCParamGLMaxID, _MDInCParamZ0gID;
-static int _MDInLeafAreaIndexID, _MDInStemAreaIndexID;
+static int _MDInDayLengthID     = MFUnset;
+static int _MDInI0HDayID        = MFUnset;
+static int _MDInCParamAlbedoID  = MFUnset;
+static int _MDInCParamCHeightID = MFUnset;
+static int _MDInCParamR5ID      = MFUnset;
+static int _MDInCParamCDID      = MFUnset;
+static int _MDInCParamCRID      = MFUnset;
+static int _MDInCParamGLMaxID   = MFUnset;
+static int _MDInCParamZ0gID     = MFUnset;
+static int _MDInLeafAreaIndexID = MFUnset;
+static int _MDInStemAreaIndexID = MFUnset;
 
-static int _MDInAtMeanID, _MDInAtMinID, _MDInAtMaxID, _MDInSolRadID, _MDInVPressID, _MDInWSpeedID;
-static int _MDFAOReferenceETPID = CMfailed;
+static int _MDInAtMeanID        = MFUnset;
+static int _MDInAtMinID         = MFUnset;
+static int _MDInAtMaxID         = MFUnset;
+static int _MDInSolRadID        = MFUnset;
+static int _MDInVPressID        = MFUnset;
+static int _MDInWSpeedID        = MFUnset;
+static int _MDFAOReferenceETPID = MFUnset;
 
 static void _MDFAOReferenceETP (int itemID) {
 /* day-night Penman-Monteith PE in mm for day */
@@ -148,29 +160,29 @@ static void _MDFAOReferenceETP (int itemID) {
 }
 
 int MDFAOReferenceETPDef () {
-	if (_MDFAOReferenceETPID != CMfailed) return (_MDFAOReferenceETPID);
+	if (_MDFAOReferenceETPID != MFUnset) return (_MDFAOReferenceETPID);
 
 	MFDefEntering ("FAO Reference ETP ");
 	if (((_MDInDayLengthID     = MDSRadDayLengthDef ()) == CMfailed) ||
-		 ((_MDInI0HDayID        = MDSRadI0HDayDef    ()) == CMfailed) ||
+	    ((_MDInI0HDayID        = MDSRadI0HDayDef    ()) == CMfailed) ||
 	    ((_MDInCParamAlbedoID  = MDCParamAlbedoDef  ()) == CMfailed) ||
-		 ((_MDInCParamCHeightID = MDCParamCHeightDef ()) == CMfailed) ||
-		 ((_MDInCParamR5ID      = MDCParamR5Def      ()) == CMfailed) ||
-		 ((_MDInCParamCDID      = MDCParamCDDef      ()) == CMfailed) ||
-		 ((_MDInCParamCRID      = MDCParamCRDef      ()) == CMfailed) ||
-		 ((_MDInCParamGLMaxID   = MDCParamGLMaxDef   ()) == CMfailed) ||
-		 ((_MDInCParamZ0gID     = MDCParamZ0gDef     ()) == CMfailed) ||
-		 ((_MDInLeafAreaIndexID = MDLeafAreaIndexDef ()) == CMfailed) ||
-		 ((_MDInStemAreaIndexID = MDStemAreaIndexDef ()) == CMfailed) ||
-		 ((_MDInSolRadID        = MDSolarRadDef      ()) == CMfailed) ||
-		 ((_MDInAtMeanID  = MFVarGetID (MDVarAirTemperature, "degC",  MFInput,  MFState, false)) == CMfailed) ||
-		 ((_MDInAtMinID   = MFVarGetID (MDVarAirTempMinimum, "degC",  MFInput,  MFState, false)) == CMfailed) ||
-		 ((_MDInAtMaxID   = MFVarGetID (MDVarAirTempMaximum, "degC",  MFInput,  MFState, false)) == CMfailed) ||
-		 ((_MDInVPressID  = MFVarGetID (MDVarVaporPressure,  "kPa",   MFInput,  MFState, false)) == CMfailed) ||
-		 ((_MDInWSpeedID  = MFVarGetID (MDVarWindSpeed,      "m/s",   MFInput,  MFState, false)) == CMfailed) ||
-		 ((_MDFAOReferenceETPID    = MFVarGetID (MDVarReferenceEvapotranspiration,  "mm",    MFOutput, MFFlux,  false)) == CMfailed)) return (CMfailed);
+	    ((_MDInCParamCHeightID = MDCParamCHeightDef ()) == CMfailed) ||
+	    ((_MDInCParamR5ID      = MDCParamR5Def      ()) == CMfailed) ||
+	    ((_MDInCParamCDID      = MDCParamCDDef      ()) == CMfailed) ||
+	    ((_MDInCParamCRID      = MDCParamCRDef      ()) == CMfailed) ||
+	    ((_MDInCParamGLMaxID   = MDCParamGLMaxDef   ()) == CMfailed) ||
+	    ((_MDInCParamZ0gID     = MDCParamZ0gDef     ()) == CMfailed) ||
+	    ((_MDInLeafAreaIndexID = MDLeafAreaIndexDef ()) == CMfailed) ||
+	    ((_MDInStemAreaIndexID = MDStemAreaIndexDef ()) == CMfailed) ||
+	    ((_MDInSolRadID        = MDSolarRadDef      ()) == CMfailed) ||
+	    ((_MDInAtMeanID        = MFVarGetID (MDVarAirTemperature, "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInAtMinID         = MFVarGetID (MDVarAirTempMinimum, "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInAtMaxID         = MFVarGetID (MDVarAirTempMaximum, "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInVPressID        = MFVarGetID (MDVarVaporPressure,  "kPa",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInWSpeedID        = MFVarGetID (MDVarWindSpeed,      "m/s",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDFAOReferenceETPID = MFVarGetID (MDVarReferenceEvapotranspiration,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed)) return (CMfailed);
 	
-	_MDFAOReferenceETPID=MFVarSetFunction (_MDFAOReferenceETPID,_MDFAOReferenceETP);
+	_MDFAOReferenceETPID = MFVarSetFunction (_MDFAOReferenceETPID,_MDFAOReferenceETP);
 	printf ("RefETP ID %i\n",_MDFAOReferenceETPID);
 	MFDefLeaving ("FAO Reference ETP");
 	return(_MDFAOReferenceETPID);

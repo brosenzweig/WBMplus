@@ -1,8 +1,8 @@
 /******************************************************************************
 
-GHAAS Water Balance Model Library V1.0
+GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
-Copyright 1994-2004, University of New Hampshire
+Copyright 1994-2007, University of New Hampshire
 
 MDLSAreaIndex.c
 
@@ -15,16 +15,18 @@ balazs.fekete@unh.edu
 #include<MF.h>
 #include<MD.h>
 
-static int _MDInCoverID, _MDInAtMeanID, _MDInCParamLPMaxID;
-static int _MDOutLeafAreaIndexID = CMfailed;
+static int _MDInCoverID          = MFUnset;
+static int _MDInAtMeanID         = MFUnset;
+static int _MDInCParamLPMaxID    = MFUnset;
+static int _MDOutLeafAreaIndexID = MFUnset;
 
 static void _MDLeafAreaIndex (int itemID) {
-/* projected leaf area index (lai) pulled out from cover dependent PET functions  */
-/* Input */
+// projected leaf area index (lai) pulled out from cover dependent PET functions
+// Input
 	int   cover;  
-	float lpMax;  /* maximum projected leaf area index */
-	float airT;   /* air temperature [degree C] */
-/* Local */
+	float lpMax;  // maximum projected leaf area index
+	float airT;   // air temperature [degree C]
+// Local
 	float lai;
 
 	if (MFVarTestMissingVal (_MDInCoverID,       itemID) ||
@@ -42,41 +44,42 @@ static void _MDLeafAreaIndex (int itemID) {
    MFVarSetFloat (_MDOutLeafAreaIndexID,itemID,0.001 > lai ? 0.001 : lai);
 }
 
-enum { MDhelp, MDinput, MDstandard };
+enum { MDinput, MDstandard };
 
 int MDLeafAreaIndexDef () {
 	int optID = MDinput;
 	const char *optStr, *optName = MDVarLeafAreaIndex;
-	const char *options [] = { MDHelpStr, MDInputStr, "standard", (char *) NULL };
+	const char *options [] = { MDInputStr, "standard", (char *) NULL };
 
-	if (_MDOutLeafAreaIndexID != CMfailed) return (_MDOutLeafAreaIndexID);
+	if (_MDOutLeafAreaIndexID != MFUnset) return (_MDOutLeafAreaIndexID);
 
 	MFDefEntering ("Leaf Area");
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options,optStr,true);
 	switch (optID) {
-		case MDinput:  _MDOutLeafAreaIndexID = MFVarGetID (MDVarLeafAreaIndex, MFNoUnit, MFInput, MFState, false); break;
+		case MDinput:  _MDOutLeafAreaIndexID = MFVarGetID (MDVarLeafAreaIndex, MFNoUnit, MFInput, MFState, MFBoundary); break;
 		case MDstandard:
 			if (((_MDInCParamLPMaxID    = MDCParamLPMaxDef ()) == CMfailed) ||
-				 ((_MDInCoverID          = MFVarGetID (MDVarWBMCover,       MFNoUnit, MFInput,  MFState, false)) == CMfailed) ||
-				 ((_MDInAtMeanID         = MFVarGetID (MDVarAirTemperature, "degC",   MFInput,  MFState, false)) == CMfailed) ||
-				 ((_MDOutLeafAreaIndexID = MFVarGetID (MDVarLeafAreaIndex,  MFNoUnit, MFOutput, MFState, false)) == CMfailed))
+				 ((_MDInCoverID          = MFVarGetID (MDVarWBMCover,       MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
+				 ((_MDInAtMeanID         = MFVarGetID (MDVarAirTemperature, "degC",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+				 ((_MDOutLeafAreaIndexID = MFVarGetID (MDVarLeafAreaIndex,  MFNoUnit, MFOutput, MFState, MFBoundary)) == CMfailed))
 				return (CMfailed);
 			_MDOutLeafAreaIndexID = MFVarSetFunction (_MDOutLeafAreaIndexID,_MDLeafAreaIndex); 
 			break;
+		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
 	MFDefLeaving ("Leaf Area");
 	return (_MDOutLeafAreaIndexID);
 }
 
 static int _MDInCParamCHeightID;
-static int _MDOutStemAreaIndexID = CMfailed;
+static int _MDOutStemAreaIndexID = MFUnset;
 
 static void _MDStemAreaIndex (int itemID) {
-/* Projected Stem area index (sai) pulled out from McNaugthon and Black PET function  */
-/* Input */
- 	float lpMax;   /* maximum projected leaf area index */
-	float cHeight; /* canopy height [m] */
-/* Local */
+// Projected Stem area index (sai) pulled out from McNaugthon and Black PET function
+// Input
+ 	float lpMax;   // maximum projected leaf area index
+	float cHeight; // canopy height [m]
+// Local
 	float sai;
 
 	if (MFVarTestMissingVal (_MDInCParamLPMaxID,   itemID) ||
@@ -92,21 +95,22 @@ static void _MDStemAreaIndex (int itemID) {
 int MDStemAreaIndexDef () {
 	int optID = MDinput;
 	const char *optStr, *optName = MDVarStemAreaIndex;
-	const char *options [] = { MDHelpStr, MDInputStr, "standard", (char *) NULL };
+	const char *options [] = { MDInputStr, "standard", (char *) NULL };
 
-	if (_MDOutStemAreaIndexID != CMfailed) return (_MDOutStemAreaIndexID);
+	if (_MDOutStemAreaIndexID != MFUnset) return (_MDOutStemAreaIndexID);
 
 	MFDefEntering ("Stem Area Index");
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options,optStr,true);
 	switch (optID) {
-		case MDinput:  _MDOutStemAreaIndexID = MFVarGetID (MDVarStemAreaIndex, MFNoUnit, MFInput, MFState, false); break;
+		case MDinput:  _MDOutStemAreaIndexID = MFVarGetID (MDVarStemAreaIndex, MFNoUnit, MFInput, MFState, MFBoundary); break;
 		case MDstandard:
-			if (((_MDInCParamLPMaxID    = MFVarGetID (MDVarCParamLPMax,    MFNoUnit, MFInput,  MFState, false)) == CMfailed) ||
-				 ((_MDInCParamCHeightID  = MFVarGetID (MDVarCParamCHeight,  "m",      MFInput,  MFState, false)) == CMfailed) ||
-				 ((_MDOutStemAreaIndexID = MFVarGetID (MDVarStemAreaIndex,  MFNoUnit, MFOutput, MFState, false)) == CMfailed))
+			if (((_MDInCParamLPMaxID    = MFVarGetID (MDVarCParamLPMax,    MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
+				 ((_MDInCParamCHeightID  = MFVarGetID (MDVarCParamCHeight,  "m",      MFInput,  MFState, MFBoundary)) == CMfailed) ||
+				 ((_MDOutStemAreaIndexID = MFVarGetID (MDVarStemAreaIndex,  MFNoUnit, MFOutput, MFState, MFBoundary)) == CMfailed))
 				return (CMfailed);
 			_MDOutStemAreaIndexID = MFVarSetFunction (_MDOutStemAreaIndexID,_MDStemAreaIndex); 
 			break;
+		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
 	MFDefLeaving ("Stem Area Index");
 	return (_MDOutStemAreaIndexID);

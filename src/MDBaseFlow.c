@@ -1,8 +1,8 @@
 /******************************************************************************
 
-GHAAS Water Balance Model Library V1.0
+GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
-Copyright 1994-2004, University of New Hampshire
+Copyright 1994-2007, University of New Hampshire
 
 MDBaseFlow.c
 
@@ -16,15 +16,17 @@ balazs.fekete@unh.edu
 #include<MF.h>
 #include<MD.h>
 
-/* Input */
-static int _MDInRechargeID;
-static int _MDInGrossIrrigationDemandID;
-static int _MDInIrrReturnFlowID;
-static int _MDInActIrrAreaID;
-/* Output */
-static int _MDOutGrdWatID, _MDOutGrdWatChgID, _MDOutBaseFlowID = CMfailed;
-static int _MDOutGrdWaterAbstractionID;
-static int _MDOutDischargeAbstractionID;
+// Input
+static int _MDInRechargeID              = MFUnset;
+static int _MDInGrossIrrigationDemandID = MFUnset;
+static int _MDInIrrReturnFlowID         = MFUnset;
+static int _MDInActIrrAreaID            = MFUnset;
+// Output
+static int _MDOutGrdWatID               = MFUnset;
+static int _MDOutGrdWatChgID            = MFUnset;
+static int _MDOutBaseFlowID             = MFUnset;
+static int _MDOutGrdWaterAbstractionID  = MFUnset;
+static int _MDOutDischargeAbstractionID = MFUnset;
 
 
 static float _MDGroundWatBETA  = 0.016666667;
@@ -34,15 +36,15 @@ static float _MDRecharge;
 float _MDGroundWaterFunc (float t,float grdH2O) { return (_MDRecharge - _MDGroundWatBETA * grdH2O); }
 
 static void _MDBaseFlow (int itemID) {
-/* Input */
+// Input
 	float irrDemand;
 	float irrReturnFlow;
-/* Output */
+// Output
 	float grdWater;
 	float grdWaterChg = 0.0; 
 	float groundWaterAbstraction;
 	float dischargeAbstraction;
-/* Local */
+// Local
 	float baseFlow;
 	float irrArea;
 /*
@@ -143,7 +145,7 @@ int MDBaseFlowDef () {
 	const char *optStr;
 	float par;
 
-	if (_MDOutBaseFlowID != CMfailed) return (_MDOutBaseFlowID);
+	if (_MDOutBaseFlowID != MFUnset) return (_MDOutBaseFlowID);
 	MFDefEntering ("Base flow");
 
 	if ((_MDInRechargeID        = MDInfiltrationDef ())   == CMfailed) return (CMfailed);
@@ -151,12 +153,12 @@ int MDBaseFlowDef () {
 	if (((optStr = MFOptionGet (MDParGroundWatBETA))  != (char *) NULL) && (sscanf (optStr,"%f",&par) == 1))
 		_MDGroundWatBETA = par;
 //	if ((_MDInGrossIrrigationDemandID = MDIrrigationWaterDef()) == CMfailed)return CMfailed;
-	if ((_MDInIrrReturnFlowID         = MFVarGetID (MDVarIrrPercolationWater,    "mm", MFInput,  MFState,  false)) == CMfailed) return CMfailed;
-	if ((_MDOutGrdWatID               = MFVarGetID (MDVarGroundWater,            "mm", MFOutput, MFState, true))  == CMfailed) return CMfailed;
-	if ((_MDOutGrdWatChgID            = MFVarGetID (MDVarGroundWaterChange,      "mm", MFOutput, MFFlux,  false)) == CMfailed) return CMfailed;
-	if ((_MDOutBaseFlowID             = MFVarGetID (MDVarBaseFlow,               "mm", MFOutput, MFFlux,  true))  == CMfailed) return CMfailed;
-	if ((_MDOutGrdWaterAbstractionID  = MFVarGetID (MDVarGroundWaterAbstraction, "mm", MFOutput, MFFlux,  false)) == CMfailed) return CMfailed;
-	if ((_MDOutDischargeAbstractionID = MFVarGetID (MDVarDischargeAbstraction,   "mm", MFOutput, MFFlux,  false)) == CMfailed) return CMfailed;
+	if ((_MDInIrrReturnFlowID         = MFVarGetID (MDVarIrrPercolationWater,    "mm", MFInput,  MFState, MFBoundary)) == CMfailed) return CMfailed;
+	if ((_MDOutGrdWatID               = MFVarGetID (MDVarGroundWater,            "mm", MFOutput, MFState, MFInitial))  == CMfailed) return CMfailed;
+	if ((_MDOutGrdWatChgID            = MFVarGetID (MDVarGroundWaterChange,      "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) return CMfailed;
+	if ((_MDOutBaseFlowID             = MFVarGetID (MDVarBaseFlow,               "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) return CMfailed;
+	if ((_MDOutGrdWaterAbstractionID  = MFVarGetID (MDVarGroundWaterAbstraction, "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) return CMfailed;
+	if ((_MDOutDischargeAbstractionID = MFVarGetID (MDVarIrrUptake,              "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) return CMfailed;
 	if ((_MDInGrossIrrigationDemandID = MFVarGetID (MDVarIrrGrossIrrigationWaterDemand,          "mm", MFInput, MFState, false)) == CMfailed) return (CMfailed);
 	//if ((_MDInIrrAreaID               = MFVarGetID (MDVarIrrAreaFraction,        "%",  MFInput,  MFState, false)) == CMfailed) return CMfailed;
         if ((_MDInActIrrAreaID		  = MFVarGetID (MDVarActuallyIrrArea,	     "-",  MFInput,  MFState, false))==CMfailed)return (CMfailed);

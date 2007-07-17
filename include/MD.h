@@ -1,8 +1,8 @@
 /******************************************************************************
 
-GHAAS Model Library V1.0
+GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
-Copyright 1994-2003, University of New Hampshire
+Copyright 1994-2007, University of New Hampshire
 
 MD.h
 
@@ -17,16 +17,21 @@ balazs.fekete@unh.edu
 extern "C" {
 #endif
 
-#define MDHelpStr      "help"
 #define MDNoneStr      "none"
 #define MDInputStr     "input"
+#define MDLookupStr    "lookup"
 #define MDCalculateStr "calculate"
 #define MDOnStr        "on"
 #define MDOffStr       "off"
 
-// Modules	
-#define MDModIrrigation	"Irrigation"
-#define MDModReservoirs "Reservoirs"	
+// Options
+#define MDOptDischarge  "Discharge"
+#define MDOptIrrigation	"Irrigation"
+#define MDOptModel      "Model"
+#define MDOptReservoirs "Reservoirs"
+#define MDOptRiverbed   "Riverbed"
+#define MDOptRouting    "Routing"
+#define MDOptMuskingum  "Muskingum"
 
  //MD BGCInput
 # define MDVarNonPointTNSourcesCont				"NonPointTNSourcesCont" 
@@ -79,7 +84,9 @@ extern "C" {
 #define MDVarIrrSoilMoistureChange		"IrrSoilMoistChange"
 #define MDVarExcessAbstraction	"ExcessAbstraction"
 #define MDVarGroundWaterAbstraction	"GroundWaterAbstraction"
-#define MDVarDischargeAbstraction "DischargeAbstraction"
+#define MDVarIrrUptake "IrrUptake" // Formerly known as MDVarDischargeAbstraction
+#define MDVarIrrUptakeRiver "IrrUptakeRiver"
+#define MDVarIrrUptakeExcess "IrrUptakeExcess"
 ////////a ...
 
 #define MDVarCorrectedRunoff              "CorrectedRunoff"
@@ -156,9 +163,9 @@ extern "C" {
 #define MDVarBaseFlow                              "BaseFlow"
 
 #define MDVarDischarge                             "Discharge"
-#define MDVarDischLevel1                           "DischargeLevel1"
-#define MDVarDischLevel2                           "DischargeLevel2"
-#define MDVarDischLevel3                           "DischargeLevel3"
+#define MDVarDischLevel1                           "__DischargeLevel1"
+#define MDVarDischLevel2                           "__DischargeLevel2"
+#define MDVarDischLevel3                           "__DischargeLevel3"
 #define MDVarDischObserved                         "DischargeObserved"
 #define MDVarDischMean	                           "DischargeMean"
 
@@ -183,10 +190,11 @@ extern "C" {
 #define MDVarPrecipFraction                        "PrecipitationFraction"
 #define MDVarPrecipMonthly                         "MonthlyPrecipitation"
 #define MDVarRelHumidity	                        "RelativeHumidity"
-#define MDVarRiverCrossArea	                     "RiverCross-sectionArea"
-#define MDVarRiverSlope	                           "RiverSlope"
-#define MDVarRiverShapeExp	                   "RiverShapeExponent"
-#define MDVarRiverShapeCoeff                       "RiverShapeCoefficient"
+#define MDVarRiverbedAvgDepthMean	               "RiverbedAvgDepthMean"
+#define MDVarRiverbedCrossArea	                   "RiverbedCross-sectionArea"
+#define MDVarRiverbedSlope	                       "RiverbedSlope"
+#define MDVarRiverbedShapeExponent	               "RiverbedShapeExponent"
+#define MDVarRiverbedWidthMean	                   "RiverbedWidthMean"
 #define MDVarRiverStorage                          "RiverStorage"
 #define MDVarRiverStorageChange                    "RiverStorageChange"
 
@@ -277,7 +285,7 @@ int MDParNumberOfCrops;
 int MDVarIrrAreaFractionDef ();
 int MDVarIrrIntensityDef ();
 int MDVarIrrEfficiencyDef ();
-int MDIrrigationWaterDef();
+int MDIrrigationDef();
 int MDReferenceETPDef ();
 int MDReservoirDef ();
 
@@ -328,6 +336,7 @@ int MDPotETSWGdnDef ();
 int MDPotETTurcDef ();
 int MDPotFAOReferenceETDef ();
 int MDRelHumidityDef ();
+int MDRiverbedShapeExponentDef ();
 //int MDRootDepthDef ();
 int MDRunoffDef ();
 int MDRunoffVolumeDef ();

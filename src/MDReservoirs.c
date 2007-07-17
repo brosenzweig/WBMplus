@@ -1,11 +1,23 @@
+/******************************************************************************
+
+GHAAS Water Balance/Transport Model V3.0
+Global Hydrologic Archive and Analysis System
+Copyright 1994-2007, University of New Hampshire
+
+MDReservoirs.c
+
+dominik.wisser@unh.edu
+
+*******************************************************************************/
+
 
 #include<cm.h>
 #include<MF.h>
 #include<MD.h>
  
 // Input
-static int _MDInDischCalculateID = MFUnset;
-static int _MDInDischReferenceID = MFUnset;
+static int _MDInDischargeID      = MFUnset;
+static int _MDInDischMeanID      = MFUnset;
 static int _MDInResCapacityID    = MFUnset;
 // Output
 static int _MDOutResStorageID    = MFUnset;
@@ -29,11 +41,11 @@ static void _MDReservoir (int itemID) {
 	float drySeasonPct = .6;
 	float wetSeasonPct = 0.16;
 	
-	if (MFVarTestMissingVal (_MDInDischCalculateID, itemID) ||
-	    MFVarTestMissingVal (_MDInDischReferenceID, itemID)) discharge = meanDischarge = 0.0;
+	if (MFVarTestMissingVal (_MDInDischargeID, itemID) ||
+	    MFVarTestMissingVal (_MDInDischMeanID, itemID)) discharge = meanDischarge = 0.0;
 	else {
-		discharge     = MFVarGetFloat (_MDInDischCalculateID,  itemID);
-		meanDischarge = MFVarGetFloat (_MDInDischReferenceID,  itemID);
+		discharge     = MFVarGetFloat (_MDInDischargeID, itemID);
+		meanDischarge = MFVarGetFloat (_MDInDischMeanID, itemID);
 	}
 	if (MFVarTestMissingVal (_MDInResCapacityID,     itemID) ||
 	    ((resCapacity = MFVarGetFloat (_MDInResCapacityID, itemID)) <= 0.0)) { 
@@ -69,29 +81,26 @@ static void _MDReservoir (int itemID) {
 	MFVarSetFloat (_MDOutResReleaseID,    itemID, resRelease);
 }
 
-enum { MDhelp, MDnone, MDcalculate };
+enum { MDnone, MDcalculate };
 
 int MDReservoirDef () {
-	int optID = MDnone;
-	const char *optStr, *optName = MDModReservoirs;
-	const char *options [] = { MDHelpStr, MDNoneStr, MDCalculateStr, (char *) NULL };
+	const char *optStr, *optName = MDOptReservoirs;
+	const char *options [] = { MDNoneStr, MDCalculateStr, (char *) NULL };
   
-	if (_MDOutResReleaseID != CMfailed) return (_MDOutResReleaseID);
+	if (_MDOutResReleaseID != MFUnset) return (_MDOutResReleaseID);
 
 	MFDefEntering ("Reservoirs");
-	if (((optStr = MFOptionGet (MDModReservoirs)) != (char *) NULL) && (CMoptLookup (options, optStr, true) != MDcalculate)) {
-		CMmsgPrint (CMmsgInfo,"Help [%s options]:",optName);
-		for (optID = 1;options [optID] != (char *) NULL;++optID) CMmsgPrint (CMmsgInfo," %s",options [optID]);
-		CMmsgPrint (CMmsgInfo,"\n");
+	if (((optStr = MFOptionGet (optName)) != (char *) NULL) && (CMoptLookup (options, optStr, true) != MDcalculate)) {
+		MFOptionMessage (optName, optStr, options);
 		return (CMfailed);
 	}
 
-	if (((_MDInDischCalculateID = MDDischCalculateDef ())) == CMfailed) ||
-	    ((_MDInDischReferenceID = MDDischReferenceDef  ())) == CMfailed) ||
-	    ((_MDInResCapacityID    = MFVarGetID (MDVarReservoirCapacity,      "km3",  MFInput,  MFState, false)) == CMfailed) ||
-	    ((_MDOutResStorageID    = MFVarGetID (MDVarReservoirStorage,       "km3",  MFOutput, MFState, true))  == CMfailed) ||
-	    ((_MDOutResStorageChgID = MFVarGetID (MDVarReservoirStorageChange, "km3",  MFOutput, MFState, true))  == CMfailed) ||
-		((_MDOutResReleaseID    = MFVarGetID (MDVarReservoirRelease,       "m3/s", MFOutput, MFFlux,  false)) == CMfailed)) return (CMfailed);
+	if (((_MDInDischMeanID      = MDDischMeanDef ())   == CMfailed) ||
+	    ((_MDInDischargeID      = MDDischLevel2Def ()) == CMfailed) ||
+	    ((_MDInResCapacityID    = MFVarGetID (MDVarReservoirCapacity,      "km3",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDOutResStorageID    = MFVarGetID (MDVarReservoirStorage,       "km3",  MFOutput, MFState, MFInitial))  == CMfailed) ||
+	    ((_MDOutResStorageChgID = MFVarGetID (MDVarReservoirStorageChange, "km3",  MFOutput, MFState, MFBoundary)) == CMfailed) ||
+		((_MDOutResReleaseID    = MFVarGetID (MDVarReservoirRelease,       "m3/s", MFOutput, MFFlux,  MFBoundary)) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Reservoirs");
 	return (MFVarSetFunction(_MDOutResReleaseID,_MDReservoir)); 
 }

@@ -1,8 +1,8 @@
 /******************************************************************************
 
-GHAAS Water Balance Model Library V1.0
+GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
-Copyright 1994-2004, University of New Hampshire
+Copyright 1994-2007, University of New Hampshire
 
 MDPotET.c
 
@@ -15,34 +15,34 @@ balazs.fekete@unh.edu
 #include<MF.h>
 #include<MD.h>
 
-enum { MDhelp, MDinput, MDHamon, MDJensen, MDPsTaylor, MDPstd, MDPMday, MDPMdn, MDSWGday, MDSWGdn, MDTurc };
+static int _MDPotETID = MFUnset;
+
+enum { MDinput, MDHamon, MDJensen, MDPsTaylor, MDPstd, MDPMday, MDPMdn, MDSWGday, MDSWGdn, MDTurc };
 
 int MDPotETDef () {
-	int optID = MDinput, ret = CMfailed;
+	int optID = MDinput;
 	const char *optStr, *optName = MDVarPotEvapotrans;
-	const char *options [] = { MDHelpStr, MDInputStr, "Hamon", "Jensen", "PsTaylor", "Pstd", "PMday", "PMdn", "SWGday", "SWGdn", "Turc", (char *) NULL };
+	const char *options [] = { MDInputStr, "Hamon", "Jensen", "PsTaylor", "Pstd", "PMday", "PMdn", "SWGday", "SWGdn", "Turc", (char *) NULL };
+
+	if (_MDPotETID != MFUnset) return (_MDPotETID);
 
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options,optStr,true);
 	MFDefEntering ("PotET");
 	if (MDSPackChgDef () == CMfailed) return (CMfailed);
 
 	switch (optID) {
-		case MDinput:    ret = MFVarGetID (MDVarPotEvapotrans, "mm", MFInput, MFFlux, false); break;
-		case MDHamon:    ret = MDPotETHamonDef    (); break;
-		case MDJensen:   ret = MDPotETJensenDef   (); break;
-		case MDPsTaylor: ret = MDPotETPsTaylorDef (); break;
-		case MDPstd:     ret = MDPotETPstdDef     (); break;
-		case MDPMday:    ret = MDPotETPMdayDef    (); break;
-		case MDPMdn:     ret = MDPotETPMdnDef     (); break;
-		case MDSWGday:   ret = MDPotETSWGdayDef   (); break;
-		case MDSWGdn:    ret = MDPotETSWGdnDef    (); break;
-		case MDTurc:     ret = MDPotETTurcDef     (); break;
-		default:
-			fprintf (stderr,"Help [%s options]:",optName);
-			for (optID = 1;options [optID] != (char *) NULL;++optID) fprintf (stderr," %s",options [optID]);
-			fprintf (stderr,"\n");
-			break;
+		case MDinput:    _MDPotETID = MFVarGetID (MDVarPotEvapotrans, "mm", MFInput, MFFlux, false); break;
+		case MDHamon:    _MDPotETID = MDPotETHamonDef    (); break;
+		case MDJensen:   _MDPotETID = MDPotETJensenDef   (); break;
+		case MDPsTaylor: _MDPotETID = MDPotETPsTaylorDef (); break;
+		case MDPstd:     _MDPotETID = MDPotETPstdDef     (); break;
+		case MDPMday:    _MDPotETID = MDPotETPMdayDef    (); break;
+		case MDPMdn:     _MDPotETID = MDPotETPMdnDef     (); break;
+		case MDSWGday:   _MDPotETID = MDPotETSWGdayDef   (); break;
+		case MDSWGdn:    _MDPotETID = MDPotETSWGdnDef    (); break;
+		case MDTurc:     _MDPotETID = MDPotETTurcDef     (); break;
+		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
 	MFDefLeaving ("PotET");
-	return (ret);
+	return (_MDPotETID);
 }

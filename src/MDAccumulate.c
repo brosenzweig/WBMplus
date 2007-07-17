@@ -1,23 +1,25 @@
-/*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *******************************************************************************/
+/******************************************************************************
+
+GHAAS Water Balance/Transport Model V3.0
+Global Hydrologic Archive and Analysis System
+Copyright 1994-2007, University of New Hampshire
+
+MDAccumulate.c
+
+balazs.fekete@unh.edu
+
+*******************************************************************************/
+
 #include<stdio.h>
 #include<cm.h>
 #include<MF.h>
 #include<MD.h>
 
 //Input;
-static int _MDInPrecipID    = CMfailed;
+static int _MDInPrecipID     = MFUnset;
 
 //Output
-static int _MDOutAccPrecipID = CMfailed;
+static int _MDOutAccPrecipID = MFUnset;
 
 static void _MDAccumPrecip (int itemID) {
 	float accum;
@@ -29,11 +31,11 @@ static void _MDAccumPrecip (int itemID) {
 
 int MDAccumPrecipDef() {
 
-	if (_MDOutAccPrecipID != CMfailed) return (_MDOutAccPrecipID);
+	if (_MDOutAccPrecipID != MFUnset) return (_MDOutAccPrecipID);
 
 	MFDefEntering ("Accumulate Precipitation");
 	if ((_MDInPrecipID     = MDPrecipitationDef ()) == CMfailed) return CMfailed;
-	if ((_MDOutAccPrecipID = MFVarGetID (MDVarAccPrecipitation, "m3/s",   MFRoute,  MFState, true)) == CMfailed) return CMfailed;
+	if ((_MDOutAccPrecipID = MFVarGetID (MDVarAccPrecipitation, "m3/s",   MFRoute,  MFState, MFInitial)) == CMfailed) return CMfailed;
 	_MDOutAccPrecipID = MFVarSetFunction(_MDOutAccPrecipID,_MDAccumPrecip);
 
 	MFDefLeaving ("Accumulate Precipitation");
@@ -41,10 +43,10 @@ int MDAccumPrecipDef() {
 }
 
 //Input;
-static int _MDInEvapID      = CMfailed;
+static int _MDInEvapID      = MFUnset;
 
 //Output
-static int _MDOutAccEvapID  = CMfailed;
+static int _MDOutAccEvapID  = MFUnset;
 
 static void _MDAccumEvap (int itemID) {
 	float accum;
@@ -56,11 +58,11 @@ static void _MDAccumEvap (int itemID) {
 
 int MDAccumEvapDef() {
 
-	if (_MDOutAccEvapID != CMfailed) return (_MDOutAccEvapID);
+	if (_MDOutAccEvapID != MFUnset) return (_MDOutAccEvapID);
 
 	MFDefEntering ("Accumulate Evapotranspiration");
-	if ((_MDInEvapID     = MFVarGetID (MDVarEvapotranspiration,    "mm",   MFInput, MFFlux,  false)) == CMfailed) return CMfailed;
-	if ((_MDOutAccEvapID = MFVarGetID (MDVarAccEvapotranspiration, "m3/s", MFRoute, MFState, true))  == CMfailed) return CMfailed;
+	if ((_MDInEvapID     = MFVarGetID (MDVarEvapotranspiration,    "mm",   MFInput, MFFlux,  MFBoundary)) == CMfailed) return CMfailed;
+	if ((_MDOutAccEvapID = MFVarGetID (MDVarAccEvapotranspiration, "m3/s", MFRoute, MFState, MFInitial))  == CMfailed) return CMfailed;
 	_MDOutAccEvapID = MFVarSetFunction(_MDOutAccEvapID,_MDAccumEvap);
 
 	MFDefLeaving ("Accumulate Evapotranspiration");
@@ -68,10 +70,10 @@ int MDAccumEvapDef() {
 }
 
 //Input;
-static int _MDInSMoistChgID = CMfailed;
+static int _MDInSMoistChgID     = MFUnset;
 
 //Output
-static int _MDOutAccSMoistChgID = CMfailed;
+static int _MDOutAccSMoistChgID = MFUnset;
 
 static void _MDAccumSMoistChg (int itemID) {
 	float accum;
@@ -83,11 +85,11 @@ static void _MDAccumSMoistChg (int itemID) {
 
 int MDAccumSMoistChgDef() {
 
-	if (_MDOutAccSMoistChgID != CMfailed) return (_MDOutAccSMoistChgID);
+	if (_MDOutAccSMoistChgID != MFUnset) return (_MDOutAccSMoistChgID);
 
 	MFDefEntering ("Accumulate Soil Moisture Change");
 	if (((_MDInSMoistChgID     = MDSMoistChgDef ()) == CMfailed) ||
-	    ((_MDOutAccSMoistChgID = MFVarGetID (MDVarAccSoilMoistChange, "m3/s", MFRoute, MFState, true))  == CMfailed)) return (CMfailed);
+	    ((_MDOutAccSMoistChgID = MFVarGetID (MDVarAccSoilMoistChange, "m3/s", MFRoute, MFState, MFInitial))  == CMfailed)) return (CMfailed);
 	_MDOutAccSMoistChgID = MFVarSetFunction(_MDOutAccSMoistChgID,_MDAccumSMoistChg);
 
 	MFDefLeaving ("Accumulate Soil Moisture Change");
@@ -95,10 +97,10 @@ int MDAccumSMoistChgDef() {
 }
 
 //Input;
-static int _MDInGrdWatChgID = CMfailed;
+static int _MDInGrdWatChgID     = MFUnset;
 
 //Output
-static int _MDOutAccGrdWatChgID = CMfailed;
+static int _MDOutAccGrdWatChgID = MFUnset;
 
 static void _MDAccumGrdWatChg (int itemID) {
 	float accum;
@@ -110,11 +112,11 @@ static void _MDAccumGrdWatChg (int itemID) {
 
 int MDAccumGrdWatChgDef() {
 
-	if (_MDOutAccGrdWatChgID != CMfailed) return (_MDOutAccGrdWatChgID);
+	if (_MDOutAccGrdWatChgID != MFUnset) return (_MDOutAccGrdWatChgID);
 
 	MFDefEntering ("Accumulate Groundwater Change");
-	if (((_MDInGrdWatChgID     = MFVarGetID (MDVarGroundWaterChange,    "mm",   MFInput,  MFFlux,  false)) == CMfailed) ||
-	    ((_MDOutAccGrdWatChgID = MFVarGetID (MDVarAccGroundWaterChange, "m3/s", MFRoute,  MFState, true))  == CMfailed))
+	if (((_MDInGrdWatChgID     = MFVarGetID (MDVarGroundWaterChange,    "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+	    ((_MDOutAccGrdWatChgID = MFVarGetID (MDVarAccGroundWaterChange, "m3/s", MFRoute,  MFState, MFInitial))  == CMfailed))
 		return (CMfailed);
 	_MDOutAccGrdWatChgID = MFVarSetFunction(_MDOutAccGrdWatChgID,_MDAccumGrdWatChg);
 
@@ -124,10 +126,10 @@ int MDAccumGrdWatChgDef() {
 
 
 //Input;
-static int _MDInRunoffVolumeID    = CMfailed;
+static int _MDInRunoffVolumeID  = MFUnset;
 
 //Output
-static int _MDOutAccRunoffID    = CMfailed;
+static int _MDOutAccRunoffID    = MFUnset;
 
 static void _MDAccumRunoff (int itemID) {
 	float accum;
@@ -138,11 +140,11 @@ static void _MDAccumRunoff (int itemID) {
 
 int MDAccumRunoffDef() {
 
-	if (_MDOutAccRunoffID != CMfailed) return (_MDOutAccRunoffID);
+	if (_MDOutAccRunoffID != MFUnset) return (_MDOutAccRunoffID);
 
 	MFDefEntering ("Accumulate Runoff");
 	if (((_MDInRunoffVolumeID  = MDRunoffVolumeDef ()) == CMfailed) ||
-	    ((_MDOutAccRunoffID    = MFVarGetID (MDVarAccRunoff, "m3/s", MFRoute,  MFState, false)) == CMfailed)) return (CMfailed);
+	    ((_MDOutAccRunoffID    = MFVarGetID (MDVarAccRunoff, "m3/s", MFRoute,  MFState, MFInitial)) == CMfailed)) return (CMfailed);
 	_MDOutAccRunoffID = MFVarSetFunction(_MDOutAccRunoffID,_MDAccumRunoff);
 
 	MFDefLeaving ("Accumulate Runoff");

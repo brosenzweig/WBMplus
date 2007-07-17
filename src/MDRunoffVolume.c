@@ -1,10 +1,10 @@
 /******************************************************************************
 
-GHAAS Water Balance Model Library V1.0
+GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
-Copyright 1994-2004, University of New Hampshire
+Copyright 1994-2007, University of New Hampshire
 
-MDRunoff.c
+MDRunoffVolume.c
 
 balazs.fekete@unh.edu
 
@@ -16,9 +16,9 @@ balazs.fekete@unh.edu
 #include<MD.h>
 
 /* Input */
-static int _MDInRunoffID;
+static int _MDInRunoffID        = MFUnset;
 /* Output */
-static int _MDOutRunoffVolumeID = CMfailed;
+static int _MDOutRunoffVolumeID = MFUnset;
 
 static void _MDRunoffVolume (int itemID) {
 // if (MFVarTestMissingVal (_MDInBaseFlowID, itemID)) printf("missing baseflow in runoff!\n");
@@ -33,32 +33,27 @@ static void _MDRunoffVolume (int itemID) {
 	}
 }
  
-enum { MDhelp, MDinput, MDcalculate };
+enum { MDinput, MDcalculate };
 
 int MDRunoffVolumeDef () {
 	int optID = MDinput;
 	const char *optStr, *optName = MDVarRunoffVolume;
-	const char *options [] = { MDHelpStr, MDInputStr, MDCalculateStr, (char *) NULL };
-		if (_MDOutRunoffVolumeID != CMfailed) return (_MDOutRunoffVolumeID);
+	const char *options [] = { MDInputStr, MDCalculateStr, (char *) NULL };
+		if (_MDOutRunoffVolumeID != MFUnset) return (_MDOutRunoffVolumeID);
 
 	MFDefEntering ("Runoff Volume");
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);
 	switch (optID) {
 		case MDinput:
-			_MDOutRunoffVolumeID = MFVarGetID (MDVarRunoffVolume, "m3/s", MFInput, MFState, false);
+			_MDOutRunoffVolumeID = MFVarGetID (MDVarRunoffVolume, "m3/s", MFInput, MFState, MFBoundary);
 			break;
 		case MDcalculate:
 			if (((_MDInRunoffID        = MDRunoffDef ()) == CMfailed) ||
-			    ((_MDOutRunoffVolumeID = MFVarGetID (MDVarRunoffVolume, "m3/s", MFOutput, MFState, false)) == CMfailed))
+			    ((_MDOutRunoffVolumeID = MFVarGetID (MDVarRunoffVolume, "m3/s", MFOutput, MFState, MFBoundary)) == CMfailed))
 				return (CMfailed);
 			_MDOutRunoffVolumeID = MFVarSetFunction(_MDOutRunoffVolumeID,_MDRunoffVolume);
 			break;
-		default:
-			
-			CMmsgPrint (CMmsgInfo,"Help [%s options]:",optName);
-			for (optID = 1;options [optID] != (char *) NULL;++optID) CMmsgPrint (CMmsgInfo," %s",options [optID]);
-			CMmsgPrint (CMmsgInfo,"\n");
-			return (CMfailed);
+		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
 	MFDefLeaving  ("Runoff Volume");
 	return (_MDOutRunoffVolumeID);

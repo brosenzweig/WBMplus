@@ -1,8 +1,8 @@
 /******************************************************************************
 
-GHAAS Water Balance Model Library V1.0
+GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
-Copyright 1994-2004, University of New Hampshire
+Copyright 1994-2007, University of New Hampshire
 
 MDRelHumidity.c
 
@@ -15,18 +15,19 @@ balazs.fekete@unh.edu
 #include<MF.h>
 #include<MD.h>
 
-static int _MDInAtMeanID, _MDInVaporPressID;
+static int _MDInAtMeanID       = MFUnset;
+static int _MDInVaporPressID   = MFUnset;
 
-static int _MDOutRelHumidityID = CMfailed;
+static int _MDOutRelHumidityID = MFUnset;
 
 static void _MDRelHumidity (int itemID) {
-/* Input */
-	float airT;      /* air temperature [degree C] */
-	float vPress;    /* vapor pressure [kPa] */
-/* Output */
-	float relHumid;  /* relative humidity in fraction (0.0 - 1.0) */
-/* Local */
-	float sVPress;   /* saturated vapor pressure [kPa] */
+// Input
+	float airT;      // air temperature [degree C]
+	float vPress;    // vapor pressure [kPa]
+// Output
+	float relHumid;  // relative humidity in fraction (0.0 - 1.0)
+// Local
+	float sVPress;   // saturated vapor pressure [kPa]
 
 	if (MFVarTestMissingVal (_MDInAtMeanID,     itemID) ||
 		 MFVarTestMissingVal (_MDInVaporPressID, itemID)) { MFVarSetMissingVal (_MDOutRelHumidityID,itemID); return; }
@@ -41,32 +42,28 @@ static void _MDRelHumidity (int itemID) {
 	MFVarSetFloat (_MDOutRelHumidityID, itemID, relHumid);
 }
 
-enum { MDhelp, MDinput, MDcalc };
+enum { MDinput, MDcalc };
 
 int MDRelHumidityDef () {
 	int optID = MDinput;
 	const char *optStr, *optName = MDVarRelHumidity;
-	const char *options [] = { MDHelpStr, MDInputStr, MDCalculateStr, (char *) NULL };
+	const char *options [] = { MDInputStr, MDCalculateStr, (char *) NULL };
 	
-	if (_MDOutRelHumidityID != CMfailed) return (_MDOutRelHumidityID);
+	if (_MDOutRelHumidityID != MFUnset) return (_MDOutRelHumidityID);
 
 	MFDefEntering ("Relative Humidity");
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options,optStr,true);
 
 	switch (optID) {
-		case MDinput:  _MDOutRelHumidityID = MFVarGetID (MDVarRelHumidity,  "%", MFInput, MFState, false); break;
+		case MDinput:  _MDOutRelHumidityID = MFVarGetID (MDVarRelHumidity,  "%", MFInput, MFState, MFBoundary); break;
 		case MDcalc:
-			if (((_MDInAtMeanID       = MFVarGetID (MDVarAirTemperature, "degC",  MFInput, MFState, false)) == CMfailed) ||
-	    		 ((_MDInVaporPressID   = MFVarGetID (MDVarVaporPressure,  "kPa",   MFInput, MFState, false)) == CMfailed) ||
-		  		 ((_MDOutRelHumidityID = MFVarGetID (MDVarRelHumidity,    "mm",    MFOutput,MFState, false)) == CMfailed))
+			if (((_MDInAtMeanID       = MFVarGetID (MDVarAirTemperature, "degC",  MFInput, MFState, MFBoundary)) == CMfailed) ||
+	    		 ((_MDInVaporPressID   = MFVarGetID (MDVarVaporPressure,  "kPa",   MFInput, MFState, MFBoundary)) == CMfailed) ||
+		  		 ((_MDOutRelHumidityID = MFVarGetID (MDVarRelHumidity,    "mm",    MFOutput,MFState, MFBoundary)) == CMfailed))
 				return (CMfailed);
 			_MDOutRelHumidityID = MFVarSetFunction (_MDOutRelHumidityID,_MDRelHumidity);
 			break;
-		default:
-			fprintf (stderr,"Help [%s options]:",optName);
-			for (optID = 1;options [optID] != (char *) NULL;++optID) fprintf (stderr," %s",options [optID]);
-			fprintf (stderr,"\n");
-			return (CMfailed);
+		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
 	MFDefLeaving ("Relative Humidity");
 	return (_MDOutRelHumidityID);

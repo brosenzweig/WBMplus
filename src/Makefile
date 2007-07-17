@@ -24,7 +24,7 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDDischLevel3Cascade.o\
        $(OBJ)/MDDischLevel3Muskingum.o\
        $(OBJ)/MDDischLevel3MuskingumCoeff.o\
-       $(OBJ)/MDDischReference.o\
+       $(OBJ)/MDDischMean.o\
        $(OBJ)/MDLandCover.o\
        $(OBJ)/MDLSAreaIndex.o\
        $(OBJ)/MDHamonReferenceETP.o\
@@ -44,10 +44,10 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDPotETSWGdn.o\
        $(OBJ)/MDPotETTurc.o\
        $(OBJ)/MDPotETlib.o\
-       $(OBJ)/MDRefDischarge.o\
        $(OBJ)/MDReferenceETP.o\
        $(OBJ)/MDRelHumidity.o\
        $(OBJ)/MDReservoirs.o\
+       $(OBJ)/MDRiverbedShapeExp.o\
        $(OBJ)/MDRunoff.o\
        $(OBJ)/MDRunoffVolume.o\
        $(OBJ)/MDSMoistChg.o\

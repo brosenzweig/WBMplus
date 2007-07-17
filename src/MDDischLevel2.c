@@ -16,42 +16,41 @@ balazs.fekete@unh.edu
 #include<MD.h>
 
 // Inputs
-static int _MDInDischargeID        = MFUnset;
-static int _MDInIrrGrossDemandID   = MFUnset;
+static int _MDInDischLevel3ID      = MFUnset;
+static int _MDInIrrUptakeID        = MFUnset;
 // Outputs
 static int _MDOutIrrUptakeRiverID  = MFUnset;
 static int _MDOutIrrUptakeExcessID = MFUnset;
-static int _MDOutDischLevel2ID  = MFUnset;
+static int _MDOutDischLevel2ID     = MFUnset;
 
 static void _MDDischLevel2 (int itemID) {
 // Inputs
-	float dishRouted;      // Routed discharge [m3/s]
-	float irrGrossDemand;  // Total irrigational water uptake [mm/dt]
+	float discharge;       // Discharge [m3/s]
+	float irrUptake;       // Total irrigational water uptake [mm/dt]
 // Outputs
 	float irrUptakeRiver;  // Irrigational water uptake from river [m3/s]
 	float irrUptakeExcess; // Irrigational water uptake from unsustainable source [mm/dt]
-	float dicharge;        // Calculated discharge [m3/s]
 
-	if (MFVarTestMissingVal (_MDInDischargeID, itemID)) {
-		MFVarSetFloat (_MDOutDischCalculatedID,  itemID, 0.0);
+	if (MFVarTestMissingVal (_MDInDischLevel3ID, itemID)) {
+		MFVarSetFloat (_MDOutDischLevel2ID,  itemID, 0.0);
 	}
 	else {
-		discharge = MFVarGetFloat (_MDInDischargeID,  itemID);
-		if (_MDInIrrGrossDemandID != MFUnset) {
-			if (MFVarTestMissingVal (_MDInIrrGrossDemandID, itemID)) {
+		discharge = MFVarGetFloat (_MDInDischLevel3ID,  itemID);
+		if (_MDInIrrUptakeID != MFUnset) {
+			if (MFVarTestMissingVal (_MDInIrrUptakeID, itemID)) {
 				irrUptakeRiver  = 0.0;
 				irrUptakeExcess = 0.0;
 			}
 			else {
-				irrTotalUptake = MFVarGetFloat (_MDInIrrGrossDemandID,  itemID);
-				if (discharge > irrGrossDemand) {
-					irrUptakeRiver  = irrGrossDemand;
+				irrUptake = MFVarGetFloat (_MDInIrrUptakeID,  itemID);
+				if (discharge > irrUptake) {
+					irrUptakeRiver  = irrUptake;
 					irrUptakeExcess = 0.0;
 					discharge = discharge - irrUptakeRiver;
 				}
 				else {
 					irrUptakeRiver  = discharge;
-					irrUptakeExcess = irrGrossDemand - discharge;
+					irrUptakeExcess = irrUptake - discharge;
 					discharge = 0.0;
 				}
 			}
@@ -63,9 +62,8 @@ static void _MDDischLevel2 (int itemID) {
 }
 
 int MDDischLevel2Def() {
-	int optID = MDinput;
-	const char *optStr, *optName = MDModIrrigation;
-	const char *options [] = { MDnoneStr, (char *) NULL };
+	const char *optStr;
+	const char *options [] = { MDNoneStr, (char *) NULL };
 
 	if (_MDOutDischLevel2ID != MFUnset) return (_MDOutDischLevel2ID);
 
@@ -73,10 +71,10 @@ int MDDischLevel2Def() {
 	if (((_MDInDischLevel3ID  = MDDischLevel3Def ()) == CMfailed) ||
 	    ((_MDOutDischLevel2ID = MFVarGetID (MDVarDischLevel2,  "m/3", MFOutput, MFState, false)) == CMfailed))
 	    return (CMfailed);
-	if (((optStr = MFOptionGet (optName)) != (char *) NULL) && (CMoptLookup (options,optStr,true) != CMfailed)) {
-		if (((_MDInIrrGrossDemandID   = MFVarGetID (MDVarIrrGrossDemand,  "mm",  MFInput,  MFFlux,  false)) == CMfailed) ||
-		    ((_MDOutIrrUptakeRiverID  = MFVarGetID (MDVarIrrUptakeRiver,  "m/3", MFInput,  MFState, false)) == CMfailed) ||
-		    ((_MDOutIrrUptakeExcessID = MFVarGetID (MDVarIrrUptakeExcess, "mm",  MFOutput, MFFlux,  false)) == CMfailed))
+	if (((optStr = MFOptionGet (MDOptIrrigation)) != (char *) NULL) && (CMoptLookup (options,optStr,true) == CMfailed)) {
+		if (((_MDInIrrUptakeID        = MFVarGetID (MDVarIrrUptake,       "mm",  MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+		    ((_MDOutIrrUptakeRiverID  = MFVarGetID (MDVarIrrUptakeRiver,  "m/3", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+		    ((_MDOutIrrUptakeExcessID = MFVarGetID (MDVarIrrUptakeExcess, "mm",  MFOutput, MFFlux,  MFBoundary)) == CMfailed))
 			return (CMfailed);
 	}
 	MFDefLeaving ("Discharge Level 2");

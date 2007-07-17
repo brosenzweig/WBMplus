@@ -1,8 +1,8 @@
 /******************************************************************************
 
-GHAAS Water Balance Model Library V1.0
+GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
-Copyright 1994-2004, University of New Hampshire
+Copyright 1994-2007, University of New Hampshire
 
 MDSMoistChg.c
 
@@ -36,11 +36,21 @@ static float _MDDryingFunc (float time, float sMoist) {
 	return (sMoistChg);
 }
 
-static int _MDInFldCapaID,       _MDInWltPntID,  _MDInAirTMeanID, _MDInPotETID;
-static int _MDInInterceptID,   _MDInPrecipID,  _MDInSPackChgID;
-static int _MDInRootDepthID;
-static int _MDOutSoilMoistID, _MDOutSMoistChgID = CMfailed, _MDOutEvaptrsID;
-static int _MDAvCapID;
+// Input
+static int _MDInFldCapaID    = MFUnset;
+static int _MDInWltPntID     = MFUnset;
+static int _MDInAirTMeanID   = MFUnset;
+static int _MDInPotETID      = MFUnset;
+static int _MDInInterceptID  = MFUnset;
+static int _MDInPrecipID     = MFUnset;
+static int _MDInSPackChgID   = MFUnset;
+static int _MDInRootDepthID  = MFUnset;
+// Output
+static int _MDOutSoilMoistID = MFUnset;
+static int _MDOutSMoistChgID = MFUnset;
+static int _MDOutEvaptrsID   = MFUnset;
+static int _MDOutAvCapID        = MFUnset;
+
 static void _MDSMoistChg (int itemID) {
 	float wltPnt, fldCap,airT, precip, intercept, pet, sPackChg, sMoist, sMoistChg = 0.0, transp;
 	float rootDepth;
@@ -66,8 +76,8 @@ static void _MDSMoistChg (int itemID) {
 	sMoist    = MFVarGetFloat (_MDOutSoilMoistID,itemID);
 
 	//this has been changed by dw. 	
-	_MDAWCap=(fldCap-wltPnt)*rootDepth;	
-	MFVarSetFloat(_MDAvCapID,itemID,_MDAWCap);
+	_MDAWCap =(fldCap-wltPnt)*rootDepth;	
+	MFVarSetFloat(_MDOutAvCapID,itemID,_MDAWCap);
 	
 	// if (_MDAWCap < 0) printf("AWCAp %f FC %f PWP %f RD %f LON %f LAT %f\n",_MDAWCap,fldCap,wltPnt,rootDepth, MFModelGetLongitude(itemID),MFModelGetLatitude(itemID));	
 	//printf ("RD %f\n" , rootDepth);
@@ -95,7 +105,7 @@ static void _MDSMoistChg (int itemID) {
 }
 
 int MDSMoistChgDef () {
-	if (_MDOutSMoistChgID != CMfailed) return (_MDOutSMoistChgID);
+	if (_MDOutSMoistChgID != MFUnset) return (_MDOutSMoistChgID);
 
 	MFDefEntering ("Soil Moisture");
 	
@@ -103,15 +113,15 @@ int MDSMoistChgDef () {
 	if (((_MDInPrecipID     = MDPrecipitationDef ()) == CMfailed) ||
 	    ((_MDInPotETID      = MDPotETDef         ()) == CMfailed) ||
 	    ((_MDInInterceptID  = MDInterceptDef     ()) == CMfailed) ||
-	    ((_MDInFldCapaID    = MFVarGetID (MDVarFieldCapacity,      "mm/m", MFInput,  MFState, false)) == CMfailed) ||
-	    ((_MDInWltPntID     = MFVarGetID (MDVarWiltingPoint,       "mm/m", MFInput,  MFState, false)) == CMfailed) ||
-	    ((_MDAvCapID        = MFVarGetID (MDVarAvailWatCap,        "mm",   MFOutput, MFState, false)) == CMfailed) ||
-	    ((_MDInRootDepthID  = MFVarGetID (MDVarRootingDepth,       "mm",   MFInput,  MFState, false)) == CMfailed) ||
-	    ((_MDInAirTMeanID   = MFVarGetID (MDVarAirTemperature,     "degC", MFInput,  MFState, false)) == CMfailed) ||
-	    ((_MDInSPackChgID   = MFVarGetID (MDVarSnowPackChange,     "mm",   MFInput,  MFFlux,  false)) == CMfailed) ||
-	    ((_MDOutSoilMoistID = MFVarGetID (MDVarSoilMoisture,       "mm",   MFOutput, MFState, true))  == CMfailed) ||
-       ((_MDOutSMoistChgID = MFVarGetID (MDVarSoilMoistChange,    "mm",   MFOutput, MFFlux,  false)) == CMfailed) ||
-	    ((_MDOutEvaptrsID   = MFVarGetID (MDVarEvapotranspiration, "mm",   MFOutput, MFFlux,  false)) == CMfailed))
+	    ((_MDInFldCapaID    = MFVarGetID (MDVarFieldCapacity,      "mm/m", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInWltPntID     = MFVarGetID (MDVarWiltingPoint,       "mm/m", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInRootDepthID  = MFVarGetID (MDVarRootingDepth,       "mm",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInAirTMeanID   = MFVarGetID (MDVarAirTemperature,     "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInSPackChgID   = MFVarGetID (MDVarSnowPackChange,     "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+	    ((_MDOutAvCapID     = MFVarGetID (MDVarAvailWatCap,        "mm",   MFOutput, MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDOutSoilMoistID = MFVarGetID (MDVarSoilMoisture,       "mm",   MFOutput, MFState, MFInitial))  == CMfailed) ||
+        ((_MDOutSMoistChgID = MFVarGetID (MDVarSoilMoistChange,    "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+	    ((_MDOutEvaptrsID   = MFVarGetID (MDVarEvapotranspiration, "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed))
 		return (CMfailed);
 	MFDefLeaving ("Soil Moisture");
 	//	printf("in soil moisture def,_MDOutSMoistChgID= %i \n", _MDOutSMoistChgID);

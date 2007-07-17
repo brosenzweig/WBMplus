@@ -1,8 +1,8 @@
 /******************************************************************************
 
-GHAAS Water Balance Model Library V1.0
+GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
-Copyright 1994-2004, University of New Hampshire
+Copyright 1994-2007, University of New Hampshire
 
 MDPotETTurc.c
 
@@ -15,8 +15,9 @@ balazs.fekete@unh.edu
 #include<MF.h>
 #include<MD.h>
 
-static int _MDInAtMeanID, _MDInSolRadID;
-static int _MDOutPetID = CMfailed;
+static int _MDInAtMeanID = MFUnset;
+static int _MDInSolRadID = MFUnset;
+static int _MDOutPetID   = MFUnset;
 
 static void _MDPotETTurc (int itemID) {
 /* Turc (1961) PE in mm for day */
@@ -37,12 +38,12 @@ static void _MDPotETTurc (int itemID) {
 }
 
 int MDPotETTurcDef () {
-	if (_MDOutPetID != CMfailed) return (_MDOutPetID);
+	if (_MDOutPetID != MFUnset) return (_MDOutPetID);
 
 	MFDefEntering ("PotET Turc");
 	if (((_MDInSolRadID = MDSolarRadDef ()) == CMfailed) ||
-		 ((_MDInAtMeanID = MFVarGetID (MDVarAirTemperature, "degC",  MFInput,  MFState, false)) == CMfailed) ||
-		 ((_MDOutPetID   = MFVarGetID (MDVarPotEvapotrans,  "mm",    MFOutput, MFFlux,  false)) == CMfailed)) return (CMfailed);
+		 ((_MDInAtMeanID = MFVarGetID (MDVarAirTemperature, "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
+		 ((_MDOutPetID   = MFVarGetID (MDVarPotEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("PotET Turc");
 	return (MFVarSetFunction (_MDOutPetID,_MDPotETTurc));
 }

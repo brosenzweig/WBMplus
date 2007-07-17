@@ -1,8 +1,8 @@
 /******************************************************************************
 
-GHAAS Water Balance Modell V1.0
+GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
-Copyright 1994-2004, University of New Hampshire
+Copyright 1994-2007, University of New Hampshire
 
 WBMMain.c
 
@@ -11,13 +11,13 @@ balazs.fekete@unh.edu
 *******************************************************************************/
 #include "wbm.h"
 
-enum { MDhelp, MDpet, MDsurplus, MDinfiltration, MDrunoff, MDdischarge, MDbgc, MDbalance };
+enum { MDpet, MDsurplus, MDinfiltration, MDrunoff, MDdischarge, MDbgc, MDbalance };
 
 int main (int argc,char *argv []) {
 	int argNum;
 	int  optID = MDbalance;
-	const char *optStr, *optName = "Model";
-	const char *options [] = { MDHelpStr, "pet", "surplus", "infiltration", "runoff", "discharge", "bgc", "balance", (char *) NULL };
+	const char *optStr, *optName = MDOptModel;
+	const char *options [] = { "pet", "surplus", "infiltration", "runoff", "discharge", "bgc", "balance", (char *) NULL };
 
 	argNum = MFOptionParse (argc,argv);
 
@@ -31,11 +31,7 @@ int main (int argc,char *argv []) {
 		case MDdischarge:    return (MFModelRun (argc,argv,argNum,MDDischargeDef));
 		case MDbgc:          return (MFModelRun (argc,argv,argNum,MDBgcRoutingDef));
 		case MDbalance:      return (MFModelRun (argc,argv,argNum,MDWaterBalanceDef));
-		default:
-			CMmsgPrint (CMmsgInfo,"Help [%s options]:",optName);
-			for (optID = 1;options [optID] != (char *) NULL;++optID) CMmsgPrint (CMmsgInfo," %s",options [optID]);
-			CMmsgPrint (CMmsgInfo,"\n");
-			break;
+		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
 	return (CMfailed);
 }

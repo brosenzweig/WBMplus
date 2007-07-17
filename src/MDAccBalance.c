@@ -1,8 +1,8 @@
 /******************************************************************************
 
-GHAAS Water Balance Model Library V1.0
+GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
-Copyright 1994-2004, University of New Hampshire
+Copyright 1994-2007, University of New Hampshire
 
 MDAccBalance.c
 
@@ -16,14 +16,14 @@ balazs.fekete@unh.edu
 #include<MD.h>
 
 //Input;
-static int _MDInAccPrecipID;
-static int _MDInAccEvapID;
-static int _MDInAccSMoistChgID;
-static int _MDInAccGrdWatChgID;
-static int _MDInAccRunoffID;
+static int _MDInAccPrecipID    = MFUnset;
+static int _MDInAccEvapID      = MFUnset;
+static int _MDInAccSMoistChgID = MFUnset;
+static int _MDInAccGrdWatChgID = MFUnset;
+static int _MDInAccRunoffID    = MFUnset;
 
 //Output
-static int _MDOutAccBalanceID = CMfailed;
+static int _MDOutAccBalanceID  = MFUnset;
 
 static void _MDAccumBalance (int itemID)
 {
@@ -48,11 +48,11 @@ static void _MDAccumBalance (int itemID)
 	}
 }
 
-enum { MDhelp, MDinput, MDcalc };
+enum { MDinput, MDcalc };
 
 int MDAccumBalanceDef() {
 
-	if (_MDOutAccBalanceID != CMfailed) return (_MDOutAccBalanceID);
+	if (_MDOutAccBalanceID != MFUnset) return (_MDOutAccBalanceID);
 
 	MFDefEntering ("Accumulated Balance");
 
@@ -61,7 +61,7 @@ int MDAccumBalanceDef() {
 	    ((_MDInAccGrdWatChgID = MDAccumGrdWatChgDef()) == CMfailed) ||
 	    ((_MDInAccSMoistChgID = MDAccumSMoistChgDef()) == CMfailed) ||
 	    ((_MDInAccEvapID      = MDAccumEvapDef())      == CMfailed) ||
-	    ((_MDOutAccBalanceID  = MFVarGetID (MDVarAccBalance,  "mm",     MFOutput, MFFlux,  false)) == CMfailed)) return CMfailed;
+	    ((_MDOutAccBalanceID  = MFVarGetID (MDVarAccBalance,  "mm",     MFOutput, MFFlux,  MFBoundary)) == CMfailed)) return CMfailed;
 	_MDOutAccBalanceID = MFVarSetFunction(_MDOutAccBalanceID,_MDAccumBalance);
 
 	MFDefLeaving ("Accumulated Balance");

@@ -1,13 +1,15 @@
-/*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *******************************************************************************/
+/******************************************************************************
+
+GHAAS Water Balance/Transport Model V3.0
+Global Hydrologic Archive and Analysis System
+Copyright 1994-2007, University of New Hampshire
+
+MDWaterBalance.c
+
+dominik.wisser@unh.edu
+
+*******************************************************************************/
+
 #include<stdio.h>
 #include<math.h>
 #include<cm.h>
@@ -15,33 +17,34 @@
 #include<MD.h>
 //Water In;
 
-static int _MDInPrecipID;
-static int _MDInEvaptrsID;
-static int _MDInSnowPackChgID;
-static int _MDInSoilMoistChgID;
-static int _MDInIrrSoilMoistChgID;
-static int _MDInGrdWatChgID;
-static int _MDInRunoffID;
-static int _MDInActIrrAreaID;
-static int _MDInCropEtpID;
-static int _MDInDischargeAbstractionID;
+static int _MDInPrecipID                  = MFUnset;
+static int _MDInEvaptrsID                 = MFUnset;
+static int _MDInSnowPackChgID             = MFUnset;
+static int _MDInSoilMoistChgID            = MFUnset;
+static int _MDInIrrSoilMoistChgID         = MFUnset;
+static int _MDInGrdWatChgID               = MFUnset;
+static int _MDInRunoffID                  = MFUnset;
+static int _MDInActIrrAreaID              = MFUnset;
+static int _MDInCropEtpID                 = MFUnset;
+static int _MDInDischargeAbstractionID    = MFUnset;
 
-static int _MDInInfiltrationID;
-static int _MDInGrdWaterAbstractionID;
-static int _MDInGrossIrrDemandID;
-static int _MDInIrrigationDrainageID;
-static int _MDInExcessAbstractionID;
-static int _MDDischarge;
-static int _MDBgcRoutingID;
+static int _MDInInfiltrationID            = MFUnset;
+static int _MDInGrdWaterAbstractionID     = MFUnset;
+static int _MDInGrossIrrDemandID          = MFUnset;
+static int _MDInIrrigationDrainageID      = MFUnset;
+static int _MDInExcessAbstractionID       = MFUnset;
+static int _MDDischargeID                 = MFUnset;
+static int _MDBgcRoutingID                = MFUnset;
 //Output
-static int _MDOutWaterBalanceID;
-static int _MDOutPrecipID;
-static int  _MDDischarge;
-static int _MDInAirTemperatureID;
-static int _MDOutTotalEvapotranpirationID;
-static int _MDIsGrowingSeasonID;
-static int _MDInRefETPID;
+static int _MDOutWaterBalanceID           = MFUnset;
+static int _MDOutPrecipID                 = MFUnset;
+static int _MDInAirTemperatureID          = MFUnset;
+static int _MDOutTotalEvapotranpirationID = MFUnset;
+static int _MDIsGrowingSeasonID           = MFUnset;
+static int _MDInRefETPID                  = MFUnset;
+
 float etpThreshold=0.5;
+
 static void _MDWaterBalance(int itemID) {
 
 	if ( MFVarTestMissingVal (_MDInActIrrAreaID, itemID)) 
@@ -150,32 +153,31 @@ static void _MDWaterBalance(int itemID) {
 
 int MDWaterBalanceDef() {
 	MFDefEntering ("WaterBalance");
-	if ((                               MDAccumBalanceDef ()   == CMfailed) ||
-	    ((_MDInPrecipID               = MDPrecipitationDef ()) == CMfailed) ||
-	    ((_MDDischarge                = MDDischargeDef ())     == CMfailed) ||
-	    ((_MDBgcRoutingID              = MDBgcRoutingDef ())     == CMfailed) ||
-	    ((_MDInEvaptrsID              = MFVarGetID (MDVarEvapotranspiration,   "mm", MFInput,  MFFlux,  false)) == CMfailed) ||
-	    ((_MDInSnowPackChgID          = MFVarGetID (MDVarSnowPackChange,       "mm", MFInput,  MFFlux,  false)) == CMfailed) ||
-	    ((_MDInRefETPID  = MFVarGetID (MDVarPotEvapotrans, "mm", MFInput,  MFState, false)) == CMfailed) ||
+	if ((                                  MDAccumBalanceDef ()   == CMfailed) ||
+	    ((_MDInPrecipID                  = MDPrecipitationDef ()) == CMfailed) ||
+	    ((_MDDischargeID                 = MDDischargeDef ())     == CMfailed) ||
+	    ((_MDBgcRoutingID                = MDBgcRoutingDef ())    == CMfailed) ||
+	    ((_MDInEvaptrsID                 = MFVarGetID (MDVarEvapotranspiration,            "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+	    ((_MDInSnowPackChgID             = MFVarGetID (MDVarSnowPackChange,                "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+	    ((_MDInRefETPID                  = MFVarGetID (MDVarPotEvapotrans,                 "mm",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
 
-	    ((_MDInSoilMoistChgID         = MFVarGetID (MDVarSoilMoistChange,      "mm", MFInput,  MFFlux,  false)) == CMfailed) ||
-	    ((_MDInRunoffID               = MFVarGetID (MDVarRunoff,               "mm", MFInput,  MFFlux,  false)) == CMfailed) ||
-	    ((_MDInCropEtpID              = MFVarGetID (MDVarIrrCropETP,           "mm", MFInput,  MFFlux,  false)) == CMfailed) ||
-	    ((_MDInIrrSoilMoistChgID      = MFVarGetID(MDVarIrrSoilMoistureChange, "mm", MFInput, MFFlux,  false)) == CMfailed) ||
-	    ((_MDInGrdWatChgID            = MFVarGetID (MDVarGroundWaterChange,    "mm", MFInput, MFFlux,  false)) == CMfailed) ||
-	    ((_MDOutPrecipID		  = MFVarGetID (MDVarPrecipitationOUT,	   "mm" ,MFOutput, MFFlux,  false)) == CMfailed) ||	
-	    ((_MDInDischargeAbstractionID = MFVarGetID (MDVarDischargeAbstraction, "mm", MFInput, MFFlux,  false)) == CMfailed) ||
-	    ((_MDInInfiltrationID        = MFVarGetID (MDVarInfiltration,         "mm", MFInput, MFFlux, false)) == CMfailed)||
-	    ((_MDInIrrigationDrainageID = MFVarGetID (MDVarIrrPercolationWater,   "mm", MFInput, MFState, false)) == CMfailed) || 
-	    ((_MDInGrdWaterAbstractionID  = MFVarGetID (MDVarGroundWaterAbstraction, "mm", MFInput, MFFlux,  false)) == CMfailed)||
-	    ((_MDInActIrrAreaID            = MFVarGetID (MDVarActuallyIrrArea,      "-",  MFInput,  MFState, false)) == CMfailed) ||
-	    ((_MDInExcessAbstractionID    = MFVarGetID (MDVarExcessAbstraction,    "mm",     MFInput, MFFlux,  false)) == CMfailed) ||
-	    ((_MDInDischargeAbstractionID = MFVarGetID (MDVarDischargeAbstraction,   "mm", MFInput, MFFlux,  false)) == CMfailed) ||
-	    ((_MDOutTotalEvapotranpirationID= MFVarGetID(MDVarCombinedEvapotranspiration, "mm",MFOutput,MFState,false))==CMfailed)||
-	    ((_MDInAirTemperatureID  = MFVarGetID (MDVarAirTemperature, "degC",  MFInput,  MFState, false)) == CMfailed) ||
-	    ((_MDIsGrowingSeasonID  = MFVarGetID (MDVarIsGrowingSeasonCalc, "DoY",  MFOutput,  MFState, false)) == CMfailed)||
-	    ((_MDInGrossIrrDemandID     = MFVarGetID (MDVarIrrGrossIrrigationWaterDemand, "mm", MFInput, MFState, false)) == CMfailed)||
-	    ((_MDOutWaterBalanceID        = MFVarGetID (MDVarWaterBalance,         "mm", MFOutput, MFFlux,  false)) == CMfailed)) return (CMfailed);
+	    ((_MDInSoilMoistChgID            = MFVarGetID (MDVarSoilMoistChange,               "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+	    ((_MDInRunoffID                  = MFVarGetID (MDVarRunoff,                        "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+	    ((_MDInCropEtpID                 = MFVarGetID (MDVarIrrCropETP,                    "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+	    ((_MDInIrrSoilMoistChgID         = MFVarGetID (MDVarIrrSoilMoistureChange,         "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+	    ((_MDInGrdWatChgID               = MFVarGetID (MDVarGroundWaterChange,             "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+	    ((_MDOutPrecipID                 = MFVarGetID (MDVarPrecipitationOUT,              "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||	
+	    ((_MDInDischargeAbstractionID    = MFVarGetID (MDVarIrrUptake,                     "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+	    ((_MDInInfiltrationID            = MFVarGetID (MDVarInfiltration,                  "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+	    ((_MDInIrrigationDrainageID      = MFVarGetID (MDVarIrrPercolationWater,           "mm",   MFInput,  MFState, MFBoundary)) == CMfailed) || 
+	    ((_MDInGrdWaterAbstractionID     = MFVarGetID (MDVarGroundWaterAbstraction,        "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+	    ((_MDInActIrrAreaID              = MFVarGetID (MDVarActuallyIrrArea,               "-",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInExcessAbstractionID       = MFVarGetID (MDVarExcessAbstraction,             "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+	    ((_MDOutTotalEvapotranpirationID = MFVarGetID (MDVarCombinedEvapotranspiration,    "mm",   MFOutput, MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInAirTemperatureID          = MFVarGetID (MDVarAirTemperature,                "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDIsGrowingSeasonID           = MFVarGetID (MDVarIsGrowingSeasonCalc,           "DoY",  MFOutput, MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInGrossIrrDemandID          = MFVarGetID (MDVarIrrGrossIrrigationWaterDemand, "mm",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDOutWaterBalanceID           = MFVarGetID (MDVarWaterBalance,                  "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed)) return (CMfailed);
 	_MDOutWaterBalanceID = MFVarSetFunction(_MDOutWaterBalanceID,_MDWaterBalance);
 	
 	MFDefLeaving ("WaterBalance");

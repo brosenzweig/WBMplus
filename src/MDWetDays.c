@@ -1,15 +1,14 @@
-/* 
+/******************************************************************************
 
-GHAAS Water Balance Model Library V1.0
+GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
-Copyright 1994-2004, University of New Hampshire
+Copyright 1994-2007, University of New Hampshire
 
 MDWetDays.c
 
 balazs.fekete@unh.edu
 
-*/
- 
+*******************************************************************************/
 
 #include<stdio.h>
 #include<math.h>
@@ -17,12 +16,16 @@ balazs.fekete@unh.edu
 #include<MF.h>
 #include<MD.h>
 
-static int _MDInPrecipID, _MDInAlphaID, _MDInBetaID;
-static int _MDOutWetDaysID = CMfailed;
+// Input
+static int _MDInPrecipID   = MFUnset;
+static int _MDInAlphaID    = MFUnset;
+static int _MDInBetaID     = MFUnset;
+// Output
+static int _MDOutWetDaysID = MFUnset;
 
 static void _MDWetDays (int itemID)
 	{
-// Input /
+// Input
 	float precip;
 	float alpha;
 	float beta;
@@ -47,35 +50,31 @@ static void _MDWetDays (int itemID)
 	MFVarSetInt (_MDOutWetDaysID,itemID,wetDays);
 	}
 
-enum { MDhelp, MDinput, MDlbg };
+enum { MDinput, MDlbg };
 
 int MDWetDaysDef ()
 	{
 	int optID = MDinput;
 	const char *optStr, *optName = MDVarWetDays;
-	const char *options [] = { MDHelpStr, MDInputStr, "LBG", (char *) NULL };
+	const char *options [] = { MDInputStr, "LBG", (char *) NULL };
 
-	if (_MDOutWetDaysID != CMfailed) return (_MDOutWetDaysID);
+	if (_MDOutWetDaysID != MFUnset) return (_MDOutWetDaysID);
 
 	MFDefEntering ("Wet Days");
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options,optStr,true);
 
 	switch (optID)
 		{
-		case MDinput:  _MDOutWetDaysID = MFVarGetID (MDVarWetDays,           " ", MFInput,   MFState, false); break;
+		case MDinput: _MDOutWetDaysID = MFVarGetID (MDVarWetDays,   MFNoUnit, MFInput,  MFState, MFBoundary); break;
 		case MDlbg:
-			if (((_MDInPrecipID   = MFVarGetID (MDVarPrecipitation, "mm", MFInput,  MFFlux,  false)) == CMfailed) ||
-				 ((_MDInAlphaID    = MFVarGetID (MDVarWetDaysAlpha,  " ",  MFInput,  MFState, false)) == CMfailed) ||
-				 ((_MDInBetaID     = MFVarGetID (MDVarWetDaysBeta,   " ",  MFInput,  MFState, false)) == CMfailed) ||
-	   		 ((_MDOutWetDaysID = MFVarGetID (MDVarWetDays,       "  ", MFOutput, MFFlux,  false)) == CMfailed))
+			if (((_MDInPrecipID   = MFVarGetID (MDVarPrecipitation, "mm",     MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+			    ((_MDInAlphaID    = MFVarGetID (MDVarWetDaysAlpha,  MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDInBetaID     = MFVarGetID (MDVarWetDaysBeta,   MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDOutWetDaysID = MFVarGetID (MDVarWetDays,       MFNoUnit, MFOutput, MFFlux,  MFBoundary)) == CMfailed))
 				return (CMfailed);
 			_MDOutWetDaysID = MFVarSetFunction (_MDOutWetDaysID,_MDWetDays); 
 			break;
-		default:
-			fprintf (stderr,"Help [%s options]:",optName);
-			for (optID = 1;options [optID] != (char *) NULL;++optID) fprintf (stderr," %s",options [optID]);
-			fprintf (stderr,"\n");
-			return (CMfailed);
+		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 		}
 	MFDefLeaving ("Wet Days");
 	return (_MDOutWetDaysID);

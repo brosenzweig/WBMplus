@@ -15,10 +15,10 @@ balazs.fekete@unh.edu
 #include<MF.h>
 #include<MD.h>
 
-static int _MDInAccumDischargeID;
-static int _MDInAvgNStepsID;
+static int _MDInAccumDischargeID = MFUnset;
+static int _MDInAvgNStepsID      = MFUnset;
 
-static int _MDOutDischMeanID = CMfailed;
+static int _MDOutDischMeanID     = MFUnset;
 
 static void _MDDischMean (int itemID) {
 	int   nSteps;
@@ -37,12 +37,12 @@ static void _MDDischMean (int itemID) {
 	}
 }
 
-enum { MDhelp, MDinput, MDcalculate };
+enum { MDinput, MDcalculate };
 
 int MDDischMeanDef () {
 	int  optID = MDinput;
 	const char *optStr, *optName = MDVarDischMean;
-	const char *options [] = { MDHelpStr, MDInputStr, MDCalculateStr, (char *) NULL };
+	const char *options [] = { MDInputStr, MDCalculateStr, (char *) NULL };
 
 	if (_MDOutDischMeanID != CMfailed) return (_MDOutDischMeanID);
 	MFDefEntering ("Discharge Mean");
@@ -50,19 +50,15 @@ int MDDischMeanDef () {
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);
 
 	switch (optID) {
-		case MDinput: _MDOutDischMeanID  = MFVarGetID (MDVarDischMean, "m3/s", MFInput,  MFState, false); break;
+		case MDinput: _MDOutDischMeanID  = MFVarGetID (MDVarDischMean, "m3/s", MFInput,  MFState, MFBoundary); break;
 		case MDcalculate:
 			if (((_MDInAvgNStepsID       = MDAvgNStepsDef ())   == CMfailed) ||
 			    ((_MDInAccumDischargeID  = MDAccumRunoffDef ()) == CMfailed) ||
-			    ((_MDOutDischMeanID      = MFVarGetID (MDVarDischMean, "m3/s", MFOutput, MFState, true))  == CMfailed))
+			    ((_MDOutDischMeanID      = MFVarGetID (MDVarDischMean, "m3/s", MFOutput, MFState, MFInitial))  == CMfailed))
 				return (CMfailed);
-			_MDOutDischMeanID =	MFVarSetFunction(_MDOutDischMeanID,_MDDischMean)
+			_MDOutDischMeanID =	MFVarSetFunction(_MDOutDischMeanID,_MDDischMean);
 			break;
-		default:
-			CMmsgPrint (CMmsgInfo,"Help [%s options]:",optName);
-			for (optID = 1;options [optID] != (char *) NULL;++optID) CMmsgPrint (CMmsgInfo," %s",options [optID]);
-			CMmsgPrint (CMmsgInfo,"\n");
-			return (CMfailed);
+		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
 	MFDefLeaving ("Discharge Mean");
 	return (_MDOutDischMeanID);

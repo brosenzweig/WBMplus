@@ -1,6 +1,6 @@
 /******************************************************************************
 
-GHAAS Water Balance Model Library V1.0
+GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
 Copyright 1994-2007, University of New Hampshire
 
@@ -15,7 +15,8 @@ balazs.fekete@unh.edu
 #include<MF.h>
 #include<MD.h>
 
-static int _MDOutAvgNStepsID = CMfailed;
+// Output
+static int _MDOutAvgNStepsID = MFUnset;
 
 static void _MDAvgNSteps (int itemID) {
 	int nStep;
@@ -28,9 +29,9 @@ static void _MDAvgNSteps (int itemID) {
 }
 int MDAvgNStepsDef () {
 
-	if (_MDOutAvgNStepsID != CMfailed) return (_MDOutAvgNStepsID);
+	if (_MDOutAvgNStepsID != MFUnset) return (_MDOutAvgNStepsID);
 	MFDefEntering ("Average NSteps");
-	if ((_MDOutAvgNStepsID = MFVarGetID (MDVarAvgNSteps, MFNoUnit, MFInt,    MFState,  true)) == CMfailed)
+	if ((_MDOutAvgNStepsID = MFVarGetID (MDVarAvgNSteps, MFNoUnit, MFInt,    MFState,  MFInitial)) == CMfailed)
 		return (CMfailed);
 	MFDefLeaving ("Average NSteps");
 	return (MFVarSetFunction(_MDOutAvgNStepsID,_MDAvgNSteps));
