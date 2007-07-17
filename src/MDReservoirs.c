@@ -1,25 +1,16 @@
-/*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *******************************************************************************/
+
 #include<cm.h>
 #include<MF.h>
 #include<MD.h>
  
 // Input
-static int _MDInDischCalculatedID = MFUnset;
-static int _MDInDischReferenceID  = MFUnset;
-static int _MDInResCapacityID     = MFUnset;
+static int _MDInDischCalculateID = MFUnset;
+static int _MDInDischReferenceID = MFUnset;
+static int _MDInResCapacityID    = MFUnset;
 // Output
-static int _MDOutResStorageID     = MFUnset;
-static int _MDOutResStorageChgID  = MFUnset;
-static int _MDOutResReleaseID     = MFUnset;
+static int _MDOutResStorageID    = MFUnset;
+static int _MDOutResStorageChgID = MFUnset;
+static int _MDOutResReleaseID    = MFUnset;
 
 static void _MDReservoir (int itemID) {
 
@@ -38,11 +29,11 @@ static void _MDReservoir (int itemID) {
 	float drySeasonPct = .6;
 	float wetSeasonPct = 0.16;
 	
-	if (MFVarTestMissingVal (_MDInDischCalculatedID, itemID) ||
-	    MFVarTestMissingVal (_MDInDischReferenceID,  itemID)) discharge = meanDischarge = 0.0;
+	if (MFVarTestMissingVal (_MDInDischCalculateID, itemID) ||
+	    MFVarTestMissingVal (_MDInDischReferenceID, itemID)) discharge = meanDischarge = 0.0;
 	else {
-		discharge     = MFVarGetFloat (_MDInDischCalculatedID,  itemID);
-		meanDischarge = MFVarGetFloat (_MDInDischReferenceID,   itemID);
+		discharge     = MFVarGetFloat (_MDInDischCalculateID,  itemID);
+		meanDischarge = MFVarGetFloat (_MDInDischReferenceID,  itemID);
 	}
 	if (MFVarTestMissingVal (_MDInResCapacityID,     itemID) ||
 	    ((resCapacity = MFVarGetFloat (_MDInResCapacityID, itemID)) <= 0.0)) { 
@@ -95,7 +86,7 @@ int MDReservoirDef () {
 		return (CMfailed);
 	}
 
-	if (((_MDInDischCalculateID = MDDischCalculatedDef ())) == CMfailed) ||
+	if (((_MDInDischCalculateID = MDDischCalculateDef ())) == CMfailed) ||
 	    ((_MDInDischReferenceID = MDDischReferenceDef  ())) == CMfailed) ||
 	    ((_MDInResCapacityID    = MFVarGetID (MDVarReservoirCapacity,      "km3",  MFInput,  MFState, false)) == CMfailed) ||
 	    ((_MDOutResStorageID    = MFVarGetID (MDVarReservoirStorage,       "km3",  MFOutput, MFState, true))  == CMfailed) ||

@@ -1,6 +1,6 @@
 /******************************************************************************
 
-GHAAS Water Balance Model Library V1.0
+GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
 Copyright 1994-2007, University of New Hampshire
 
@@ -21,9 +21,9 @@ static int _MDInIrrGrossDemandID   = MFUnset;
 // Outputs
 static int _MDOutIrrUptakeRiverID  = MFUnset;
 static int _MDOutIrrUptakeExcessID = MFUnset;
-static int _MDOutDischCalculateID  = MFUnset;
+static int _MDOutDischLevel2ID  = MFUnset;
 
-static void _MDDischCalculate (int itemID) {
+static void _MDDischLevel2 (int itemID) {
 // Inputs
 	float dishRouted;      // Routed discharge [m3/s]
 	float irrGrossDemand;  // Total irrigational water uptake [mm/dt]
@@ -58,20 +58,20 @@ static void _MDDischCalculate (int itemID) {
 			MFVarSetFloat (_MDOutIrrUptakeRiverID,  itemID, irrUptakeRiver);
 			MFVarSetFloat (_MDOutIrrUptakeExcessID, itemID, irrUptakeExcess);
 		}
-		MFVarSetFloat (_MDOutRoutedDischargeID,  itemID, discharge);
+		MFVarSetFloat (_MDOutDischLevel2ID,  itemID, discharge);
 	}
 }
 
-int MDDischCalculateDef() {
+int MDDischLevel2Def() {
 	int optID = MDinput;
 	const char *optStr, *optName = MDModIrrigation;
 	const char *options [] = { MDnoneStr, (char *) NULL };
 
-	if (_MDOutDischCalculatedID != MFUnset) return (_MDOutDischCalculatedID);
+	if (_MDOutDischLevel2ID != MFUnset) return (_MDOutDischLevel2ID);
 
-	MFDefEntering ("Discharge Calculated");
-	if (((_MDInDischRoutedID = MDDischRouteDef ()) == CMfailed) ||
-	    ((_MDOutDischCalculatedID = MFVarGetID (MDVarDischCalculated,  "m/3", MFOutput, MFState, false)) == CMfailed))
+	MFDefEntering ("Discharge Level 2");
+	if (((_MDInDischLevel3ID  = MDDischLevel3Def ()) == CMfailed) ||
+	    ((_MDOutDischLevel2ID = MFVarGetID (MDVarDischLevel2,  "m/3", MFOutput, MFState, false)) == CMfailed))
 	    return (CMfailed);
 	if (((optStr = MFOptionGet (optName)) != (char *) NULL) && (CMoptLookup (options,optStr,true) != CMfailed)) {
 		if (((_MDInIrrGrossDemandID   = MFVarGetID (MDVarIrrGrossDemand,  "mm",  MFInput,  MFFlux,  false)) == CMfailed) ||
@@ -79,6 +79,6 @@ int MDDischCalculateDef() {
 		    ((_MDOutIrrUptakeExcessID = MFVarGetID (MDVarIrrUptakeExcess, "mm",  MFOutput, MFFlux,  false)) == CMfailed))
 			return (CMfailed);
 	}
-	MFDefLeaving ("Discharge Calculated");
-	return (MFVarSetFunction(_MDOutDischCalculatedID,_MDDischCalculate));
+	MFDefLeaving ("Discharge Level 2");
+	return (MFVarSetFunction(_MDOutDischLevel2ID,_MDDischLevel2));
 }

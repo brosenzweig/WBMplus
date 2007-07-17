@@ -156,9 +156,11 @@ extern "C" {
 #define MDVarBaseFlow                              "BaseFlow"
 
 #define MDVarDischarge                             "Discharge"
-#define MDVarDischObserved                         "ObservedDischarge"
-#define MDVarDischCalculated                       "CalculatedDischarge"
-#define MDVarDischReference	                       "ReferenceDischarge"
+#define MDVarDischLevel1                           "DischargeLevel1"
+#define MDVarDischLevel2                           "DischargeLevel2"
+#define MDVarDischLevel3                           "DischargeLevel3"
+#define MDVarDischObserved                         "DischargeObserved"
+#define MDVarDischMean	                           "DischargeMean"
 
 #define MDVarEvapotranspiration                    "Evapotranspiration"
 #define MDVarGrossRadiance                         "GrossRadiance"
@@ -300,14 +302,14 @@ int MDCParamGLMaxDef ();
 int MDCParamLPMaxDef ();
 int MDCParamZ0gDef ();
 int MDDischargeDef ();
-int MDDischCalculate ();
-int MDDischCalcRoute ();
-int MDDischCalcRouteAccumulateDef ();
-int MDDischCalcRouteMuskingumDef ();
-int MDDischCalcRouteCascadeDef ();
-int MDDischReferenceDef ();
-int MDDischSimulatedDef ();
-int MDDischCalculatedDef ();
+int MDDischLevel1Def ();
+int MDDischLevel2Def ();
+int MDDischLevel3Def ();
+int MDDischLevel3AccumulateDef ();
+int MDDischLevel3CascadeDef ();
+int MDDischLevel3MuskingumDef ();
+int MDDischLevel3MuskingumCoeffDef ();
+int MDDischMeanDef ();
 int MDGrossRadDef ();
 int MDHamonReferenceETPDef ();
 int MDLandCoverDef ();

@@ -1,10 +1,10 @@
 /******************************************************************************
 
-GHAAS Water Balance Model Library V1.0
+GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
 Copyright 1994-2007, University of New Hampshire
 
-MDDischReference.c
+MDDischMean.c
 
 balazs.fekete@unh.edu
 
@@ -18,44 +18,45 @@ balazs.fekete@unh.edu
 static int _MDInAccumDischargeID;
 static int _MDInAvgNStepsID;
 
-static int _MDOutDischReferenceID = CMfailed;
+static int _MDOutDischMeanID = CMfailed;
 
-static void _MDDischReference (int itemID) {
+static void _MDDischMean (int itemID) {
 	int   nSteps;
 	float accumDisch;
-	float dischRef;
+	float dischMean;
 
 	if (MFVarTestMissingVal (_MDInAccumDischargeID,   itemID) ||
 	    MFVarTestMissingVal (_MDInAvgNStepsID,       itemID) ||
-	    MFVarTestMissingVal (_MDOutDischReferenceID, itemID)) MFVarSetFloat (_MDOutDischReferenceID, itemID, 0.0);
+	    MFVarTestMissingVal (_MDOutDischMeanID, itemID)) MFVarSetFloat (_MDOutDischMeanID, itemID, 0.0);
 	else {
 		accumDisch = MFVarGetFloat (_MDInAccumDischargeID,  itemID);
 		nSteps     = MFVarGetInt   (_MDInAvgNStepsID,       itemID);
-		dischRef   = MFVarGetFloat (_MDOutDischReferenceID, itemID);
-		dischRef = (float) (((double) dischRef * (double) nSteps + accumDisch) / ((double) (nSteps + 1)));
-		MFVarSetFloat (_MDOutDischReferenceID, itemID, dischRef);
+		dischMean  = MFVarGetFloat (_MDOutDischMeanID, itemID);
+		dischMean  = (float) (((double) dischMean * (double) nSteps + accumDisch) / ((double) (nSteps + 1)));
+		MFVarSetFloat (_MDOutDischMeanID, itemID, dischMean);
 	}
 }
 
 enum { MDhelp, MDinput, MDcalculate };
 
-int MDDischReferenceDef () {
+int MDDischMeanDef () {
 	int  optID = MDinput;
-	const char *optStr, *optName = MDVarDischReference;
+	const char *optStr, *optName = MDVarDischMean;
 	const char *options [] = { MDHelpStr, MDInputStr, MDCalculateStr, (char *) NULL };
 
-	if (_MDOutDischReferenceID != CMfailed) return (_MDOutDischReferenceID);
-	MFDefEntering ("Reference Discharge");
+	if (_MDOutDischMeanID != CMfailed) return (_MDOutDischMeanID);
+	MFDefEntering ("Discharge Mean");
 
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);
 
 	switch (optID) {
-		case MDinput: _MDOutDischReferenceID  = MFVarGetID (MDVarDischReference, "m3/s", MFInput, MFState, true); break;
+		case MDinput: _MDOutDischMeanID  = MFVarGetID (MDVarDischMean, "m3/s", MFInput,  MFState, false); break;
 		case MDcalculate:
-			if (((_MDInAvgNStepsID      = MDAvgNStepsDef ())   == CMfailed) ||
-			    ((_MDInAccumDischargeID = MDAccumRunoffDef ()) == CMfailed) ||
-			    ((_MDOutDischReferenceID = MFVarGetID (MDVarDischReference, "m3/s",  MFOutput, MFState, true))  == CMfailed))
-			return (CMfailed);
+			if (((_MDInAvgNStepsID       = MDAvgNStepsDef ())   == CMfailed) ||
+			    ((_MDInAccumDischargeID  = MDAccumRunoffDef ()) == CMfailed) ||
+			    ((_MDOutDischMeanID      = MFVarGetID (MDVarDischMean, "m3/s", MFOutput, MFState, true))  == CMfailed))
+				return (CMfailed);
+			_MDOutDischMeanID =	MFVarSetFunction(_MDOutDischMeanID,_MDDischMean)
 			break;
 		default:
 			CMmsgPrint (CMmsgInfo,"Help [%s options]:",optName);
@@ -63,6 +64,6 @@ int MDDischReferenceDef () {
 			CMmsgPrint (CMmsgInfo,"\n");
 			return (CMfailed);
 	}
-	MFDefLeaving ("Reference Discharge");
-	return (MFVarSetFunction(_MDOutDischReferenceID,_MDDischReference));
+	MFDefLeaving ("Discharge Mean");
+	return (_MDOutDischMeanID);
 }

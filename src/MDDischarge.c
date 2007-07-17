@@ -1,6 +1,6 @@
 /******************************************************************************
 
-GHAAS Water Balance Model Library V1.0
+GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
 Copyright 1994-2007, University of New Hampshire
 
@@ -16,8 +16,8 @@ balazs.fekete@unh.edu
 #include<MD.h>
 
 // Input
-static int _MDInDischSimulatedID = MFUnset;
-static int _MDInDischObservedID  = MFUnset;
+static int _MDInDischLevel1ID   = MFUnset;
+static int _MDInDischObservedID = MFUnset;
 
 // Output
 static int _MDOutDischargeID     = MFUnset;
@@ -25,13 +25,10 @@ static int _MDOutDischargeID     = MFUnset;
 static void _MDDischarge (int itemID) {
 	float discharge;
 
-	if (MFVarTestMissingVal (_MDInDischSimulatedID, itemID)) discharge = 0.0;
-	else discharge = MFVarGetFloat (_MDInDischSimulatedID, itemID);
-
 	if ((_MDInDischObservedID != MFUnset) && (!MFVarTestMissingVal (_MDInDischObservedID, itemID)))
 		discharge = MFVarGetFloat (_MDInDischObservedID, itemID);
-	else if (MFVarTestMissingVal (_MDInDischSimulatedID, itemID)) discharge = 0.0;
-	else discharge = MFVarGetFloat (_MDInDischSimulatedID, itemID);
+	else if (MFVarTestMissingVal (_MDInDischLevel1ID, itemID)) discharge = 0.0;
+	else discharge = MFVarGetFloat (_MDInDischLevel1ID, itemID);
 
 	MFVarSetFloat (_MDOutDischargeID, itemID, discharge);
 }
@@ -51,8 +48,8 @@ int MDDischargeDef() {
 			if ((_MDInDischObservedID   = MFVarGetID (MDVarDischObserved, "m3/s",  MFInput,  MFState, false)) == CMfailed)
 				return (CMfailed);
 		case MDsimulated:
-			if (((_MDOutDischargeID     = MFVarGetID (MDVarDischarge,     "m3/s",  MFRoute,  MFState, false)) == CMfailed) ||
-				((_MDInDischSimulatedID = MDDischSimulatedDef ()) == CMfailed))
+			if (((_MDOutDischargeID     = MFVarGetID (MDVarDischarge,     "m3/s",  MFRoute,  MFState, true))  == CMfailed) ||
+				((_MDInDischLevel1ID    = MDDischLevel1Def ()) == CMfailed))
 			    return (CMfailed);
 			break;
 		default:

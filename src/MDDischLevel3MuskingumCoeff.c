@@ -10,6 +10,12 @@ balazs.fekete@unh.edu
 
 *******************************************************************************/
 
+#include<stdio.h>
+#include<math.h>
+#include<cm.h>
+#include<MF.h>
+#include<MD.h>
+
 // Input
 static int _MDInDischargeID             = MFUnset;
 static int _MDInRiverbedAvgDepthMeanID  = MFUnset;
@@ -40,16 +46,16 @@ static void _MDDischRouteMuskingumCoeff (int itemID) {
 	float dL;               // Cell length [m]
 	
 	dL = MFModelGetLength (itemID);
-	if (MFMathEqualValues (dL, 0.0) ||                                                         // Zero length river reach
-	    MFVarTestMissingVal (_MDInRiverSlopeID,          itemID) ||                            // Missing slope
-	    MFVarTestMissingVal (_MDInDischargeID,           itemID) ||                            // Missing discharge
-	    MFVarTestMissingVal (_MDInRiverbedAvgDepthMean,  itemID) ||                            // Missing average depth at mean discharge
-	    MFVarTestMissingVal (_MDInRiverbedWidthMean,     itemID) ||                            // Missing width at mean discharge
-	    MFVarTestMissingVal (_MDInRiverbedShapeExponent, itemID) ||                            // Missing riverbed shape exponent 
-	    MFMathEqualValues (discharge = fabs(MFVarGetFloat(_MDInDischargeID, itemID)),  0.0) || // Zero discharge
-	    MFMathEqualValues (slope = MFVarGetFloat(_MDInRiverSlopeID, itemID) / 1000.0,  0.0) || // Zero slope
-	    MFMathEqualValues (yMean = MFVarGetFloat(_MDInRiverbedAvgDepthMeanID, itemID), 0.0) || // Zero average depth at mean discharge
-	    MFMathEqualValues (wMean = MFVarGetFloat(_MDInRiverbedAWidthMeanID, itemID),   0.0) || // Zero width at mean discharge
+	if (MFMathEqualValues (dL, 0.0) ||                                                            // Zero length river reach
+	    MFVarTestMissingVal (_MDInRiverbedSlopeID,         itemID) ||                             // Missing slope
+	    MFVarTestMissingVal (_MDInDischargeID,             itemID) ||                             // Missing discharge
+	    MFVarTestMissingVal (_MDInRiverbedAvgDepthMeanID,  itemID) ||                             // Missing average depth at mean discharge
+	    MFVarTestMissingVal (_MDInRiverbedWidthMeanID,     itemID) ||                             // Missing width at mean discharge
+	    MFVarTestMissingVal (_MDInRiverbedShapeExponentID, itemID) ||                             // Missing riverbed shape exponent 
+	    MFMathEqualValues (discharge = fabs(MFVarGetFloat(_MDInDischargeID, itemID)),     0.0) || // Zero discharge
+	    MFMathEqualValues (slope = MFVarGetFloat(_MDInRiverbedSlopeID, itemID) / 1000.0,  0.0) || // Zero slope
+	    MFMathEqualValues (yMean = MFVarGetFloat(_MDInRiverbedAvgDepthMeanID,    itemID), 0.0) || // Zero average depth at mean discharge
+	    MFMathEqualValues (wMean = MFVarGetFloat(_MDInRiverbedWidthMeanID,       itemID), 0.0) || // Zero width at mean discharge
 	    ((xi = MFVarGetFloat(_MDInRiverbedShapeExponentID, itemID)) < 0.0)) {                  // Negative riverbed shape exponent
 	    // Falling back to flow-accumulation
 		MFVarSetFloat (_MDOutMuskingumC0ID, itemID, 1.0);
@@ -57,10 +63,10 @@ static void _MDDischRouteMuskingumCoeff (int itemID) {
 		MFVarSetFloat (_MDOutMuskingumC2ID, itemID, 0.0);
 		return;
 	}
-	dt = MFModelGet_dt; 
+	dt = MFModelGet_dt (); 
 
-	C = xi * (discharge / (yMean * wMean)) * dt / dl;
-	D = yMean / (dL * slope * (xi / (xi + xi * 2/3 + 1));
+	C = xi * (discharge / (yMean * wMean)) * dt / dL;
+	D = yMean / (dL * slope * (xi / (xi + xi * 2/3 + 1)));
 
 	C0 = (-1 + C + D) / (1 + C + D);
 	C1 = ( 1 + C - D) / (1 + C + D);
@@ -79,7 +85,7 @@ int MDDischRouteMuskingumCoeffDef () {
 	const char *optStr, *optName = "Muskingum";
 	const char *options [] = { MDHelpStr, MDInputStr, "static", "dynamic", (char *) NULL };
 
-	if (_MDOutMuskingumC0 != MFUnset) return (_MDOutMuskingumC0);
+	if (_MDOutMuskingumC0ID != MFUnset) return (_MDOutMuskingumC0ID);
 
 	MFDefEntering ("Muskingum Coefficients");
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);
@@ -91,7 +97,7 @@ int MDDischRouteMuskingumCoeffDef () {
 				return (CMfailed);
 			break;
 		case MDstatic:
-			if ((_MDInDischargeID = MDDischReferenceDef ()) == CMfailed) return (CMfailed);
+			if ((_MDInDischargeID = MDDischMeanDef ()) == CMfailed) return (CMfailed);
 		case MDdynamic:
 			if (_MDInDischargeID == MFUnset) {
 				_MDInDischargeID = MFVarGetID (MDVarRiverDischarge,     "m3/s",  MFInput,  MFState, false);

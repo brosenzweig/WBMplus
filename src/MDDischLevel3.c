@@ -1,10 +1,10 @@
 /******************************************************************************
 
-GHAAS Water Balance Model Library V1.0
+GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
 Copyright 1994-2007, University of New Hampshire
 
-MDDischCalculated.c
+MDDischLevel3.c
 
 balazs.fekete@unh.edu
 
@@ -17,25 +17,28 @@ balazs.fekete@unh.edu
 
 enum { MDhelp, MDaccumulate, MDmuskingum, MDcascade };
 
-int MDDischRouteDef() {
-	int optID = MDaccumulate, ret;
+static int _MDDischLevel3ID = MFUnset;
+
+int MDDischLevel3Def() {
+	int optID = MDaccumulate;
 	const char *optStr, *optName = MDModDischRoute;
 	const char *options []    = { MDHelpStr, "accumulate", "muskingum", "cascade", (char *) NULL };
 
-	MFDefEntering ("Route Discharge");
+	if (_MDDischLevel3ID != MFUnset) return (_MDDischLevel3ID);
+
+	MFDefEntering ("Discharge Level 3");
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options,optStr,true);
-	if (((optStr = MFOptionGet (MDModIrrigation)) != (char *) NULL) &&
-	    ((irrOptID = CMoptLookup (irrOptions, optStr, true)) == CMfailed) optID = MDhelp; 
+
 	switch (optID) {
-		case MDaccumulate: ret = MDDischRouteAccumulateDef (); break;
-		case MDmuskingum:  ret = MDDischRouteMuskingumDef  (); break;
-		case MDcascade:    ret = MDDischRouteCascadeDef    (); break;
+		case MDaccumulate: _MDDischLevel3ID = MDDischLevel3AccumulateDef (); break;
+		case MDmuskingum:  _MDDischLevel3ID = MDDischLevel3MuskingumDef  (); break;
+		case MDcascade:    _MDDischLevel3ID = MDDischLevel3CascadeDef    (); break;
 		default:
 			CMmsgPrint (CMmsgInfo,"Help [%s options]:",optName);
 			for (optID = 1;options [optID] != (char *) NULL;++optID) CMmsgPrint (CMmsgInfo," %s",options [optID]);
 			CMmsgPrint (CMmsgInfo,"\n");
 			return (CMfailed);
 	}
-	MFDefLeaving ("Route Discharge");
-	return (ret));
+	MFDefLeaving ("Discharge Level 3");
+	return (_MDDischLevel3ID));
 }

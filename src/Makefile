@@ -17,12 +17,14 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDBaseFlow.o\
        $(OBJ)/MDCParams.o\
        $(OBJ)/MDDischarge.o\
-       $(OBJ)/MDDischCalculate.o\
-       $(OBJ)/MDDischCalcAccumulate.o\
-       $(OBJ)/MDDischCalcCascade.o\
-       $(OBJ)/MDDischCalcMuskingum.o\
+       $(OBJ)/MDDischLevel1.o\
+       $(OBJ)/MDDischLevel2.o\
+       $(OBJ)/MDDischLevel3.o\
+       $(OBJ)/MDDischLevel3Accum.o\
+       $(OBJ)/MDDischLevel3Cascade.o\
+       $(OBJ)/MDDischLevel3Muskingum.o\
+       $(OBJ)/MDDischLevel3MuskingumCoeff.o\
        $(OBJ)/MDDischReference.o\
-       $(OBJ)/MDDischSimulate.o\
        $(OBJ)/MDLandCover.o\
        $(OBJ)/MDLSAreaIndex.o\
        $(OBJ)/MDHamonReferenceETP.o\
