@@ -33,8 +33,8 @@ static void _MDPotETHamon (int itemID) {
 	if ((MFVarTestMissingVal (_MDInDayLengthID, itemID)) ||
 		 (MFVarTestMissingVal (_MDInAtMeanID,    itemID))) { MFVarSetMissingVal (_MDOutPetID,itemID);  return; }
 
-	dayLen = MFVarGetFloat (_MDInDayLengthID, itemID);
-	airT   = MFVarGetFloat (_MDInAtMeanID,    itemID);
+	dayLen = MFVarGetFloat (_MDInDayLengthID, itemID, 12);
+	airT   = MFVarGetFloat (_MDInAtMeanID,    itemID, 0.0);
 
    rhoSat = 2.167 * MDPETlibVPressSat (airT) / (airT + 273.15);
    pet = 165.1 * 2.0 * dayLen * rhoSat; // 2 * DAYLEN = daylength as fraction of 12 hours

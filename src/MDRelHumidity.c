@@ -32,8 +32,8 @@ static void _MDRelHumidity (int itemID) {
 	if (MFVarTestMissingVal (_MDInAtMeanID,     itemID) ||
 		 MFVarTestMissingVal (_MDInVaporPressID, itemID)) { MFVarSetMissingVal (_MDOutRelHumidityID,itemID); return; }
 
-	airT   = MFVarGetFloat (_MDInAtMeanID,     itemID);
-	vPress = MFVarGetFloat (_MDInVaporPressID, itemID);
+	airT   = MFVarGetFloat (_MDInAtMeanID,     itemID, 0.0);
+	vPress = MFVarGetFloat (_MDInVaporPressID, itemID, 0.0);
 
  	sVPress = MDPETlibVPressSat (airT);
 

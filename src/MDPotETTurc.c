@@ -30,8 +30,8 @@ static void _MDPotETTurc (int itemID) {
 	if ((MFVarTestMissingVal (_MDInAtMeanID, itemID)) ||
 		 (MFVarTestMissingVal (_MDInSolRadID, itemID))) { MFVarSetMissingVal (_MDOutPetID,itemID);  return; }
 
-	airT   = MFVarGetFloat (_MDInAtMeanID, itemID);
-	solRad = MFVarGetFloat (_MDInSolRadID, itemID);
+	airT   = MFVarGetFloat (_MDInAtMeanID, itemID, 0.0);
+	solRad = MFVarGetFloat (_MDInSolRadID, itemID, 0.0);
 
 	pet = airT > 0.0 ? 0.313 * airT * (solRad + 2.1) / (airT + 15) : 0.0;
    MFVarSetFloat (_MDOutPetID,itemID,pet);

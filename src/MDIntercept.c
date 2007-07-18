@@ -40,29 +40,24 @@ static void _MDIntercept (int itemID) {
 	float c;       // canopy storage capacity [mm]
 // Output
 	float intercept; // estimated interception [mm] 
-	if (MFVarTestMissingVal (_MDInPrecipID,       itemID) ||
-		 MFVarTestMissingVal (_MDInSPackChgID,     itemID) ||
-		 MFVarTestMissingVal (_MDInPetID,          itemID) ||
-		 MFVarTestMissingVal (_MDInCParamCHeightID,itemID) ||
-		 MFVarTestMissingVal (_MDInLeafAreaIndexID,itemID) ||
-   	 MFVarTestMissingVal (_MDInStemAreaIndexID,itemID)) { MFVarSetMissingVal (_MDOutInterceptID,itemID); return; }
-	precip   = MFVarGetFloat (_MDInPrecipID,        itemID);
-	pet      = MFVarGetFloat (_MDInPetID,           itemID);
+
+	precip   = MFVarGetFloat (_MDInPrecipID,        itemID, 0.0);
+	pet      = MFVarGetFloat (_MDInPetID,           itemID, 0.0);
 
 	intercept = 0.0;
 	if ((pet > 0.0) && (precip > 0.0)) {
-		lai      = MFVarGetFloat (_MDInLeafAreaIndexID, itemID);
-		sai      = MFVarGetFloat (_MDInStemAreaIndexID, itemID);
+		lai      = MFVarGetFloat (_MDInLeafAreaIndexID, itemID, 0.0);
+		sai      = MFVarGetFloat (_MDInStemAreaIndexID, itemID, 0.0);
 		c = MDConstInterceptCI * (lai + sai) / 2.0;
 		if (c > 0.0) {
-			sPackChg = MFVarGetFloat (_MDInSPackChgID,      itemID);
-			height   = MFVarGetFloat (_MDInCParamCHeightID, itemID);
+			sPackChg = MFVarGetFloat (_MDInSPackChgID,      itemID, 0.0);
+			height   = MFVarGetFloat (_MDInCParamCHeightID, itemID, 0.0);
 			if (sPackChg > 0.0) precip = precip - sPackChg;
 			epi = pet * (height < MDConstInterceptCH ? 1.0 + height / MDConstInterceptCH : 2.0);
 			eis = MDConstInterceptD * epi;
 			intercept = precip < (eis + c) ? /* capacity is not reached */ precip : /* capacity exceeded */ (eis + c);
 			if (intercept > pet) intercept = pet; // FBM Addition
-	}
+		}
 	}
 	MFVarSetFloat (_MDOutInterceptID,itemID, intercept);	
 }
@@ -100,3 +95,4 @@ int MDInterceptDef () {
 	MFDefLeaving ("Intercept");
 	return (_MDOutInterceptID); 
 }
+

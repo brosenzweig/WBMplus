@@ -38,9 +38,9 @@ static void _MDWetDays (int itemID)
 		 MFVarTestMissingVal (_MDInAlphaID,  itemID) ||
 		 MFVarTestMissingVal (_MDInBetaID,   itemID)) { MFVarSetMissingVal (_MDOutWetDaysID,itemID); return; }
 
-	precip = MFVarGetFloat (_MDInPrecipID, itemID);
-	alpha  = MFVarGetFloat (_MDInAlphaID,  itemID);
-	beta   = MFVarGetFloat (_MDInBetaID,   itemID);
+	precip = MFVarGetFloat (_MDInPrecipID, itemID, 0.0);
+	alpha  = MFVarGetFloat (_MDInAlphaID,  itemID, 1.0);
+	beta   = MFVarGetFloat (_MDInBetaID,   itemID, 0.0);
 
 	nDays   = MFDateGetMonthLength ();
 	wetDays = (int) ((float) nDays * alpha * (1.0 - exp ((double) (beta * precip))));

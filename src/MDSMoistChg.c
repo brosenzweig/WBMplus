@@ -65,15 +65,15 @@ static void _MDSMoistChg (int itemID) {
 		 MFVarTestMissingVal (_MDInPrecipID,      itemID) ||
 		 MFVarTestMissingVal (_MDOutSoilMoistID,  itemID)) { MFVarSetFloat (_MDOutSMoistChgID,itemID,sMoistChg); return; }
 
-	fldCap    = MFVarGetFloat (_MDInFldCapaID,  itemID);
-	rootDepth = MFVarGetFloat (_MDInRootDepthID,itemID);  
-	pet       = MFVarGetFloat (_MDInPotETID,	  itemID);
-	intercept = MFVarGetFloat (_MDInInterceptID,itemID);
-	wltPnt    = MFVarGetFloat (_MDInWltPntID,	  itemID);
-	airT      = MFVarGetFloat (_MDInAirTMeanID, itemID);
-	precip    = MFVarGetFloat (_MDInPrecipID,   itemID);
-	sPackChg  = MFVarGetFloat (_MDInSPackChgID, itemID);
-	sMoist    = MFVarGetFloat (_MDOutSoilMoistID,itemID);
+	fldCap    = MFVarGetFloat (_MDInFldCapaID,    itemID, 0.0);
+	rootDepth = MFVarGetFloat (_MDInRootDepthID,  itemID, 0.0);  
+	pet       = MFVarGetFloat (_MDInPotETID,	  itemID, 0.0);
+	intercept = MFVarGetFloat (_MDInInterceptID,  itemID, 0.0);
+	wltPnt    = MFVarGetFloat (_MDInWltPntID,	  itemID, 0.0);
+	airT      = MFVarGetFloat (_MDInAirTMeanID,   itemID, 0.0);
+	precip    = MFVarGetFloat (_MDInPrecipID,     itemID, 0.0);
+	sPackChg  = MFVarGetFloat (_MDInSPackChgID,   itemID, 0.0);
+	sMoist    = MFVarGetFloat (_MDOutSoilMoistID, itemID, 0.0);
 
 	//this has been changed by dw. 	
 	_MDAWCap =(fldCap-wltPnt)*rootDepth;	

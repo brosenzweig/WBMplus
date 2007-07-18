@@ -126,8 +126,8 @@ static void _MDSolarRadiationCloud (int itemID) {
 		return;
 	}
 
-	solarRad = MFVarGetFloat (_MDGrossRadID, itemID);
-	cloud    = MFVarGetFloat(_MDInputID,  itemID) ;
+	solarRad = MFVarGetFloat (_MDGrossRadID, itemID, 0.0);
+	cloud    = MFVarGetFloat (_MDInputID,    itemID, 0.0) ;
 	//if (cloud >100 ) printf ("Error in Cloudcover! VarID %i MDSolarRad!CLD = %f \n",_MDInputID, cloud);
 	if (fabs(cloud) > 100.0) printf ("cloud cover item %i  %f VarID %i \n",itemID, cloud, _MDInputID);
 	cloud = cloud / 100.0;
@@ -146,8 +146,8 @@ static void _MDSolarRadiationSun (int itemID) {
 	if (MFVarTestMissingVal (_MDInputID,  itemID) ||
 		 MFVarTestMissingVal (_MDGrossRadID, itemID)) { MFVarSetMissingVal (_MDOutSolarRadID,   itemID); return; }
 
-	solarRad = MFVarGetFloat (_MDGrossRadID, itemID);
-	sunShine = MFVarGetFloat (_MDInputID,  itemID) / 100.;
+	solarRad = MFVarGetFloat (_MDGrossRadID, itemID,  0.0);
+	sunShine = MFVarGetFloat (_MDInputID,    itemID, 50.0) / 100.;
 printf ("Hier \n");
 	solarRad = solarRad * (0.251 + 0.509 * sunShine);
 	MFVarSetFloat (_MDOutSolarRadID,  itemID, solarRad);

@@ -20,12 +20,9 @@ static int _MDOutAvgNStepsID = MFUnset;
 
 static void _MDAvgNSteps (int itemID) {
 	int nStep;
-	if (MFVarTestMissingVal (_MDOutAvgNStepsID, itemID))
-		MFVarSetInt (_MDOutAvgNStepsID, itemID, 1);
-	else {
-		nStep = MFVarGetInt (_MDOutAvgNStepsID, itemID);
-		MFVarSetInt (_MDOutAvgNStepsID, itemID, nStep + 1);
-	}
+	
+	nStep = MFVarGetInt (_MDOutAvgNStepsID, itemID, 0);
+	MFVarSetInt (_MDOutAvgNStepsID, itemID, nStep + 1);
 }
 int MDAvgNStepsDef () {
 

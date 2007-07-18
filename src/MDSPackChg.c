@@ -33,9 +33,9 @@ static void _MDSPackChg (int itemID) {
 	if (MFVarTestMissingVal (_MDInAtMeanID,itemID) ||
 		 MFVarTestMissingVal (_MDInPrecipID, itemID)) { MFVarSetFloat (_MDOutSPackChgID,itemID,sPackChg); return; }
 
-	airT   = MFVarGetFloat (_MDInAtMeanID,itemID);
-	precip = MFVarGetFloat (_MDInPrecipID,itemID);
-	sPack  = MFVarGetFloat (_MDOutSnowPackID,itemID);
+	airT   = MFVarGetFloat (_MDInAtMeanID,    itemID, 0.0);
+	precip = MFVarGetFloat (_MDInPrecipID,    itemID, 0.0);
+	sPack  = MFVarGetFloat (_MDOutSnowPackID, itemID, 0.0);
 
 	if (airT < -1.0) {  /* Accumulating snow pack */
 		MFVarSetFloat (_MDOutSPackChgID,itemID,precip);
@@ -54,7 +54,6 @@ static void _MDSPackChg (int itemID) {
 		
 	}
 }
-
 
 int MDSPackChgDef () {
 

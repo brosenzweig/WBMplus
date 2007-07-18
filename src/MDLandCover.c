@@ -25,7 +25,7 @@ static void _MDLCSAGEVegToCover (int itemID) {
 	if (MFVarTestMissingVal (_MDInCroplandPctID, itemID) |
 		 MFVarTestMissingVal (_MDInSAGEVegID,     itemID)) { MFVarSetMissingVal (_MDOutCoverID, itemID); return; }
 
-	switch (MFVarGetInt (_MDInSAGEVegID,itemID)) {
+	switch (MFVarGetInt (_MDInSAGEVegID,itemID, 15)) {
 		case  1: MFVarSetInt (_MDOutCoverID,itemID, 8); break;
 		case  2:
 		case  3:
@@ -49,10 +49,7 @@ static int _MDInTEMVegID;
 static void _MDLCTEMVegToCover (int itemID) {
 	int wetland = 3;
 	
-	if (MFVarTestMissingVal (_MDInCroplandPctID, itemID) |
-	    MFVarTestMissingVal (_MDInTEMVegID,      itemID)) { MFVarSetMissingVal (_MDOutCoverID, itemID); return; }
-
-	switch (MFVarGetInt (_MDInTEMVegID,itemID)) {
+	switch (MFVarGetInt (_MDInTEMVegID,itemID, -36)) {
 		case   4: // Conifer forest
 		case   9: MFVarSetInt (_MDOutCoverID,itemID, 0); break;
 		case   8: // Broadleaf forest

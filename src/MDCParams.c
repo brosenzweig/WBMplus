@@ -22,22 +22,18 @@ static int _MDOutCParamAlbedoID = MFUnset;
 
 static void _MDCParamAlbedo (int itemID) {
 // Input
-	int cover;
+	int   cover;
 	float snowPack;
 // Local
 	static float albedo []     = { 0.14, 0.18, 0.18, 0.20, 0.20, 0.22, 0.26, 0.10 };
 	static float albedoSnow [] = { 0.14, 0.23, 0.35, 0.50, 0.50, 0.50, 0.50, 0.50 };
 
-	if (MFVarTestMissingVal (_MDInCoverID,    itemID) ||
-		 MFVarTestMissingVal (_MDInSnowPackID, itemID)) { MFVarSetMissingVal (_MDOutCParamAlbedoID,itemID); return; }
-
-	cover = MFVarGetInt (_MDInCoverID,itemID);
+	cover    = MFVarGetInt   (_MDInCoverID,    itemID,   7); // defaulting missing value to water.
 	if ((cover < 0) || (cover >= (int) (sizeof (albedo) / sizeof (albedo [0])))) {
 		CMmsgPrint (CMmsgWarning,"Warning: Invalid cover [%d] in: %s:%d\n",cover,__FILE__,__LINE__);
 		return;
 	}
-
-	snowPack = MFVarGetFloat (_MDInSnowPackID,itemID);
+	snowPack = MFVarGetFloat (_MDInSnowPackID, itemID, 0.0);
 	MFVarSetFloat (_MDOutCParamAlbedoID,itemID,snowPack > 0.0 ? albedoSnow[cover] : albedo[cover]);	
 }
 
@@ -76,9 +72,7 @@ static void _MDCParamCHeight (int itemID) {
 // Local
 	static float lookup [] = { 25.0, 25.0, 8.0, 0.5, 0.3, 0.3, 0.1, 0.01}; 
 
-	if (MFVarTestMissingVal (_MDInCoverID, itemID)) { MFVarSetMissingVal (_MDOutCParamCHeightID,itemID); return; }
-
-	cover = MFVarGetInt (_MDInCoverID,itemID);
+	cover = MFVarGetInt (_MDInCoverID, itemID, 7); // defaulting missing value to water.
 	if ((cover < 0) || (cover >= (int) (sizeof (lookup) / sizeof (lookup [0])))) {
 		CMmsgPrint (CMmsgWarning ,"Warning: Invalid cover [%d] in: %s:%d\n",cover,__FILE__,__LINE__);
 		return;
@@ -120,9 +114,7 @@ static void _MDCParamLWidth (int itemID) {
 // Local
 	static float lookup [] = { 0.004,0.1,  0.03, 0.01, 0.01, 0.1,  0.02, 0.001};
 
-	if (MFVarTestMissingVal (_MDInCoverID, itemID)) { MFVarSetMissingVal (_MDOutCParamLWidthID,itemID); return; }
-
-	cover = MFVarGetInt (_MDInCoverID,itemID);
+	cover = MFVarGetInt (_MDInCoverID, itemID, 7); // defaulting missing value to water.
 	if ((cover < 0) || (cover >= (int) (sizeof (lookup) / sizeof (lookup [0])))) {
 		CMmsgPrint (CMmsgWarning,"Warning: Invalid cover [%d] in: %s:%d\n",cover,__FILE__,__LINE__);
 		return;
@@ -191,9 +183,7 @@ static void _MDCParamR5 (int itemID) {
 // Local
 	static float lookup []     = { 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 10.0 };
 
-	if (MFVarTestMissingVal (_MDInCoverID, itemID)) { MFVarSetMissingVal (_MDOutCParamR5ID,itemID); return; }
-
-	cover = MFVarGetInt (_MDInCoverID,itemID);
+	cover = MFVarGetInt (_MDInCoverID, itemID, 7); // defaulting missing value to water.
 	if ((cover < 0) || (cover >= (int) (sizeof (lookup) / sizeof (lookup [0])))) {
 		CMmsgPrint (CMmsgWarning,"Warning: Invalid cover [%d] in: %s:%d\n",cover,__FILE__,__LINE__);
 		return;
@@ -234,9 +224,7 @@ static void _MDCParamCD (int itemID) {
 // Local
 	static float lookup []     = { 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 0.10 };
 
-	if (MFVarTestMissingVal (_MDInCoverID, itemID)) { MFVarSetMissingVal (_MDOutCParamCDID,itemID); return; }
-
-	cover = MFVarGetInt (_MDInCoverID,itemID);
+	cover = MFVarGetInt (_MDInCoverID, itemID, 7); // defaulting missing value to water.
 //	if (itemID==2)printf ("Hier Land cover no  %i \n", cover );
 	if ((cover < 0) || (cover >= (int) (sizeof (lookup) / sizeof (lookup [0])))) {
 		CMmsgPrint (CMmsgWarning,"Warning: Invalid cover [%d] in: %s:%d\n",cover,__FILE__,__LINE__);
@@ -278,9 +266,7 @@ static void _MDCParamCR (int itemID) {
 // Local
 	static float lookup [] = { 0.5, 0.6, 0.6, 0.7, 0.7, 0.7, 0.7, 0.01 };
 
-	if (MFVarTestMissingVal (_MDInCoverID, itemID)) { MFVarSetMissingVal (_MDOutCParamCRID,itemID); return; }
-
-	cover = MFVarGetInt (_MDInCoverID,itemID);
+	cover = MFVarGetInt (_MDInCoverID, itemID, 7); // defaulting missing value to water.
 	if ((cover < 0) || (cover >= (int) (sizeof (lookup) / sizeof (lookup [0])))) {
 		CMmsgPrint (CMmsgWarning,"Warning: Invalid cover [%d] in: %s:%d\n",cover,__FILE__,__LINE__);
 		return;
@@ -321,9 +307,7 @@ static void _MDCParamGLMax (int itemID) {
 // Local
 	static float lookup []     = { 0.0053, 0.0053, 0.0053, 0.008, 0.0066, 0.011, 0.005, 0.001 };
 
-	if (MFVarTestMissingVal (_MDInCoverID, itemID)) { MFVarSetMissingVal (_MDOutCParamGLMaxID,itemID); return; }
-
-	cover = MFVarGetInt (_MDInCoverID,itemID);
+	cover = MFVarGetInt (_MDInCoverID, itemID, 7); // defaulting missing value to water.
 	if ((cover < 0) || (cover >= (int) (sizeof (lookup) / sizeof (lookup [0])))) {
 		CMmsgPrint (CMmsgWarning,"Warning: Invalid cover [%d] in: %s:%d\n",cover,__FILE__,__LINE__);
 		return;
@@ -365,9 +349,7 @@ static void _MDCParamLPMax (int itemID) {
 // Local
 	static float lookup []     = { 6, 6, 3, 3, 4, 3, 1, 0.00001 };
 
-	if (MFVarTestMissingVal (_MDInCoverID, itemID)) { MFVarSetMissingVal (_MDOutCParamLPMaxID,itemID); return; }
-
-	cover = MFVarGetInt (_MDInCoverID,itemID);
+	cover = MFVarGetInt (_MDInCoverID, itemID, 7); // defaulting missing value to water.
 	if ((cover < 0) || (cover >= (int) (sizeof (lookup) / sizeof (lookup [0])))) {
 		CMmsgPrint (CMmsgWarning,"Warning: Invalid cover [%d] in: %s:%d\n",cover,__FILE__,__LINE__);
 		return;
@@ -411,9 +393,7 @@ static void _MDCParamZ0g (int itemID) {
 /* Local */
 	static float lookup []     = { 0.02, 0.02, 0.02, 0.01, 0.01, 0.005, 0.001, 0.001 };
 
-	if (MFVarTestMissingVal (_MDInCoverID, itemID)) { MFVarSetMissingVal (_MDOutCParamZ0gID,itemID); return; }
-
-	cover = MFVarGetInt (_MDInCoverID,itemID);
+	cover = MFVarGetInt (_MDInCoverID, itemID, 7); // defaulting missing value to water.
 	if ((cover < 0) || (cover >= (int) (sizeof (lookup) / sizeof (lookup [0])))) {
 		CMmsgPrint (CMmsgWarning,"Warning: Invalid cover [%d] in: %s:%d\n",cover,__FILE__,__LINE__);
 		return;

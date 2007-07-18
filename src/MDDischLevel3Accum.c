@@ -26,10 +26,8 @@ static void _MDDischLevel3Accumulate (int itemID) {
 	float runoff;     // Local runoff volume [m3/s]
 	float discharge;  // Discharge from upstream [m3/s]
 
-	if (MFVarTestMissingVal (_MDInRunoffID,    itemID)) runoff    = 0.0;
-	else runoff    = MFVarGetFloat(_MDInRunoffID,    itemID);
-	if (MFVarTestMissingVal (_MDInDischargeID, itemID)) discharge = 0.0;
-	else discharge = MFVarGetFloat(_MDInDischargeID, itemID);
+	runoff    = MFVarGetFloat(_MDInRunoffID,    itemID, 0.0);
+	discharge = MFVarGetFloat(_MDInDischargeID, itemID, 0.0);
 
 	MFVarSetFloat(_MDOutDischLevel3ID, itemID, discharge + runoff);
 }

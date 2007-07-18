@@ -78,11 +78,11 @@ extern "C" {
 #define MDParIrrRiceWaterLayerDepth 				"IrrRiceWaterLayerDepth"
 #define MDVarIrrSoilMoistureChange                  "IrrSoilMoistChange"
 
-#define MDVarIrrUptakeExt                           "IrrUptakeExternal"    // Formerly MDVarDischargeAbstraction
+#define MDVarIrrReturnFlow                          "IrrReturnFlow"
+#define MDVarIrrUptakeExt                           "IrrUptakeExternal"
 #define MDVarIrrUptakeRiver                         "IrrUptakeRiver"       
-#define MDVarIrrUptakeExcess                        "IrrUptakeExcess"      // Formerly MDVarExcessAbstraction
-#define MDVarIrrUptakeGrdWater                      "IrrUptakeGroundWater" // Formerly MDVarGroundWaterAbstraction
-////////a ...
+#define MDVarIrrUptakeExcess                        "IrrUptakeExcess"
+#define MDVarIrrUptakeGrdWater                      "IrrUptakeGroundWater"
 
 #define MDVarCorrectedRunoff              "CorrectedRunoff"
 #define MDVarCrop_1                       "CropFraction_1"
@@ -281,6 +281,7 @@ int MDVarIrrAreaFractionDef ();
 int MDVarIrrIntensityDef ();
 int MDVarIrrEfficiencyDef ();
 int MDIrrigationDef();
+int MDIrrGrossDemandDef();
 int MDReferenceETPDef ();
 int MDReservoirDef ();
 

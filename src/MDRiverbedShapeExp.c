@@ -41,7 +41,7 @@ static void _MDRiverbedShapeExponent (int itemID) {
 		MFVarSetFloat (_MDOutRiverbedShapeExponentID, itemID, 2.0);
 		return;
 	}
-	discharge = fabs(MFVarGetFloat(_MDInDischMeanID,  itemID));
+	discharge = fabs(MFVarGetFloat(_MDInDischMeanID,  itemID, 0.0));
 	dL        = MFModelGetLength (itemID);
 	if (MFMathEqualValues (dL, 0.0) || (_MDInRiverbedSlopeID == MFUnset) || MFVarTestMissingVal (_MDInRiverbedSlopeID, itemID)) {
 		// Slope independent riverbed geometry
@@ -53,7 +53,7 @@ static void _MDRiverbedShapeExponent (int itemID) {
 		return;	
 	}
 	// Slope dependent riverbed geometry
-	slope     = MFVarGetFloat(_MDInRiverbedSlopeID,      itemID) / 1000.0;
+	slope     = MFVarGetFloat(_MDInRiverbedSlopeID,      itemID, 0.01) / 1000.0;
 
 	yMean = eta * pow (discharge, nu);
 	wMean = tau * pow (discharge, phi);

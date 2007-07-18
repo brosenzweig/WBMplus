@@ -52,12 +52,12 @@ static void _MDPotETPsTaylor (int itemID) {
 		 MFVarTestMissingVal (_MDInSolRadID,       itemID) ||
 		 MFVarTestMissingVal (_MDInVPressID,       itemID)) { MFVarSetMissingVal (_MDOutPetID,itemID); return; }
 
-	dayLen  = MFVarGetFloat (_MDInDayLengthID,    itemID);
-	i0hDay  = MFVarGetFloat (_MDInI0HDayID,       itemID);
-	albedo  = MFVarGetFloat (_MDInCParamAlbedoID, itemID);
-	airT    = MFVarGetFloat (_MDInAtMeanID,       itemID);
-	solRad  = MFVarGetFloat (_MDInSolRadID,       itemID);
-	vPress  = MFVarGetFloat (_MDInVPressID,       itemID);
+	dayLen  = MFVarGetFloat (_MDInDayLengthID,    itemID, 0.0);
+	i0hDay  = MFVarGetFloat (_MDInI0HDayID,       itemID, 0.0);
+	albedo  = MFVarGetFloat (_MDInCParamAlbedoID, itemID, 0.0);
+	airT    = MFVarGetFloat (_MDInAtMeanID,       itemID, 0.0);
+	solRad  = MFVarGetFloat (_MDInSolRadID,       itemID, 0.0);
+	vPress  = MFVarGetFloat (_MDInVPressID,       itemID, 0.0);
 
 	solNet = (1.0 - albedo) * solRad / MDConstIGRATE;
 	lngNet = MDSRadNETLong (i0hDay,airT,solRad,vPress);

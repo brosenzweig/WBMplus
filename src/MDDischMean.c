@@ -25,16 +25,11 @@ static void _MDDischMean (int itemID) {
 	float accumDisch;
 	float dischMean;
 
-	if (MFVarTestMissingVal (_MDInAccumDischargeID,   itemID) ||
-	    MFVarTestMissingVal (_MDInAvgNStepsID,       itemID) ||
-	    MFVarTestMissingVal (_MDOutDischMeanID, itemID)) MFVarSetFloat (_MDOutDischMeanID, itemID, 0.0);
-	else {
-		accumDisch = MFVarGetFloat (_MDInAccumDischargeID,  itemID);
-		nSteps     = MFVarGetInt   (_MDInAvgNStepsID,       itemID);
-		dischMean  = MFVarGetFloat (_MDOutDischMeanID, itemID);
-		dischMean  = (float) (((double) dischMean * (double) nSteps + accumDisch) / ((double) (nSteps + 1)));
-		MFVarSetFloat (_MDOutDischMeanID, itemID, dischMean);
-	}
+	accumDisch = MFVarGetFloat (_MDInAccumDischargeID,  itemID, 0.0);
+	nSteps     = MFVarGetInt   (_MDInAvgNStepsID,       itemID,   0);
+	dischMean  = MFVarGetFloat (_MDOutDischMeanID,      itemID, 0.0);
+	dischMean  = (float) (((double) dischMean * (double) nSteps + accumDisch) / ((double) (nSteps + 1)));
+	MFVarSetFloat (_MDOutDischMeanID, itemID, dischMean);
 }
 
 enum { MDinput, MDcalculate };

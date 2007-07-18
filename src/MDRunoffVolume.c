@@ -25,12 +25,8 @@ static void _MDRunoffVolume (int itemID) {
 	/* Input */
 	float runoff;
 
-	if (MFVarTestMissingVal (_MDInRunoffID, itemID))
-	 	MFVarSetMissingVal (_MDOutRunoffVolumeID, itemID);
-	else {
-		runoff = MFVarGetFloat (_MDInRunoffID,itemID) * MFModelGetArea (itemID) / 86400000.0;
-		MFVarSetFloat (_MDOutRunoffVolumeID, itemID, runoff);
-	}
+	runoff = MFVarGetFloat (_MDInRunoffID, itemID, 0.0) * MFModelGetArea (itemID) / 86400000.0;
+	MFVarSetFloat (_MDOutRunoffVolumeID, itemID, runoff);
 }
  
 enum { MDinput, MDcalculate };

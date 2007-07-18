@@ -34,16 +34,16 @@ static void _MDAccumBalance (int itemID)
 	double runoff;
 
 	if (MFVarTestMissingVal (_MDInAccPrecipID,    itemID) ||
-		 MFVarTestMissingVal (_MDInAccEvapID,      itemID) ||
-		 MFVarTestMissingVal (_MDInAccSMoistChgID, itemID) ||
-		 MFVarTestMissingVal (_MDInAccGrdWatChgID, itemID) ||
-		 MFVarTestMissingVal (_MDInAccRunoffID,    itemID)) MFVarSetMissingVal (_MDOutAccBalanceID,itemID);
+	    MFVarTestMissingVal (_MDInAccEvapID,      itemID) ||
+		MFVarTestMissingVal (_MDInAccSMoistChgID, itemID) ||
+		MFVarTestMissingVal (_MDInAccGrdWatChgID, itemID) ||
+		MFVarTestMissingVal (_MDInAccRunoffID,    itemID)) MFVarSetMissingVal (_MDOutAccBalanceID,itemID);
 	else {
-		precip     = MFVarGetFloat(_MDInAccPrecipID,    itemID);
-		evap       = MFVarGetFloat(_MDInAccEvapID,      itemID);
-		sMoistChg  = MFVarGetFloat(_MDInAccSMoistChgID, itemID);
-		grdWatChg  = MFVarGetFloat(_MDInAccGrdWatChgID, itemID);
-		runoff     = MFVarGetFloat(_MDInAccRunoffID,    itemID);
+		precip     = MFVarGetFloat(_MDInAccPrecipID,    itemID, 0.0);
+		evap       = MFVarGetFloat(_MDInAccEvapID,      itemID, 0.0);
+		sMoistChg  = MFVarGetFloat(_MDInAccSMoistChgID, itemID, 0.0);
+		grdWatChg  = MFVarGetFloat(_MDInAccGrdWatChgID, itemID, 0.0);
+		runoff     = MFVarGetFloat(_MDInAccRunoffID,    itemID, 0.0);
 		MFVarSetFloat(_MDOutAccBalanceID, itemID, precip + evap + sMoistChg + grdWatChg + runoff);
 	}
 }

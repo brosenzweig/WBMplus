@@ -26,10 +26,8 @@ static void _MDRunoff (int itemID) {
 	float baseFlow;
 	float surfaceRO;
 
-	if (MFVarTestMissingVal (_MDInBaseFlowID, itemID))  baseFlow  = 0.0;
-	else baseFlow  = MFVarGetFloat (_MDInBaseFlowID,itemID);
-	if (MFVarTestMissingVal (_MDInSurfaceROID, itemID)) surfaceRO = 0.0;
-	else surfaceRO = MFVarGetFloat (_MDInSurfaceROID,itemID);
+	baseFlow  = MFVarGetFloat (_MDInBaseFlowID,  itemID, 0.0);
+	surfaceRO = MFVarGetFloat (_MDInSurfaceROID, itemID, 0.0);
 
 	MFVarSetFloat (_MDOutRunoffID, itemID, baseFlow + surfaceRO);
 }

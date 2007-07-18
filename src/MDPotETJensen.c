@@ -30,8 +30,8 @@ static void _MDPotETJensen (int itemID) {
 	if ((MFVarTestMissingVal (_MDInAtMeanID, itemID)) ||
 		 (MFVarTestMissingVal (_MDInSolRadID, itemID))) { MFVarSetMissingVal (_MDOutPetID,itemID);  return; }
 
-	airT   = MFVarGetFloat (_MDInAtMeanID, itemID);
-	solRad = MFVarGetFloat (_MDInSolRadID, itemID);
+	airT   = MFVarGetFloat (_MDInAtMeanID, itemID, 0.0);
+	solRad = MFVarGetFloat (_MDInSolRadID, itemID, 0.0);
 
 	pet = 0.41 * (0.025 * airT + .078) * solRad;
    MFVarSetFloat (_MDOutPetID,itemID,pet);

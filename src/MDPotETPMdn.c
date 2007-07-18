@@ -93,23 +93,23 @@ static void _MDPotETPMdn (int itemID) {
 		 MFVarTestMissingVal (_MDInVPressID,       itemID) ||
 		 MFVarTestMissingVal (_MDInWSpeedID,       itemID)) { MFVarSetMissingVal (_MDOutPetID,itemID); return; }
 
-	dayLen  = MFVarGetFloat (_MDInDayLengthID,    itemID);
-	i0hDay  = MFVarGetFloat (_MDInI0HDayID,       itemID);
-	albedo  = MFVarGetFloat (_MDInCParamAlbedoID, itemID);
-	height  = MFVarGetFloat (_MDInCParamCHeightID,itemID);
-	r5      = MFVarGetFloat (_MDInCParamR5ID,     itemID);
-	cd      = MFVarGetFloat (_MDInCParamCDID,     itemID);
-	cr      = MFVarGetFloat (_MDInCParamCRID,     itemID);
-	glMax   = MFVarGetFloat (_MDInCParamGLMaxID,  itemID);
-	z0g     = MFVarGetFloat (_MDInCParamZ0gID,    itemID);
-	lai     = MFVarGetFloat (_MDInLeafAreaIndexID,itemID);
-	sai     = MFVarGetFloat (_MDInStemAreaIndexID,itemID);
-	airT    = MFVarGetFloat (_MDInAtMeanID,       itemID);
-	airTMin = MFVarGetFloat (_MDInAtMinID,        itemID);
-	airTMax = MFVarGetFloat (_MDInAtMaxID,        itemID);
-	solRad  = MFVarGetFloat (_MDInSolRadID,       itemID);
-	vPress  = MFVarGetFloat (_MDInVPressID,       itemID);
-	wSpeed  = fabs (MFVarGetFloat (_MDInWSpeedID, itemID));
+	dayLen  = MFVarGetFloat (_MDInDayLengthID,    itemID, 0.0);
+	i0hDay  = MFVarGetFloat (_MDInI0HDayID,       itemID, 0.0);
+	albedo  = MFVarGetFloat (_MDInCParamAlbedoID, itemID, 0.0);
+	height  = MFVarGetFloat (_MDInCParamCHeightID,itemID, 0.0);
+	r5      = MFVarGetFloat (_MDInCParamR5ID,     itemID, 0.0);
+	cd      = MFVarGetFloat (_MDInCParamCDID,     itemID, 0.0);
+	cr      = MFVarGetFloat (_MDInCParamCRID,     itemID, 0.0);
+	glMax   = MFVarGetFloat (_MDInCParamGLMaxID,  itemID, 0.0);
+	z0g     = MFVarGetFloat (_MDInCParamZ0gID,    itemID, 0.0);
+	lai     = MFVarGetFloat (_MDInLeafAreaIndexID,itemID, 0.0);
+	sai     = MFVarGetFloat (_MDInStemAreaIndexID,itemID, 0.0);
+	airT    = MFVarGetFloat (_MDInAtMeanID,       itemID, 0.0);
+	airTMin = MFVarGetFloat (_MDInAtMinID,        itemID, 0.0);
+	airTMax = MFVarGetFloat (_MDInAtMaxID,        itemID, 0.0);
+	solRad  = MFVarGetFloat (_MDInSolRadID,       itemID, 0.0);
+	vPress  = MFVarGetFloat (_MDInVPressID,       itemID, 0.0);
+	wSpeed  = fabs (MFVarGetFloat (_MDInWSpeedID, itemID, 0.0));
 	if (wSpeed < 0.2) wSpeed = 0.2;
 
 // daytime

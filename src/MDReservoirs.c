@@ -41,14 +41,11 @@ static void _MDReservoir (int itemID) {
 	float drySeasonPct = .6;
 	float wetSeasonPct = 0.16;
 	
-	if (MFVarTestMissingVal (_MDInDischargeID, itemID) ||
-	    MFVarTestMissingVal (_MDInDischMeanID, itemID)) discharge = meanDischarge = 0.0;
-	else {
-		discharge     = MFVarGetFloat (_MDInDischargeID, itemID);
-		meanDischarge = MFVarGetFloat (_MDInDischMeanID, itemID);
-	}
-	if (MFVarTestMissingVal (_MDInResCapacityID,     itemID) ||
-	    ((resCapacity = MFVarGetFloat (_MDInResCapacityID, itemID)) <= 0.0)) { 
+
+	discharge     = MFVarGetFloat (_MDInDischargeID, itemID, 0.0);
+	meanDischarge = MFVarGetFloat (_MDInDischMeanID, itemID, discharge);
+
+	if ((resCapacity = MFVarGetFloat (_MDInResCapacityID, itemID, 0.0)) <= 0.0) { 
 		MFVarSetFloat (_MDOutResStorageID,    itemID, 0.0); 
 		MFVarSetFloat (_MDOutResStorageChgID, itemID, 0.0); 
 		MFVarSetFloat (_MDOutResReleaseID,    itemID, discharge);
@@ -56,8 +53,7 @@ static void _MDReservoir (int itemID) {
 	}
 
 	dt = MFModelGet_dt ();
-	if (MFVarTestMissingVal (_MDOutResStorageID, itemID)) prevResStorage = 0.0;
-	else prevResStorage = MFVarGetFloat(_MDOutResStorageID, itemID);
+	prevResStorage = MFVarGetFloat(_MDOutResStorageID, itemID, 0.0);
 
 	resRelease = discharge > meanDischarge ?
 		         wetSeasonPct * discharge  :

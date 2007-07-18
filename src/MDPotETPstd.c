@@ -58,13 +58,13 @@ static void _MDPotETPstd (int itemID) {
 		 MFVarTestMissingVal (_MDInVPressID,       itemID) ||
 		 MFVarTestMissingVal (_MDInWSpeedID,       itemID)) { MFVarSetMissingVal (_MDOutPetID,itemID); return; }
 
-	dayLen  = MFVarGetFloat (_MDInDayLengthID,    itemID);
-	i0hDay  = MFVarGetFloat (_MDInI0HDayID,       itemID);
-	albedo  = MFVarGetFloat (_MDInCParamAlbedoID, itemID);
-	airT    = MFVarGetFloat (_MDInAtMeanID,       itemID);
-	solRad  = MFVarGetFloat (_MDInSolRadID,       itemID);
-	vPress  = MFVarGetFloat (_MDInVPressID,       itemID);
-	wSpeed  = fabs (MFVarGetFloat (_MDInWSpeedID, itemID));
+	dayLen  = MFVarGetFloat (_MDInDayLengthID,    itemID, 12.0);
+	i0hDay  = MFVarGetFloat (_MDInI0HDayID,       itemID,  0.0);
+	albedo  = MFVarGetFloat (_MDInCParamAlbedoID, itemID,  0.0);
+	airT    = MFVarGetFloat (_MDInAtMeanID,       itemID,  0.0);
+	solRad  = MFVarGetFloat (_MDInSolRadID,       itemID,  0.0);
+	vPress  = MFVarGetFloat (_MDInVPressID,       itemID,  0.0);
+	wSpeed  = fabs (MFVarGetFloat (_MDInWSpeedID, itemID,  0.0));
 	if (wSpeed < 0.2) wSpeed = 0.2;
 
 	solNet = (1.0 - albedo) * solRad / MDConstIGRATE; // net solar with Penman (1948) albedo of 0.25

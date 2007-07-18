@@ -31,34 +31,23 @@ static void _MDDischLevel2 (int itemID) {
 	float irrUptakeRiver;  // Irrigational water uptake from river [m3/s]
 	float irrUptakeExcess; // Irrigational water uptake from unsustainable source [mm/dt]
 
-	if (MFVarTestMissingVal (_MDInDischLevel3ID, itemID)) {
-		MFVarSetFloat (_MDOutDischLevel2ID,  itemID, 0.0);
-	}
-	else {
-		discharge = MFVarGetFloat (_MDInDischLevel3ID,  itemID);
-		if (_MDInIrrUptakeID != MFUnset) {
-			if (MFVarTestMissingVal (_MDInIrrUptakeID, itemID)) {
-				irrUptakeRiver  = 0.0;
-				irrUptakeExcess = 0.0;
-			}
-			else {
-				irrUptake = MFVarGetFloat (_MDInIrrUptakeID,  itemID);
-				if (discharge > irrUptake) {
-					irrUptakeRiver  = irrUptake;
-					irrUptakeExcess = 0.0;
-					discharge = discharge - irrUptakeRiver;
-				}
-				else {
-					irrUptakeRiver  = discharge;
-					irrUptakeExcess = irrUptake - discharge;
-					discharge = 0.0;
-				}
-			}
-			MFVarSetFloat (_MDOutIrrUptakeRiverID,  itemID, irrUptakeRiver);
-			MFVarSetFloat (_MDOutIrrUptakeExcessID, itemID, irrUptakeExcess);
+	discharge = MFVarGetFloat (_MDInDischLevel3ID, itemID, 0.0);
+	if (_MDInIrrUptakeID != MFUnset) {
+		irrUptake = MFVarGetFloat (_MDInIrrUptakeID, itemID, 0.0);
+		if (discharge > irrUptake) {
+			irrUptakeRiver  = irrUptake;
+			irrUptakeExcess = 0.0;
+			discharge = discharge - irrUptakeRiver;
 		}
-		MFVarSetFloat (_MDOutDischLevel2ID,  itemID, discharge);
+		else {
+			irrUptakeRiver  = discharge;
+			irrUptakeExcess = irrUptake - discharge;
+			discharge = 0.0;
+		}
+		MFVarSetFloat (_MDOutIrrUptakeRiverID,  itemID, irrUptakeRiver);
+		MFVarSetFloat (_MDOutIrrUptakeExcessID, itemID, irrUptakeExcess);
 	}
+	MFVarSetFloat (_MDOutDischLevel2ID,  itemID, discharge);
 }
 
 int MDDischLevel2Def() {
@@ -72,7 +61,7 @@ int MDDischLevel2Def() {
 	    ((_MDOutDischLevel2ID = MFVarGetID (MDVarDischLevel2,  "m/3", MFOutput, MFState, false)) == CMfailed))
 	    return (CMfailed);
 	if (((optStr = MFOptionGet (MDOptIrrigation)) != (char *) NULL) && (CMoptLookup (options,optStr,true) == CMfailed)) {
-		if (((_MDInIrrUptakeID        = MFIrrigationDef ())) == CMfailed) ||
+		if (((_MDInIrrUptakeID        = MDIrrigationDef ()) == CMfailed) ||
 		    ((_MDOutIrrUptakeRiverID  = MFVarGetID (MDVarIrrUptakeRiver,  "m/3", MFInput,  MFState, MFBoundary)) == CMfailed) ||
 		    ((_MDOutIrrUptakeExcessID = MFVarGetID (MDVarIrrUptakeExcess, "mm",  MFOutput, MFFlux,  MFBoundary)) == CMfailed))
 			return (CMfailed);

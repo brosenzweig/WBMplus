@@ -29,13 +29,9 @@ static void _MDLeafAreaIndex (int itemID) {
 // Local
 	float lai;
 
-	if (MFVarTestMissingVal (_MDInCoverID,       itemID) ||
-		 MFVarTestMissingVal (_MDInCParamLPMaxID, itemID) ||
-		 MFVarTestMissingVal (_MDInAtMeanID,      itemID)) { MFVarSetMissingVal (_MDOutLeafAreaIndexID,itemID); return; }
-
-	cover = MFVarGetInt   (_MDInCoverID,       itemID);
-	airT  = MFVarGetFloat (_MDInAtMeanID,      itemID);
-	lpMax = MFVarGetFloat (_MDInCParamLPMaxID, itemID);
+	cover = MFVarGetInt   (_MDInCoverID,       itemID, 7);
+	airT  = MFVarGetFloat (_MDInAtMeanID,      itemID, 0.0);
+	lpMax = MFVarGetFloat (_MDInCParamLPMaxID, itemID, 0.0);
 
 	if (cover == 0) lai = lpMax;
 	else if (airT > 8.0) lai = lpMax;
@@ -85,8 +81,8 @@ static void _MDStemAreaIndex (int itemID) {
 	if (MFVarTestMissingVal (_MDInCParamLPMaxID,   itemID) ||
 		 MFVarTestMissingVal (_MDInCParamCHeightID, itemID)) { MFVarSetMissingVal (_MDOutStemAreaIndexID,itemID); return; }
 
-	lpMax   = MFVarGetFloat (_MDInCParamLPMaxID,   itemID);
-	cHeight = MFVarGetFloat (_MDInCParamCHeightID, itemID);
+	lpMax   = MFVarGetFloat (_MDInCParamLPMaxID,   itemID, 0.0);
+	cHeight = MFVarGetFloat (_MDInCParamCHeightID, itemID, 0.0);
 
 	sai = lpMax > MDConstLPC ? MDConstCS * cHeight : (lpMax / MDConstLPC) * MDConstCS * cHeight;
 	MFVarSetFloat (_MDOutStemAreaIndexID,itemID,sai);

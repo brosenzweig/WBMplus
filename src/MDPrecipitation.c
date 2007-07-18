@@ -48,14 +48,10 @@ static void _MDPrecipWetDays (int itemID)
 // Local 
 	int day, nDays; 
 
-	if (MFVarTestMissingVal (_MDInPrecipID,  itemID) ||
-		 MFVarTestMissingVal (_MDInWetDaysID, itemID)) { MFVarSetMissingVal (_MDOutPrecipID,itemID); return; }
-
 	day      = MFDateGetCurrentDay ();
 	nDays    = MFDateGetMonthLength ();
-	precipIn = MFVarGetFloat (_MDInPrecipID,  itemID);
-
-	wetDays = MFVarGetInt   (_MDInWetDaysID, itemID);
+	precipIn = MFVarGetFloat (_MDInPrecipID,  itemID,  0.0);
+	wetDays  = MFVarGetInt   (_MDInWetDaysID, itemID, 31.0);
 
 	precipOut = MDEvent (nDays,wetDays,day) ? precipIn * (float) nDays / (float) wetDays : 0.0;
 
@@ -75,8 +71,8 @@ static void _MDPrecipFraction (int itemID)
 	if (MFVarTestMissingVal (_MDInPrecipID,     itemID) ||
 		 MFVarTestMissingVal (_MDInPrecipFracID, itemID)) { MFVarSetMissingVal (_MDOutPrecipID,itemID); return; }
 
-	precipIn   = MFVarGetFloat (_MDInPrecipID,     itemID);
-	precipFrac = MFVarGetFloat (_MDInPrecipFracID, itemID);
+	precipIn   = MFVarGetFloat (_MDInPrecipID,     itemID, 0.0);
+	precipFrac = MFVarGetFloat (_MDInPrecipFracID, itemID, 1.0 / nDays);
 
 	precipOut = precipIn *  precipFrac* nDays;
 	if (precipOut <0){printf ("Precip negative! precipIn=%f precipFrac =%fprecipFrac\n", precipIn, precipFrac);}

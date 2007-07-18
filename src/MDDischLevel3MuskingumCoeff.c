@@ -45,18 +45,14 @@ static void _MDDischRouteMuskingumCoeff (int itemID) {
 	float dt;               // time step length [s]
 	float dL;               // Cell length [m]
 	
-	dL = MFModelGetLength (itemID);
-	if (MFMathEqualValues (dL, 0.0) ||                                                            // Zero length river reach
-	    MFVarTestMissingVal (_MDInRiverbedSlopeID,         itemID) ||                             // Missing slope
-	    MFVarTestMissingVal (_MDInDischargeID,             itemID) ||                             // Missing discharge
-	    MFVarTestMissingVal (_MDInRiverbedAvgDepthMeanID,  itemID) ||                             // Missing average depth at mean discharge
-	    MFVarTestMissingVal (_MDInRiverbedWidthMeanID,     itemID) ||                             // Missing width at mean discharge
-	    MFVarTestMissingVal (_MDInRiverbedShapeExponentID, itemID) ||                             // Missing riverbed shape exponent 
-	    MFMathEqualValues (discharge = fabs(MFVarGetFloat(_MDInDischargeID, itemID)),     0.0) || // Zero discharge
-	    MFMathEqualValues (slope = MFVarGetFloat(_MDInRiverbedSlopeID, itemID) / 1000.0,  0.0) || // Zero slope
-	    MFMathEqualValues (yMean = MFVarGetFloat(_MDInRiverbedAvgDepthMeanID,    itemID), 0.0) || // Zero average depth at mean discharge
-	    MFMathEqualValues (wMean = MFVarGetFloat(_MDInRiverbedWidthMeanID,       itemID), 0.0) || // Zero width at mean discharge
-	    ((beta = MFVarGetFloat(_MDInRiverbedShapeExponentID, itemID)) < 0.0)) {                   // Negative riverbed shape exponent
+	dL        = MFModelGetLength (itemID);
+	discharge = fabs (MFVarGetFloat(_MDInDischargeID,         itemID, 0.0));
+	slope     = MFVarGetFloat (_MDInRiverbedSlopeID,         itemID, 0.0) / 1000.0;
+	yMean     = MFVarGetFloat (_MDInRiverbedAvgDepthMeanID,  itemID, 0.0);
+	wMean     = MFVarGetFloat (_MDInRiverbedWidthMeanID,     itemID, 0.0);
+	beta      = MFVarGetFloat (_MDInRiverbedShapeExponentID, itemID, 0.0);
+	if (MFMathEqualValues (dL, 0.0)    || MFMathEqualValues (discharge, 0.0) || MFMathEqualValues (slope, 0.0) ||
+	    MFMathEqualValues (yMean, 0.0) || MFMathEqualValues (wMean, 0.0)     || (beta  < 0.0)) { 
 	    // Falling back to flow-accumulation
 		MFVarSetFloat (_MDOutMuskingumC0ID, itemID, 1.0);
 		MFVarSetFloat (_MDOutMuskingumC1ID, itemID, 0.0);

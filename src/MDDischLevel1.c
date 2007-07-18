@@ -26,9 +26,8 @@ static void _MDDischLevel1 (int itemID) {
 	float discharge;
 
 	if ((_MDInDischReleasedID != MFUnset) && (!MFVarTestMissingVal (_MDInDischReleasedID, itemID)))
-		discharge = MFVarGetFloat (_MDInDischReleasedID, itemID);
-	else if (MFVarTestMissingVal (_MDInDischLevel2ID, itemID)) discharge = 0.0;
-	else discharge = MFVarGetFloat (_MDInDischLevel2ID, itemID);
+		 discharge = MFVarGetFloat (_MDInDischReleasedID, itemID, 0.0);
+	else discharge = MFVarGetFloat (_MDInDischLevel2ID,   itemID, 0.0);
 
 	MFVarSetFloat (_MDOutDischLevel1ID, itemID, discharge);
 }
