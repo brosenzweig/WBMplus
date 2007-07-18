@@ -72,7 +72,7 @@ int MDDischLevel2Def() {
 	    ((_MDOutDischLevel2ID = MFVarGetID (MDVarDischLevel2,  "m/3", MFOutput, MFState, false)) == CMfailed))
 	    return (CMfailed);
 	if (((optStr = MFOptionGet (MDOptIrrigation)) != (char *) NULL) && (CMoptLookup (options,optStr,true) == CMfailed)) {
-		if (((_MDInIrrUptakeID        = MFVarGetID (MDVarIrrUptake,       "mm",  MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+		if (((_MDInIrrUptakeID        = MFIrrigationDef ())) == CMfailed) ||
 		    ((_MDOutIrrUptakeRiverID  = MFVarGetID (MDVarIrrUptakeRiver,  "m/3", MFInput,  MFState, MFBoundary)) == CMfailed) ||
 		    ((_MDOutIrrUptakeExcessID = MFVarGetID (MDVarIrrUptakeExcess, "mm",  MFOutput, MFFlux,  MFBoundary)) == CMfailed))
 			return (CMfailed);

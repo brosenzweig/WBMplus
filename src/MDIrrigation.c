@@ -40,7 +40,6 @@ typedef struct {
 static MDIrrigatedCrop *_MDirrigCropStruct = (MDIrrigatedCrop *) NULL;
 static int *_MDInCropFractionID = (int *) NULL;
 static int *_MDOutCropDeficitID = (int *) NULL;
-static int _MDAbstrVolume;
 static int _MDActEvaptrsID;
  //Input
 static int _MDInPrecipID, _MDInRefETPID, _MDInIrrAreaID, _MDInIrrIntensityID, _MDInIrrEfficiencyID;
@@ -61,9 +60,8 @@ static int _MDOutNetIrrDemandID, _MDOutIrrigationDrainageID, _MDOutTotalCropETPD
 static int _MDOutGrossIrrDemandID = MFUnset;
 static int _MDOutIrrAreaSMChangeID;
 static int _MDInAirTemperatureID;
-static int _MDOutActIrrAreaID;		  	
-static void _MDIrrigationDummy (int itemID) { MFVarSetFloat (_MDOutGrossIrrDemandID,itemID,0.0); }
 
+static void _MDIrrigationDummy (int itemID) { MFVarSetFloat (_MDOutGrossIrrDemandID,itemID,0.0); }
 
 //Parameters
 static float _MDParIrrDailyPercolation;
@@ -153,8 +151,6 @@ static void _MDIrrigationWater(int itemID) {
  		}
 	}
 
-	if (irrAreaFraction==0.0) MFVarSetFloat(_MDOutActIrrAreaID, itemID,0.0);
-	
 	if (irrAreaFraction > 0.0) {
 	 	float dailyPercolation    = _MDParIrrDailyPercolation;
 	 	float wltPnt              = MFVarGetFloat (_MDInWltPntID,  itemID);
@@ -284,7 +280,6 @@ static void _MDIrrigationWater(int itemID) {
 		MFVarSetFloat(_MDOutGrossIrrDemandID,     itemID, totGrossDemand);
 		MFVarSetFloat(_MDOutIrrigationDrainageID, itemID, totalIrrPercolation);
 		MFVarSetFloat(_MDOutTotalCropETPDepthID,  itemID, totalCropETP);	
-		MFVarSetFloat(_MDAbstrVolume,             itemID, totalGrossIrrDemand / 1000  * MFModelGetArea(itemID)); // MFModelGetArea is neuerdings in m2 !!!!!!!!!!!!!!! 
 	}
 	else { // cell is not irrigated at all
 		MFVarSetFloat(_MDOutIrrAreaSMChangeID,    itemID, 0.0);
@@ -292,7 +287,6 @@ static void _MDIrrigationWater(int itemID) {
 		MFVarSetFloat(_MDOutGrossIrrDemandID,     itemID, 0.0);
 		MFVarSetFloat(_MDOutIrrigationDrainageID, itemID, 0.0);
 		MFVarSetFloat(_MDOutTotalCropETPDepthID,  itemID, 0.0);	
-		MFVarSetFloat(_MDAbstrVolume,             itemID, 0.0); 
 	}
 }
 
@@ -356,7 +350,6 @@ int MDIrrigationDef() {
 				return CMfailed;
 			}
 			//Ouputs
-			if ((_MDAbstrVolume             = MFVarGetID (MDVarIrrGrossIrrigationWaterAbstractionVol, "km3", MFOutput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
  			if ((_MDOutGrossIrrDemandID     = MFVarGetID (MDVarIrrGrossIrrigationWaterDemand,          "mm", MFOutput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
 			if ((_MDOutNetIrrDemandID       = MFVarGetID (MDVarIrrNetIrrigationWaterDemand,            "mm", MFOutput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
 			if ((_MDOutIrrAreaSMChangeID    = MFVarGetID (MDVarIrrSoilMoistureChange,                  "mm", MFOutput, MFState, MFBoundary)) == CMfailed) return (CMfailed);

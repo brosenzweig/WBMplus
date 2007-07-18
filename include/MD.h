@@ -53,7 +53,6 @@ extern "C" {
 #define MDIrrConstantKc                             "IrrConstantKc"
 #define MDVarIrrEfficiency                          "IrrigationEfficiency"
 #define MDVarIrrIntensity                           "IrrigationIntensity"
-#define MDVarIrrAreaFraction                        "IrrigatedArea_Fraction"
 #define MDVarIrrGrowingSeason1Start                 "GrowingSeason1_Start"
 #define MDVarIrrGrowingSeason2Start                 "GrowingSeason2_Start"
 #define MDVarIrrGrowingSeason3Start                 "GrowingSeason3_Start"
@@ -67,26 +66,22 @@ extern "C" {
 #define MDVarIrrNetIrrigationWaterDemand			"IrrNetWaterDemand"
 #define MDVarIrrCropETP								"IrrCropEvapotranspiration"
 #define MDVarIrrGrossIrrigationWaterDemand			"IrrGrossWaterDemand"
-#define MDVarActuallyIrrArea					"ActuallyIrrigatedArea"
+#define MDVarIrrAreaFraction                        "IrrigatedAreaFraction"
 #define MDVarCombinedEvapotranspiration				"CombinedEvapotranspiration"
 //MD Runoff Output	
-#define MDVarIrrGrossIrrigationWaterAbstractionVol		"IrrGrossWaterAbstractionVol"
-#define MDVarIrrRequiredReservoirVolume					"RequiredGridReservoirVolume"
+#define MDVarWaterBalance                           "WaterBalance"
 
-#define MDVarIrrWaterDemandVolume							"IrrGrossWaterDemandVolume"
-#define MDVarWaterBalance 								"WaterBalance"
-
-#define MDVarReferenceEvapotranspiration "ReferenceETP"
+#define MDVarReferenceEvapotranspiration            "ReferenceETP"
 #define MDVarIrrPercolationWater					"IrrPercolationWater"
 
 #define MDParIrrDailyPercolationRate 				"IrrDailyPercolationRate"
 #define MDParIrrRiceWaterLayerDepth 				"IrrRiceWaterLayerDepth"
-#define MDVarIrrSoilMoistureChange		"IrrSoilMoistChange"
-#define MDVarExcessAbstraction	"ExcessAbstraction"
-#define MDVarGroundWaterAbstraction	"GroundWaterAbstraction"
-#define MDVarIrrUptake "IrrUptake" // Formerly known as MDVarDischargeAbstraction
-#define MDVarIrrUptakeRiver "IrrUptakeRiver"
-#define MDVarIrrUptakeExcess "IrrUptakeExcess"
+#define MDVarIrrSoilMoistureChange                  "IrrSoilMoistChange"
+
+#define MDVarIrrUptakeExt                           "IrrUptakeExternal"    // Formerly MDVarDischargeAbstraction
+#define MDVarIrrUptakeRiver                         "IrrUptakeRiver"       
+#define MDVarIrrUptakeExcess                        "IrrUptakeExcess"      // Formerly MDVarExcessAbstraction
+#define MDVarIrrUptakeGrdWater                      "IrrUptakeGroundWater" // Formerly MDVarGroundWaterAbstraction
 ////////a ...
 
 #define MDVarCorrectedRunoff              "CorrectedRunoff"
