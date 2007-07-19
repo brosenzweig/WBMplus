@@ -30,7 +30,7 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDHamonReferenceETP.o\
        $(OBJ)/MDInfiltration.o\
        $(OBJ)/MDIntercept.o\
-       $(OBJ)/MDIrrigation.o\
+       $(OBJ)/MDIrrGrossDemand.o\
        $(OBJ)/MDGrossRad.o\
        $(OBJ)/MDPrecipitation.o\
        $(OBJ)/MDPotET.o\
@@ -52,7 +52,6 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDRunoffVolume.o\
        $(OBJ)/MDSMoistChg.o\
        $(OBJ)/MDSPackChg.o\
-       $(OBJ)/MDSoilProp.o\
        $(OBJ)/MDRootDepth.o\
        $(OBJ)/MDSolarRad.o\
        $(OBJ)/MDWaterBalance.o\

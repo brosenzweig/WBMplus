@@ -24,8 +24,6 @@ static int _MDInStemAreaIndexID = MFUnset;
 
 static int _MDOutInterceptID    = MFUnset;
 
-static void _MDInterceptDummy (int itemID) { MFVarSetFloat (_MDOutInterceptID,itemID,0.0); }
-
 static void _MDIntercept (int itemID) {
 // Input
 	float precip;  // daily precipitation [mm/day]
@@ -67,7 +65,7 @@ enum { MDinput, MDnone, MDcalc };
 int MDInterceptDef () {
 	int optID = MDinput;
 	const char *optStr, *optName = MDVarInterception;
-	const char *options [] = { MDInputStr, "none", MDCalculateStr, (char *) NULL };
+	const char *options [] = { MDInputStr, MDNoneStr, MDCalculateStr, (char *) NULL };
 
 	if (_MDOutInterceptID != MFUnset) return (_MDOutInterceptID);
 
@@ -75,11 +73,6 @@ int MDInterceptDef () {
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options,optStr,true);
 	switch (optID) {
 		case MDinput: _MDOutInterceptID = MFVarGetID (MDVarInterception,  "mm", MFInput, MFFlux, false); break;
-		case MDnone:
-			if	((_MDOutInterceptID     = MFVarGetID (MDVarInterception, "mm",     MFOutput,  MFFlux, false)) == CMfailed)
-				return (CMfailed);
-			_MDOutInterceptID = MFVarSetFunction (_MDOutInterceptID,_MDInterceptDummy); 
-			break;
 		case MDcalc:
 			if	(((_MDInPrecipID        = MDPrecipitationDef ()) == CMfailed) ||
 	    		 ((_MDInSPackChgID      = MFVarGetID (MDVarSnowPackChange, "mm",     MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
@@ -90,6 +83,7 @@ int MDInterceptDef () {
 				return (CMfailed);
 			_MDOutInterceptID = MFVarSetFunction (_MDOutInterceptID,_MDIntercept); 
 			break;
+
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
 	MFDefLeaving ("Intercept");

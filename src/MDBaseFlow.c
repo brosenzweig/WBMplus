@@ -26,7 +26,7 @@ static int _MDOutGrdWatID               = MFUnset;
 static int _MDOutGrdWatChgID            = MFUnset;
 static int _MDOutBaseFlowID             = MFUnset;
 static int _MDOutIrrUptakeGrdWaterID    = MFUnset;
-static int _MDOutIrrUptakeExtID         = MFUnset;
+static int _MDOutIrrUptakeExternalID    = MFUnset;
 
 static float _MDGroundWatBETA  = 0.016666667;
  
@@ -70,7 +70,7 @@ static void _MDBaseFlow (int itemID) {
 		grdWaterChg = grdWaterChg + irrReturnFlow - irrDemand;
 
 		MFVarSetFloat (_MDOutIrrUptakeGrdWaterID, itemID, irrUptakeGrdWater);
-		MFVarSetFloat (_MDOutIrrUptakeExtID,      itemID, IrrUptakeExt); 
+		MFVarSetFloat (_MDOutIrrUptakeExternalID, itemID, IrrUptakeExt); 
 	}
 	else irrAreaFrac = 0.0;
 
@@ -104,8 +104,8 @@ int MDBaseFlowDef () {
 		if (((_MDInIrrGrossDemandID     = MDIrrGrossDemandDef ()) == CMfailed) ||
 		    ((_MDInIrrReturnFlowID      = MFVarGetID (MDVarIrrReturnFlow,     "mm", MFInput,  MFState, MFBoundary)) == CMfailed) ||
 		    ((_MDInIrrAreaFractionID    = MFVarGetID (MDVarIrrAreaFraction,   "%",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		    ((_MDOutIrrUptakeGrdWaterID = MFVarGetID (MDVarIrrUptakeExcess,   "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-		    ((_MDOutIrrUptakeExtID      = MFVarGetID (MDVarIrrUptakeExcess,   "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed))
+		    ((_MDOutIrrUptakeGrdWaterID = MFVarGetID (MDVarIrrUptakeGrdWater, "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+		    ((_MDOutIrrUptakeExternalID = MFVarGetID (MDVarIrrUptakeExternal, "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed))
 			return (CMfailed);
 	}
 	if (((_MDOutGrdWatID                = MFVarGetID (MDVarGroundWater,       "mm", MFOutput, MFState, MFInitial))  == CMfailed) ||

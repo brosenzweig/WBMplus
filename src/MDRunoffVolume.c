@@ -35,7 +35,8 @@ int MDRunoffVolumeDef () {
 	int optID = MDinput;
 	const char *optStr, *optName = MDVarRunoffVolume;
 	const char *options [] = { MDInputStr, MDCalculateStr, (char *) NULL };
-		if (_MDOutRunoffVolumeID != MFUnset) return (_MDOutRunoffVolumeID);
+
+	if (_MDOutRunoffVolumeID != MFUnset) return (_MDOutRunoffVolumeID);
 
 	MFDefEntering ("Runoff Volume");
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);

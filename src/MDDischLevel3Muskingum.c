@@ -39,14 +39,6 @@ static void _MDDischLevel3Muskingum (int itemID) {
 // Local
 	float inDischPrevious; // Upstream discharge at the previous time step [m3/s]
 	
-	if (MFVarTestMissingVal (_MDInMuskingumC0ID,   itemID) ||
-		MFVarTestMissingVal (_MDInMuskingumC1ID,   itemID) ||
-		MFVarTestMissingVal (_MDInMuskingumC2ID,   itemID)) {
-		MFVarSetFloat (_MDOutDischAux0ID,    itemID, 0.0);
-		MFVarSetFloat (_MDOutDischAux1ID,    itemID, 0.0);
-		MFVarSetFloat (_MDOutDischLevel3ID,  itemID, 0.0);
-		return;
-	}
 	C0 = MFVarGetFloat (_MDInMuskingumC0ID,   itemID, 1.0);
 	C1 = MFVarGetFloat (_MDInMuskingumC1ID,   itemID, 0.0);
 	C2 = MFVarGetFloat (_MDInMuskingumC2ID,   itemID, 0.0);
@@ -72,8 +64,10 @@ int MDDischLevel3MuskingumDef () {
 	    ((_MDInMuskingumC0ID   = MDDischLevel3MuskingumCoeffDef ()) == CMfailed) ||
 	    ((_MDInMuskingumC1ID   = MFVarGetID (MDVarMuskingumC1,      MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDInMuskingumC2ID   = MFVarGetID (MDVarMuskingumC2,      MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDInDischargeID     = MFVarGetID (MDVarDischarge,          "m3/s", MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDOutDischLevel3ID  = MFVarGetID (MDVarDischLevel3,        "m3/s", MFOutput, MFState, MFBoundary)) == CMfailed))
+	    ((_MDInDischargeID     = MFVarGetID (MDVarDischarge,        "m3/s",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDOutDischAux0ID    = MFVarGetID (MDVarDischarge0,       "m3/s",   MFOutput, MFState, MFInitial))  == CMfailed) ||
+	    ((_MDOutDischAux1ID    = MFVarGetID (MDVarDischarge1,       "m3/s",   MFOutput, MFState, MFInitial))  == CMfailed) ||
+	    ((_MDOutDischLevel3ID  = MFVarGetID (MDVarDischLevel3,      "m3/s",   MFOutput, MFState, MFBoundary)) == CMfailed))
 		return (CMfailed);
 	MFDefLeaving ("Discharge Muskingum");
 	return (MFVarSetFunction(_MDOutDischLevel3ID,_MDDischLevel3Muskingum));

@@ -37,7 +37,6 @@ static int _MDDischargeID                 = MFUnset;
 static int _MDBgcRoutingID                = MFUnset;
 //Output
 static int _MDOutWaterBalanceID           = MFUnset;
-static int _MDOutPrecipID                 = MFUnset;
 static int _MDInAirTemperatureID          = MFUnset;
 static int _MDOutTotalEvapotranpirationID = MFUnset;
 static int _MDIsGrowingSeasonID           = MFUnset;
@@ -114,10 +113,12 @@ static void _MDWaterBalance(int itemID) {
 	MFVarSetFloat (_MDInInfiltrationID,itemID, infiltration);
 	MFVarSetFloat (_MDOutTotalEvapotranpirationID,itemID,totETP);
 	MFVarSetFloat (_MDIsGrowingSeasonID ,itemID,isGrowingSeason);
- 	MFVarSetFloat (_MDOutPrecipID,itemID,ppt);
 }
 
 int MDWaterBalanceDef() {
+	const char *optStr;
+	const char *options [] = { MDNoneStr, (char *) NULL };
+
 	MFDefEntering ("WaterBalance");
 	if ((                                  MDAccumBalanceDef ()   == CMfailed) ||
 	    ((_MDInPrecipID                  = MDPrecipitationDef ()) == CMfailed) ||
@@ -125,25 +126,28 @@ int MDWaterBalanceDef() {
 	    ((_MDBgcRoutingID                = MDBgcRoutingDef ())    == CMfailed) ||
 	    ((_MDInEvaptrsID                 = MFVarGetID (MDVarEvapotranspiration,            "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
 	    ((_MDInSnowPackChgID             = MFVarGetID (MDVarSnowPackChange,                "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDInRefETPID                  = MFVarGetID (MDVarPotEvapotrans,                 "mm",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
 
 	    ((_MDInSoilMoistChgID            = MFVarGetID (MDVarSoilMoistChange,               "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
 	    ((_MDInRunoffID                  = MFVarGetID (MDVarRunoff,                        "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDInCropEtpID                 = MFVarGetID (MDVarIrrCropETP,                    "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDInIrrSoilMoistChgID         = MFVarGetID (MDVarIrrSoilMoistureChange,         "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
 	    ((_MDInGrdWatChgID               = MFVarGetID (MDVarGroundWaterChange,             "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDOutPrecipID                 = MFVarGetID (MDVarPrecipitationOUT,              "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||	
-	    ((_MDInDischargeAbstractionID    = MFVarGetID (MDVarIrrUptake,                     "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
 	    ((_MDInInfiltrationID            = MFVarGetID (MDVarInfiltration,                  "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDInIrrigationDrainageID      = MFVarGetID (MDVarIrrPercolationWater,           "mm",   MFInput,  MFState, MFBoundary)) == CMfailed) || 
-	    ((_MDInGrdWaterAbstractionID     = MFVarGetID (MDVarGroundWaterAbstraction,        "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDInActIrrAreaID              = MFVarGetID (MDVarActuallyIrrArea,               "-",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDInExcessAbstractionID       = MFVarGetID (MDVarExcessAbstraction,             "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDOutTotalEvapotranpirationID = MFVarGetID (MDVarCombinedEvapotranspiration,    "mm",   MFOutput, MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDInAirTemperatureID          = MFVarGetID (MDVarAirTemperature,                "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDIsGrowingSeasonID           = MFVarGetID (MDVarIsGrowingSeasonCalc,           "DoY",  MFOutput, MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDInGrossIrrDemandID          = MFVarGetID (MDVarIrrGrossIrrigationWaterDemand, "mm",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDOutWaterBalanceID           = MFVarGetID (MDVarWaterBalance,                  "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed)) return (CMfailed);
+	    ((_MDOutWaterBalanceID           = MFVarGetID (MDVarWaterBalance,                  "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed))
+	    return (CMfailed);
+	if (((optStr = MFOptionGet (MDOptIrrigation)) != (char *) NULL) && (CMoptLookup (options,optStr,true) == CMfailed)) {
+		if (((_MDInRefETPID                  = MFVarGetID (MDVarPotEvapotrans,                 "mm",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    	((_MDInCropEtpID                 = MFVarGetID (MDVarIrrCropETP,                    "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+	    	((_MDInIrrSoilMoistChgID         = MFVarGetID (MDVarIrrSoilMoistureChange,         "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+//	    	((_MDInDischargeAbstractionID    = MFVarGetID (MDVarIrrUptake,                     "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+	    	((_MDInIrrigationDrainageID      = MFVarGetID (MDVarIrrPercolationWater,           "mm",   MFInput,  MFState, MFBoundary)) == CMfailed) || 
+//	    	((_MDInGrdWaterAbstractionID     = MFVarGetID (MDVarGroundWaterAbstraction,        "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+//	    	((_MDInActIrrAreaID              = MFVarGetID (MDVarActuallyIrrArea,               "-",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
+//	    	((_MDInExcessAbstractionID       = MFVarGetID (MDVarExcessAbstraction,             "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+	    	((_MDOutTotalEvapotranpirationID = MFVarGetID (MDVarCombinedEvapotranspiration,    "mm",   MFOutput, MFState, MFBoundary)) == CMfailed) ||
+	    	((_MDIsGrowingSeasonID           = MFVarGetID (MDVarIsGrowingSeasonCalc,           "DoY",  MFOutput, MFState, MFBoundary)) == CMfailed) ||
+	    	((_MDInGrossIrrDemandID          = MFVarGetID (MDVarIrrGrossIrrigationWaterDemand, "mm",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    	((_MDInAirTemperatureID          = MFVarGetID (MDVarAirTemperature,                "degC", MFInput,  MFState, MFBoundary)) == CMfailed))
+	    	return (CMfailed);
+	}
 	_MDOutWaterBalanceID = MFVarSetFunction(_MDOutWaterBalanceID,_MDWaterBalance);
 	
 	MFDefLeaving ("WaterBalance");

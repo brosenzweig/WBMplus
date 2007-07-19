@@ -16,7 +16,7 @@ balazs.fekete@unh.edu
 #include<MD.h>
 
 // Input
-static int _MDInRunoffID       = MFUnset;
+static int _MDInRunoffVolumeID = MFUnset;
 static int _MDInDischargeID    = MFUnset;
 // Output
 static int _MDOutDischLevel3ID = MFUnset;
@@ -26,8 +26,8 @@ static void _MDDischLevel3Accumulate (int itemID) {
 	float runoff;     // Local runoff volume [m3/s]
 	float discharge;  // Discharge from upstream [m3/s]
 
-	runoff    = MFVarGetFloat(_MDInRunoffID,    itemID, 0.0);
-	discharge = MFVarGetFloat(_MDInDischargeID, itemID, 0.0);
+	runoff    = MFVarGetFloat(_MDInRunoffVolumeID, itemID, 0.0);
+	discharge = MFVarGetFloat(_MDInDischargeID,    itemID, 0.0);
 
 	MFVarSetFloat(_MDOutDischLevel3ID, itemID, discharge + runoff);
 }
@@ -37,7 +37,7 @@ int MDDischLevel3AccumulateDef () {
 	if (_MDOutDischLevel3ID != MFUnset) return (_MDOutDischLevel3ID);
 
 	MFDefEntering ("Discharge Level 3 - Accumulate");
-	if (((_MDInRunoffID       = MDRunoffVolumeDef ()) == CMfailed) ||
+	if (((_MDInRunoffVolumeID = MDRunoffVolumeDef ()) == CMfailed) ||
 	    ((_MDInDischargeID    = MFVarGetID (MDVarDischarge,   "m3/s", MFInput,  MFState, MFInitial))  == CMfailed) ||
 	    ((_MDOutDischLevel3ID = MFVarGetID (MDVarDischLevel3, "m3/s", MFOutput, MFState, MFBoundary)) == CMfailed))
 	     return CMfailed;

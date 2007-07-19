@@ -78,11 +78,12 @@ extern "C" {
 #define MDParIrrRiceWaterLayerDepth 				"IrrRiceWaterLayerDepth"
 #define MDVarIrrSoilMoistureChange                  "IrrSoilMoistChange"
 
-#define MDVarIrrReturnFlow                          "IrrReturnFlow"
-#define MDVarIrrUptakeExt                           "IrrUptakeExternal"
-#define MDVarIrrUptakeRiver                         "IrrUptakeRiver"       
-#define MDVarIrrUptakeExcess                        "IrrUptakeExcess"
-#define MDVarIrrUptakeGrdWater                      "IrrUptakeGroundWater"
+#define MDVarIrrGrossDemand               "IrrGrossDemand"      // IrrGrossDemand = IrrUptakeGroundWater + IrrUptakeRiver + IrrUptakeExcess
+#define MDVarIrrReturnFlow                "IrrReturnFlow"
+#define MDVarIrrUptakeExternal            "__IrrUptakeExternal" // __IrrUptakeExternal = IrrUptakeRiver + IrrUptakeExcess
+#define MDVarIrrUptakeExcess              "IrrUptakeExcess"
+#define MDVarIrrUptakeGrdWater            "IrrUptakeGroundWater"
+#define MDVarIrrUptakeRiver               "IrrUptakeRiver"       
 
 #define MDVarCorrectedRunoff              "CorrectedRunoff"
 #define MDVarCrop_1                       "CropFraction_1"
@@ -158,6 +159,8 @@ extern "C" {
 #define MDVarBaseFlow                              "BaseFlow"
 
 #define MDVarDischarge                             "Discharge"
+#define MDVarDischarge0                            "Discharge0"
+#define MDVarDischarge1                            "Discharge1"
 #define MDVarDischLevel1                           "__DischargeLevel1"
 #define MDVarDischLevel2                           "__DischargeLevel2"
 #define MDVarDischLevel3                           "__DischargeLevel3"
