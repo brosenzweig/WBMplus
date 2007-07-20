@@ -24,12 +24,13 @@ static void _MDAvgNSteps (int itemID) {
 	nStep = MFVarGetInt (_MDOutAvgNStepsID, itemID, 0);
 	MFVarSetInt (_MDOutAvgNStepsID, itemID, nStep + 1);
 }
+
 int MDAvgNStepsDef () {
 
 	if (_MDOutAvgNStepsID != MFUnset) return (_MDOutAvgNStepsID);
 	MFDefEntering ("Average NSteps");
-	if ((_MDOutAvgNStepsID = MFVarGetID (MDVarAvgNSteps, MFNoUnit, MFInt,    MFState,  MFInitial)) == CMfailed)
-		return (CMfailed);
+	if (((_MDOutAvgNStepsID = MFVarGetID (MDVarAvgNSteps, MFNoUnit, MFInt,    MFState,  MFInitial)) == CMfailed) ||
+	    (MFModelAddFunction(_MDAvgNSteps) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Average NSteps");
-	return (MFVarSetFunction(_MDOutAvgNStepsID,_MDAvgNSteps));
+	return (_MDOutAvgNStepsID);
 }

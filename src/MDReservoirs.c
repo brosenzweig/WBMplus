@@ -96,7 +96,8 @@ int MDReservoirDef () {
 	    ((_MDInResCapacityID    = MFVarGetID (MDVarReservoirCapacity,      "km3",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDOutResStorageID    = MFVarGetID (MDVarReservoirStorage,       "km3",  MFOutput, MFState, MFInitial))  == CMfailed) ||
 	    ((_MDOutResStorageChgID = MFVarGetID (MDVarReservoirStorageChange, "km3",  MFOutput, MFState, MFBoundary)) == CMfailed) ||
-		((_MDOutResReleaseID    = MFVarGetID (MDVarReservoirRelease,       "m3/s", MFOutput, MFFlux,  MFBoundary)) == CMfailed)) return (CMfailed);
+		((_MDOutResReleaseID    = MFVarGetID (MDVarReservoirRelease,       "m3/s", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+		(MFModelAddFunction (_MDReservoir) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Reservoirs");
-	return (MFVarSetFunction(_MDOutResReleaseID,_MDReservoir)); 
+	return (_MDOutResReleaseID); 
 }

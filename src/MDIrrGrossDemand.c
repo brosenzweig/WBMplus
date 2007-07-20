@@ -54,9 +54,8 @@ int MDIrrGrossDemandDef () {
 		case MDcalculate:
 			if (((_MDInIrrAreaFractionID    = MFVarGetID (MDVarIrrAreaFraction,   "%",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDOutIrrGrossDemandID    = MFVarGetID (MDVarIrrGrossDemand,    "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-		    	((_MDOutIrrReturnFlowID     = MFVarGetID (MDVarIrrReturnFlow,     "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed))
-		    	return (CMfailed);
-		    _MDOutIrrGrossDemandID = MFVarSetFunction (_MDOutIrrGrossDemandID,_MDIrrGrossDemand);
+		    	((_MDOutIrrReturnFlowID     = MFVarGetID (MDVarIrrReturnFlow,     "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+		    	(MFModelAddFunction (_MDIrrGrossDemand) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}	

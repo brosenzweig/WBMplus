@@ -67,9 +67,9 @@ int MDDischLevel3MuskingumDef () {
 	    ((_MDInDischargeID     = MFVarGetID (MDVarDischarge,        "m3/s",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDOutDischAux0ID    = MFVarGetID (MDVarDischarge0,       "m3/s",   MFOutput, MFState, MFInitial))  == CMfailed) ||
 	    ((_MDOutDischAux1ID    = MFVarGetID (MDVarDischarge1,       "m3/s",   MFOutput, MFState, MFInitial))  == CMfailed) ||
-	    ((_MDOutDischLevel3ID  = MFVarGetID (MDVarDischLevel3,      "m3/s",   MFOutput, MFState, MFBoundary)) == CMfailed))
-		return (CMfailed);
+	    ((_MDOutDischLevel3ID  = MFVarGetID (MDVarDischLevel3,      "m3/s",   MFOutput, MFState, MFBoundary)) == CMfailed) ||
+	    (MFModelAddFunction(_MDDischLevel3Muskingum) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Discharge Muskingum");
-	return (MFVarSetFunction(_MDOutDischLevel3ID,_MDDischLevel3Muskingum));
+	return (_MDOutDischLevel3ID);
 }
 

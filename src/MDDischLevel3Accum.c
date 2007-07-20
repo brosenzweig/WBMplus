@@ -39,8 +39,8 @@ int MDDischLevel3AccumulateDef () {
 	MFDefEntering ("Discharge Level 3 - Accumulate");
 	if (((_MDInRunoffVolumeID = MDRunoffVolumeDef ()) == CMfailed) ||
 	    ((_MDInDischargeID    = MFVarGetID (MDVarDischarge,   "m3/s", MFInput,  MFState, MFInitial))  == CMfailed) ||
-	    ((_MDOutDischLevel3ID = MFVarGetID (MDVarDischLevel3, "m3/s", MFOutput, MFState, MFBoundary)) == CMfailed))
-	     return CMfailed;
+	    ((_MDOutDischLevel3ID = MFVarGetID (MDVarDischLevel3, "m3/s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+	    (MFModelAddFunction (_MDDischLevel3Accumulate) CMfailed)) return CMfailed;
 	MFDefLeaving ("Discharge Accumulate");
-	return (_MDOutDischLevel3ID = MFVarSetFunction(_MDOutDischLevel3ID,_MDDischLevel3Accumulate));
+	return (_MDOutDischLevel3ID);
 }

@@ -50,9 +50,8 @@ int MDRunoffDef () {
 		
 			if (((_MDInBaseFlowID  = MDBaseFlowDef ()) == CMfailed) ||
 			    ((_MDInSurfaceROID = MFVarGetID (MDVarSurfaceRO, "mm", MFInput,  MFFlux, MFBoundary)) == CMfailed) ||
-				 ((_MDOutRunoffID  = MFVarGetID (MDVarRunoff,    "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed))
-				return (CMfailed);
-			_MDOutRunoffID = MFVarSetFunction(_MDOutRunoffID,_MDRunoff);
+				 ((_MDOutRunoffID  = MFVarGetID (MDVarRunoff,    "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+				 (MFModelAddFunction (_MDRunoff) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}

@@ -203,8 +203,8 @@ int MDPotETSWGdnDef () {
 		 ((_MDInAtMaxID   = MFVarGetID (MDVarAirTempMaximum, "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
 		 ((_MDInVPressID  = MFVarGetID (MDVarVaporPressure,  "kPa",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
 		 ((_MDInWSpeedID  = MFVarGetID (MDVarWindSpeed,      "m/s",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		 ((_MDOutPetID    = MFVarGetID (MDVarPotEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed))
-		return (CMfailed);
+		 ((_MDOutPetID    = MFVarGetID (MDVarPotEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+		 (MFModelAddFunction (_MDPotETSWGdn) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("PotET Shuttleworth - Wallace (day-night)");
-	return(MFVarSetFunction (_MDOutPetID,_MDPotETSWGdn));
+	return (_MDOutPetID);
 }

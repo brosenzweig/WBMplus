@@ -79,11 +79,9 @@ int MDInterceptDef () {
 				 ((_MDInPetID           = MFVarGetID (MDVarPotEvapotrans,  "mm",     MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
 				 ((_MDInLeafAreaIndexID = MFVarGetID (MDVarLeafAreaIndex,  MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
 				 ((_MDInStemAreaIndexID = MFVarGetID (MDVarStemAreaIndex,  MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
-				 ((_MDOutInterceptID    = MFVarGetID (MDVarInterception,   "mm",     MFOutput, MFFlux,  MFBoundary)) == CMfailed))
-				return (CMfailed);
-			_MDOutInterceptID = MFVarSetFunction (_MDOutInterceptID,_MDIntercept); 
+				 ((_MDOutInterceptID    = MFVarGetID (MDVarInterception,   "mm",     MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+				 (MFModelAddFunction (_MDIntercept) == CMfailed)) return (CMfailed);
 			break;
-
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
 	MFDefLeaving ("Intercept");

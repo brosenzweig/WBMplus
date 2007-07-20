@@ -67,6 +67,7 @@ int MDDischLevel2Def() {
 		    ((_MDOutIrrUptakeExcessID  = MFVarGetID (MDVarIrrUptakeExcess,   "mm",  MFOutput, MFFlux,  MFBoundary)) == CMfailed))
 			return (CMfailed);
 	}
+	if (MFModelAddFunction(_MDDischLevel2) == CMfailed) return (CMfailed);
 	MFDefLeaving ("Discharge Level 2");
-	return (MFVarSetFunction(_MDOutDischLevel2ID,_MDDischLevel2));
+	return (_MDOutDischLevel2ID);
 }

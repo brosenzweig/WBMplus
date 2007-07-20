@@ -57,7 +57,7 @@ static void _MDPotETPMdn (int itemID) {
 	float vPress;  // daily average vapor pressure [kPa]
 	float wSpeed;  // average wind speed for the day [m/s] 
 	float sHeat = 0.0; // average subsurface heat storage for day [W/m2]
-// Local
+// Local_MDOutPetID
 	float solNet;  // average net solar radiation for daytime [W/m2]
 	float airTDtm, airTNtm; // air temperature for daytime and nighttime [degC]
 	float uaDtm,   uaNtm;	// average wind speed for daytime and nighttime [m/s]
@@ -178,7 +178,8 @@ int MDPotETPMdnDef () {
 		 ((_MDInAtMaxID   = MFVarGetID (MDVarAirTempMaximum, "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
 		 ((_MDInVPressID  = MFVarGetID (MDVarVaporPressure,  "kPa",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
 		 ((_MDInWSpeedID  = MFVarGetID (MDVarWindSpeed,      "m/s",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		 ((_MDOutPetID    = MFVarGetID (MDVarPotEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed)) return (CMfailed);
+		 ((_MDOutPetID    = MFVarGetID (MDVarPotEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+		 (MFModelAddFunction (_MDPotETPMdn) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Penman - Montieth (day-night)");
-	return(MFVarSetFunction (_MDOutPetID,_MDPotETPMdn));
+	return(_MDOutPetID);
 }

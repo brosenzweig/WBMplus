@@ -42,7 +42,8 @@ int MDDischLevel1Def() {
 	if (((optStr = MFOptionGet (MDOptReservoirs)) != (char *) NULL) && (CMoptLookup (options,optStr,true) == CMfailed)) {
 		if ((_MDInDischReleasedID = MDReservoirDef ()) == CMfailed) return (CMfailed);
 	}
-	if ((_MDOutDischLevel1ID = MFVarGetID (MDVarDischLevel1, "m3/s",  MFOutput,  MFState, MFBoundary)) == CMfailed) return (CMfailed);
+	if (((_MDOutDischLevel1ID = MFVarGetID (MDVarDischLevel1, "m3/s",  MFOutput,  MFState, MFBoundary)) == CMfailed) ||
+	    (MFModelAddFunction (_MDDischLevel1) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Discharge Level 1");
-	return (MFVarSetFunction (_MDOutDischLevel1ID,_MDDischLevel1));
+	return (_MDOutDischLevel1ID);
 }

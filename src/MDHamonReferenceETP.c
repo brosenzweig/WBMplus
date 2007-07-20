@@ -48,7 +48,8 @@ int MDHamonReferenceETPDef () {
 	MFDefEntering ("Hamon as ReferenceETP");
 	if (((_MDInDayLengthID = MDSRadDayLengthDef ()) == CMfailed) ||
 		 ((_MDInAtMeanID    = MFVarGetID (MDVarAirTemperature,              "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		 ((_MDOutPetID      = MFVarGetID (MDVarReferenceEvapotranspiration, "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed)) return (CMfailed);
+		 ((_MDOutPetID      = MFVarGetID (MDVarReferenceEvapotranspiration, "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+		 (MFModelAddFunction (_MDPotETHamon) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Hamon as ReferenceETP");
-	return (MFVarSetFunction (_MDOutPetID,_MDPotETHamon));
+	return (_MDOutPetID);
 }

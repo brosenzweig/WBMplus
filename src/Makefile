@@ -52,7 +52,6 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDRunoffVolume.o\
        $(OBJ)/MDSMoistChg.o\
        $(OBJ)/MDSPackChg.o\
-       $(OBJ)/MDRootDepth.o\
        $(OBJ)/MDSolarRad.o\
        $(OBJ)/MDWaterBalance.o\
        $(OBJ)/MDWaterSurplus.o\

@@ -148,8 +148,7 @@ int MDWaterBalanceDef() {
 	    	((_MDInAirTemperatureID          = MFVarGetID (MDVarAirTemperature,                "degC", MFInput,  MFState, MFBoundary)) == CMfailed))
 	    	return (CMfailed);
 	}
-	_MDOutWaterBalanceID = MFVarSetFunction(_MDOutWaterBalanceID,_MDWaterBalance);
-	
+	if (MFModelAddFunction(_MDWaterBalance) == CMfailed) return (CMfailed);
 	MFDefLeaving ("WaterBalance");
 	return (_MDOutWaterBalanceID);	
 }

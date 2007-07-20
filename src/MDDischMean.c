@@ -49,9 +49,8 @@ int MDDischMeanDef () {
 		case MDcalculate:
 			if (((_MDInAvgNStepsID       = MDAvgNStepsDef ())   == CMfailed) ||
 			    ((_MDInAccumDischargeID  = MDAccumRunoffDef ()) == CMfailed) ||
-			    ((_MDOutDischMeanID      = MFVarGetID (MDVarDischMean, "m3/s", MFOutput, MFState, MFInitial))  == CMfailed))
-				return (CMfailed);
-			_MDOutDischMeanID =	MFVarSetFunction(_MDOutDischMeanID,_MDDischMean);
+			    ((_MDOutDischMeanID      = MFVarGetID (MDVarDischMean, "m3/s", MFOutput, MFState, MFInitial))  == CMfailed) ||
+			    (MFModelAddFunction (_MDDischMean) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}

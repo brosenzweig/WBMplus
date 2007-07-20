@@ -48,12 +48,12 @@ int MDDischargeDef() {
 			if ((_MDInDischObservedID   = MFVarGetID (MDVarDischObserved, "m3/s",  MFInput,  MFState, MFBoundary)) == CMfailed)
 				return (CMfailed);
 		case MDsimulated:
-			if (((_MDOutDischargeID     = MFVarGetID (MDVarDischarge,     "m3/s",  MFRoute,  MFState, MFInitial))  == CMfailed) ||
-				((_MDInDischLevel1ID    = MDDischLevel1Def ()) == CMfailed))
-			    return (CMfailed);
+			if (((_MDOutDischargeID     = MFVarGetID (MDVarDischarge,     "m3/s",  MFRoute,  MFState, MFBoundary))  == CMfailed) ||
+				((_MDInDischLevel1ID    = MDDischLevel1Def ()) == CMfailed) ||
+				(MFModelAddFunction (_MDDischarge) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
 	MFDefLeaving ("Discharge");
-	return (MFVarSetFunction(_MDOutDischargeID,_MDDischarge));
+	return (_MDOutDischargeID);
 }

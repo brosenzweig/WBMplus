@@ -62,8 +62,8 @@ int MDAccumBalanceDef() {
 	    ((_MDInAccGrdWatChgID = MDAccumGrdWatChgDef()) == CMfailed) ||
 	    ((_MDInAccSMoistChgID = MDAccumSMoistChgDef()) == CMfailed) ||
 	    ((_MDInAccEvapID      = MDAccumEvapDef())      == CMfailed) ||
-	    ((_MDOutAccBalanceID  = MFVarGetID (MDVarAccBalance,  "mm",     MFOutput, MFFlux,  MFBoundary)) == CMfailed)) return CMfailed;
-	_MDOutAccBalanceID = MFVarSetFunction(_MDOutAccBalanceID,_MDAccumBalance);
+	    ((_MDOutAccBalanceID  = MFVarGetID (MDVarAccBalance,  "mm",     MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+	    (MFModelAddFunction(_MDAccumBalance) == CMfailed)) return CMfailed;
 
 	MFDefLeaving ("Accumulated Balance");
 	return (_MDOutAccBalanceID);	

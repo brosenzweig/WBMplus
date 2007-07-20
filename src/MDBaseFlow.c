@@ -110,9 +110,9 @@ int MDBaseFlowDef () {
 	}
 	if (((_MDOutGrdWatID                = MFVarGetID (MDVarGroundWater,       "mm", MFOutput, MFState, MFInitial))  == CMfailed) ||
 	    ((_MDOutGrdWatChgID             = MFVarGetID (MDVarGroundWaterChange, "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDOutBaseFlowID              = MFVarGetID (MDVarBaseFlow,          "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed)) return CMfailed;
-	_MDOutBaseFlowID = MFVarSetFunction (_MDOutBaseFlowID,_MDBaseFlow);
-			
+	    ((_MDOutBaseFlowID              = MFVarGetID (MDVarBaseFlow,          "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+	    (MFModelAddFunction (_MDBaseFlow) == CMfailed)) return (CMfailed);
+
 	MFDefLeaving ("Base flow");
 	return (_MDOutBaseFlowID);
 }

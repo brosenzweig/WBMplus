@@ -43,7 +43,8 @@ int MDPotETJensenDef () {
 	MFDefEntering ("PotET Jensen");
 	if (((_MDInSolRadID = MDSolarRadDef ()) == CMfailed) ||
 		 ((_MDInAtMeanID = MFVarGetID (MDVarAirTemperature, "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		 ((_MDOutPetID   = MFVarGetID (MDVarPotEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed)) return (CMfailed);
+		 ((_MDOutPetID   = MFVarGetID (MDVarPotEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+		 (MFModelAddFunction (_MDPotETJensen) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("PotET Jensen");
-	return (MFVarSetFunction (_MDOutPetID,_MDPotETJensen));
+	return (_MDOutPetID);
 }

@@ -68,9 +68,10 @@ int MDSRadDayLengthDef () {
 	if (_MDOutSRadDayLengthID != MFUnset) return (_MDOutSRadDayLengthID);
 
 	MFDefEntering ("Day length");
-	if ((_MDOutSRadDayLengthID   = MFVarGetID (MDVarSRadDayLength, "1/d", MFOutput, MFState, false)) == CMfailed) return (CMfailed);
+	if (((_MDOutSRadDayLengthID   = MFVarGetID (MDVarSRadDayLength, "1/d", MFOutput, MFState, false)) == CMfailed) ||
+	    (MFModelAddFunction (_MDSRadDayLength) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Day length");
-	return (MFVarSetFunction (_MDOutSRadDayLengthID,_MDSRadDayLength));
+	return (_MDOutSRadDayLengthID);
 }
 
 static int _MDOutSRadI0HDayID = MFUnset;
@@ -102,9 +103,10 @@ int MDSRadI0HDayDef () {
 	if (_MDOutSRadI0HDayID != MFUnset) return (_MDOutSRadI0HDayID);
 
 	MFDefEntering ("I0H Day");
-	if ((_MDOutSRadI0HDayID   = MFVarGetID (MDVarSRadI0HDay, "MJ/m2", MFOutput, MFState, false)) == CMfailed) return (CMfailed);
+	if (((_MDOutSRadI0HDayID   = MFVarGetID (MDVarSRadI0HDay, "MJ/m2", MFOutput, MFState, false)) == CMfailed) ||
+	    (MFModelAddFunction (_MDSRadI0HDay) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("I0H Day");
-	return (MFVarSetFunction (_MDOutSRadI0HDayID,_MDSRadI0HDay));
+	return (_MDOutSRadI0HDayID);
 }
 
 static int _MDInputID, _MDGrossRadID;
@@ -152,7 +154,6 @@ printf ("Hier \n");
 	solarRad = solarRad * (0.251 + 0.509 * sunShine);
 	MFVarSetFloat (_MDOutSolarRadID,  itemID, solarRad);
 }
- 
 
 enum { MDinput, MDcloud, MDsun };
 enum { MDstandard = 1,  MDOtto = 2 }; 
@@ -173,16 +174,14 @@ int MDSolarRadDef () {
 		//	printf ("Option: Cloud!!!");
 			if (((_MDGrossRadID      = MDGrossRadDef ()) == CMfailed) ||
 			    ((_MDInputID         = MFVarGetID (MDVarCloudCover,     "Pro%",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDOutSolarRadID   = MFVarGetID (MDVarSolarRadiation, "MJ/m^2", MFOutput, MFFlux,  MFBoundary)) == CMfailed))
-				return (CMfailed);
-			_MDOutSolarRadID = MFVarSetFunction (_MDOutSolarRadID,_MDSolarRadiationCloud);
+			    ((_MDOutSolarRadID   = MFVarGetID (MDVarSolarRadiation, "MJ/m^2", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+			    (MFModelAddFunction (_MDSolarRadiationCloud) == CMfailed)) return (CMfailed);
 			break;
 		case MDsun:
 			if (((_MDGrossRadID      = MDGrossRadDef ()) == CMfailed) ||
 			    ((_MDInputID         = MFVarGetID (MDVarSunShine,       "%",      MFInput,  MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDOutSolarRadID   = MFVarGetID (MDVarSolarRadiation, "MJ/m^2", MFOutput, MFFlux,  MFBoundary)) == CMfailed))
-				return (CMfailed);
-			_MDOutSolarRadID = MFVarSetFunction (_MDOutSolarRadID,_MDSolarRadiationSun);
+			    ((_MDOutSolarRadID   = MFVarGetID (MDVarSolarRadiation, "MJ/m^2", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+			    (MFModelAddFunction (_MDSolarRadiationSun) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}

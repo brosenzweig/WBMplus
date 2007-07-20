@@ -63,9 +63,9 @@ int MDSPackChgDef () {
 	if (((_MDInPrecipID    = MDPrecipitationDef ()) == CMfailed) ||
 		 ((_MDInAtMeanID    = MFVarGetID (MDVarAirTemperature, "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
 		 ((_MDOutSnowPackID = MFVarGetID (MDVarSnowPack,       "mm",   MFOutput, MFState, MFInitial))  == CMfailed) ||
-		 ((_MDOutSnowMeltID = MFVarGetID (MDVarSnowMelt,       "mm",   MFOutput, MFState, MFBoundary)) == CMfailed)||
-		 ((_MDOutSPackChgID = MFVarGetID (MDVarSnowPackChange, "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed))
-		return (CMfailed);
+		 ((_MDOutSnowMeltID = MFVarGetID (MDVarSnowMelt,       "mm",   MFOutput, MFState, MFBoundary)) == CMfailed) ||
+		 ((_MDOutSPackChgID = MFVarGetID (MDVarSnowPackChange, "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+		 (MFModelAddFunction (_MDSPackChg) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Snow Pack Change");
-	return (MFVarSetFunction (_MDOutSPackChgID,_MDSPackChg));
+	return (_MDOutSPackChgID);
 }

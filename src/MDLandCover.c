@@ -111,16 +111,14 @@ int MDLandCoverDef () {
 		case MDLCLookup:
 			break;
 		case MDLCSAGEVeg:
-			  if(  ((_MDInSAGEVegID     = MFVarGetID (MDVarSAGEVegCover, MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDOutCoverID      = MFVarGetID (MDVarWBMCover,     MFNoUnit, MFByte,  MFState, MFBoundary)) == CMfailed))
-				return (CMfailed);
-			_MDOutCoverID = MFVarSetFunction (_MDOutCoverID,_MDLCSAGEVegToCover);
+			  if (((_MDInSAGEVegID     = MFVarGetID (MDVarSAGEVegCover, MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed) ||
+			      ((_MDOutCoverID      = MFVarGetID (MDVarWBMCover,     MFNoUnit, MFByte,  MFState, MFBoundary)) == CMfailed) ||
+			      (MFModelAddFunction (_MDLCSAGEVegToCover) == CMfailed)) return (CMfailed);
 			break;
 		case MDLCTEMVeg:
-			  if ( ((_MDInTEMVegID      = MFVarGetID (MDVarTEMVegCover,  MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDOutCoverID      = MFVarGetID (MDVarWBMCover,     MFNoUnit, MFByte,  MFState, MFBoundary)) == CMfailed))
-				return (CMfailed);
-			_MDOutCoverID = MFVarSetFunction (_MDOutCoverID,_MDLCTEMVegToCover);
+			  if (((_MDInTEMVegID      = MFVarGetID (MDVarTEMVegCover,  MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed) ||
+			      ((_MDOutCoverID      = MFVarGetID (MDVarWBMCover,     MFNoUnit, MFByte,  MFState, MFBoundary)) == CMfailed) ||
+			      (MFModelAddFunction (_MDLCTEMVegToCover) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}

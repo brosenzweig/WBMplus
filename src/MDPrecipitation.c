@@ -100,16 +100,14 @@ int MDPrecipitationDef ()
 		case MDwetdays:
 			if (((_MDInWetDaysID    = MDWetDaysDef ()) == CMfailed) ||
 				 ((_MDInPrecipID     = MFVarGetID (MDVarPrecipMonthly,  "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-				 ((_MDOutPrecipID    = MFVarGetID (MDVarPrecipitation,  "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed))
-				return (CMfailed);
-			_MDOutPrecipID = MFVarSetFunction (_MDOutPrecipID,_MDPrecipWetDays);
+				 ((_MDOutPrecipID    = MFVarGetID (MDVarPrecipitation,  "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+				 (MFModelAddFunction (_MDPrecipWetDays) == CMfailed)) return (CMfailed);
 			break;
 		case MDfraction:
 			if (((_MDInPrecipID     = MFVarGetID (MDVarPrecipMonthly,  "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
 			    ((_MDInPrecipFracID = MFVarGetID (MDVarPrecipFraction, "mm", MFInput,  MFState, MFBoundary)) == CMfailed) ||
-				 ((_MDOutPrecipID    = MFVarGetID (MDVarPrecipitation,  "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed))
-				return (CMfailed);
-			_MDOutPrecipID = MFVarSetFunction (_MDOutPrecipID,_MDPrecipFraction);
+				 ((_MDOutPrecipID    = MFVarGetID (MDVarPrecipitation,  "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+				 (MFModelAddFunction (_MDPrecipFraction) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 		}

@@ -55,9 +55,8 @@ int MDInfiltrationDef () {
 			if (((optStr = MFOptionGet (MDParInfiltrationFrac))  != (char *) NULL) && (sscanf (optStr,"%f",&par) == 1))
 				_MDInfiltrationFrac = par;
 			if (((_MDOutSurfaceROID    = MFVarGetID (MDVarSurfaceRO,    "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-			    ((_MDOutInfiltrationID = MFVarGetID (MDVarInfiltration, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed))
-				return (CMfailed);
-			_MDOutInfiltrationID = MFVarSetFunction (_MDOutInfiltrationID,_MDInfiltrationSimple);
+			    ((_MDOutInfiltrationID = MFVarGetID (MDVarInfiltration, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+			    (MFModelAddFunction (_MDInfiltrationSimple) == CMfailed)) return (CMfailed);
 		case MDvarying:
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);

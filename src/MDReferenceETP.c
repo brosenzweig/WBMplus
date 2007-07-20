@@ -69,7 +69,8 @@ static void _MDFAOReferenceETP (int itemID) {
 	float es;      /* vapor pressure at airT [kPa] */
 	float delta;   /* dEsat/dTair [kPa/K] */
  	float dd;      /* vapor pressure deficit [kPa] */
-	float ra;		/*	aerodynamic resistance [s/ma] */
+	float ra;		/*	aerodynamic 			_MDOutPrecipID = MFVarSetFunction (_MDOutPrecipID,_MDPrecipFraction);
+	resistance [s/ma] */
  	float rc;		/* canopy resistance [s/m] */
 	float led, len;/* daytime and nighttime latent heat [W/m2] */
 /* Output */
@@ -180,10 +181,8 @@ int MDFAOReferenceETPDef () {
 	    ((_MDInAtMaxID         = MFVarGetID (MDVarAirTempMaximum, "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDInVPressID        = MFVarGetID (MDVarVaporPressure,  "kPa",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDInWSpeedID        = MFVarGetID (MDVarWindSpeed,      "m/s",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDFAOReferenceETPID = MFVarGetID (MDVarReferenceEvapotranspiration,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed)) return (CMfailed);
-	
-	_MDFAOReferenceETPID = MFVarSetFunction (_MDFAOReferenceETPID,_MDFAOReferenceETP);
-	printf ("RefETP ID %i\n",_MDFAOReferenceETPID);
+	    ((_MDFAOReferenceETPID = MFVarGetID (MDVarReferenceEvapotranspiration,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+	    (MFModelAddFunction (_MDFAOReferenceETP) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("FAO Reference ETP");
 	return(_MDFAOReferenceETPID);
 }

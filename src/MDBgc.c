@@ -193,9 +193,8 @@ int MDBgcRoutingDef () {
 	    ((_MDTNStoreSedsChangeID     = MFVarGetID (MDVarBgcTNStoreSedsChange,   "kg/day",  MFOutput, MFState, MFInitial))   == CMfailed) ||
 	    ((_MDTNTotalUptakeID         = MFVarGetID (MDVarBgcTNTotalUptake,       "kg/day",  MFOutput, MFState, MFBoundary))  == CMfailed) ||
 	    ((_MDTNConcID                = MFVarGetID (MDVarBgcTNConc,              "kg/m3",   MFOutput, MFState, MFBoundary))  == CMfailed) ||
-	    ((_MDTNFluxID                = MFVarGetID (MDVarBgcTNFlux  ,            "kg/day",  MFRoute,  MFState, MFBoundary))  == CMfailed))
-	  		return (CMfailed); 
-	_MDTNFluxID = MFVarSetFunction(_MDTNFluxID,_MDBgcRouting);
+	    ((_MDTNFluxID                = MFVarGetID (MDVarBgcTNFlux  ,            "kg/day",  MFRoute,  MFState, MFBoundary))  == CMfailed) ||
+	    (MFModelAddFunction (_MDBgcRouting) == CMfailed)) return (CMfailed); 
 	MFDefLeaving ("Nutrient Calculation");
 	return (_MDTNFluxID); 
 }

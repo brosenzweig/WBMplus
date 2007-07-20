@@ -88,9 +88,8 @@ int MDRiverbedShapeExponentDef () {
 			if (((_MDInDischMeanID = MDDischMeanDef ()) == CMfailed) ||
 			    ((_MDOutRiverbedAvgDepthMeanID = MFVarGetID (MDVarRiverbedAvgDepthMean,  "m",      MFOutput, MFState, MFBoundary)) == CMfailed)  ||
 			    ((_MDOutRiverbedWidthMeanID     = MFVarGetID (MDVarRiverbedWidthMean,     "m",      MFOutput, MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDOutRiverbedShapeExponentID = MFVarGetID (MDVarRiverbedShapeExponent, MFNoUnit, MFOutput, MFState, MFBoundary)) == CMfailed))
-				return (CMfailed);
-			_MDOutRiverbedShapeExponentID = MFVarSetFunction(_MDOutRiverbedShapeExponentID, _MDRiverbedShapeExponent);
+			    ((_MDOutRiverbedShapeExponentID = MFVarGetID (MDVarRiverbedShapeExponent, MFNoUnit, MFOutput, MFState, MFBoundary)) == CMfailed) ||
+			    (MFModelAddFunction (_MDRiverbedShapeExponent) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}

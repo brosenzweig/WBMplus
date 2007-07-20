@@ -54,9 +54,8 @@ int MDCParamAlbedoDef () {
 		case MDlookup:
 			if (((_MDInCoverID    = MDLandCoverDef ()) == CMfailed) ||
 			 	 ((_MDInSnowPackID = MFVarGetID (MDVarSnowPack, "mm", MFInput,  MFState, true)) == CMfailed) ||
-				 ((_MDOutCParamAlbedoID = MFVarGetID (MDVarCParamAlbedo, MFNoUnit, MFOutput, MFState, MFBoundary)) == CMfailed))
-				 return (CMfailed);
-			_MDOutCParamAlbedoID = MFVarSetFunction (_MDOutCParamAlbedoID,_MDCParamAlbedo); 
+				 ((_MDOutCParamAlbedoID = MFVarGetID (MDVarCParamAlbedo, MFNoUnit, MFOutput, MFState, MFBoundary)) == CMfailed) ||
+				 (MFModelAddFunction (_MDCParamAlbedo) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
@@ -96,9 +95,8 @@ int MDCParamCHeightDef ()
 		case MDinput:  _MDOutCParamCHeightID = MFVarGetID (MDVarCParamCHeight, "m", MFInput, MFState, MFBoundary); break;
 		case MDlookup:
 			if (((_MDInCoverID = MDLandCoverDef ()) == CMfailed) ||
-			    ((_MDOutCParamCHeightID = MFVarGetID (MDVarCParamCHeight, "m", MFOutput, MFState, MFBoundary)) == CMfailed))
-				return (CMfailed);
-			_MDOutCParamCHeightID = MFVarSetFunction (_MDOutCParamCHeightID,_MDCParamCHeight); 
+			    ((_MDOutCParamCHeightID = MFVarGetID (MDVarCParamCHeight, "m", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+			    (MFModelAddFunction (_MDCParamCHeight) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
@@ -137,9 +135,8 @@ int MDCParamLWidthDef () {
 		case MDinput:  _MDOutCParamLWidthID = MFVarGetID (MDVarCParamLWidth,  "mm", MFInput, MFState, MFBoundary); break;
 		case MDlookup:
 			if (((_MDInCoverID         = MDLandCoverDef ()) == CMfailed) ||
-			    ((_MDOutCParamLWidthID = MFVarGetID (MDVarCParamLWidth, "mm", MFOutput, MFState, MFBoundary)) == CMfailed))
-				return (CMfailed);
-			_MDOutCParamLWidthID = MFVarSetFunction (_MDOutCParamLWidthID,_MDCParamLWidth); 
+			    ((_MDOutCParamLWidthID = MFVarGetID (MDVarCParamLWidth, "mm", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+			    (MFModelAddFunction (_MDCParamLWidth) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
@@ -165,9 +162,8 @@ int MDCParamRSSDef () {
 		case MDinput:  _MDOutCParamRSSID = MFVarGetID (MDVarCParamRSS,  "s/m", MFInput, MFState, MFBoundary); break;
 		case MDlookup:
 			if (((_MDInCoverID = MDLandCoverDef ()) == CMfailed) ||
-				 ((_MDOutCParamRSSID = MFVarGetID (MDVarCParamRSS, "s/m", MFOutput, MFState, MFBoundary)) == CMfailed))
-				return (CMfailed);
-			_MDOutCParamRSSID =  MFVarSetFunction (_MDOutCParamRSSID,_MDCParamRSS); 
+				 ((_MDOutCParamRSSID = MFVarGetID (MDVarCParamRSS, "s/m", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+				 (MFModelAddFunction (_MDCParamRSS) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
@@ -206,9 +202,8 @@ int MDCParamR5Def () {
 		case MDinput:  _MDOutCParamR5ID = MFVarGetID (MDVarCParamR5,  "W/m2", MFInput, MFState, MFBoundary); break;
 		case MDlookup:
 			if (((_MDInCoverID = MDLandCoverDef ()) == CMfailed) ||
-				 ((_MDOutCParamR5ID = MFVarGetID (MDVarCParamR5, "W/m2", MFOutput, MFState, MFBoundary)) == CMfailed))
-				return (CMfailed);
-			_MDOutCParamR5ID = MFVarSetFunction (_MDOutCParamR5ID,_MDCParamR5); 
+				 ((_MDOutCParamR5ID = MFVarGetID (MDVarCParamR5, "W/m2", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+				 (MFModelAddFunction (_MDCParamR5) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
@@ -248,9 +243,8 @@ int MDCParamCDDef () {
 		case MDinput:  _MDOutCParamCDID = MFVarGetID (MDVarCParamCD,  "kPa", MFInput, MFState, MFBoundary); break;
 		case MDlookup:
 			if (((_MDInCoverID = MDLandCoverDef ()) == CMfailed) ||
-	    		 ((_MDOutCParamCDID = MFVarGetID (MDVarCParamCD, "kPa", MFOutput, MFState, MFBoundary)) == CMfailed))
-				return (CMfailed);
-			_MDOutCParamCDID = MFVarSetFunction (_MDOutCParamCDID,_MDCParamCD); 
+	    		 ((_MDOutCParamCDID = MFVarGetID (MDVarCParamCD, "kPa", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+	    		 (MFModelAddFunction (_MDCParamCD) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
@@ -289,9 +283,8 @@ int MDCParamCRDef () {
 		case MDinput:  _MDOutCParamCRID = MFVarGetID (MDVarCParamCR,  MFNoUnit, MFInput, MFState, MFBoundary); break;
 		case MDlookup:
 			if (((_MDInCoverID = MDLandCoverDef ()) == CMfailed) ||
-	    		 ((_MDOutCParamCRID = MFVarGetID (MDVarCParamCR, MFNoUnit, MFOutput, MFState, MFBoundary)) == CMfailed))
-				return (CMfailed);
-			_MDOutCParamCRID = MFVarSetFunction (_MDOutCParamCRID,_MDCParamCR); 
+	    		((_MDOutCParamCRID = MFVarGetID (MDVarCParamCR, MFNoUnit, MFOutput, MFState, MFBoundary)) == CMfailed) ||
+	    		(MFModelAddFunction (_MDCParamCR) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
@@ -331,9 +324,8 @@ int MDCParamGLMaxDef ()
 		case MDinput:  _MDOutCParamGLMaxID = MFVarGetID (MDVarCParamGLMax,  "m/s", MFInput, MFState, MFBoundary); break;
 		case MDlookup:
 			if (((_MDInCoverID = MDLandCoverDef ()) == CMfailed) ||
-	   		 ((_MDOutCParamGLMaxID = MFVarGetID (MDVarCParamGLMax, "m/s", MFOutput, MFState, MFBoundary)) == CMfailed))
-				return (CMfailed);
-			_MDOutCParamGLMaxID = MFVarSetFunction (_MDOutCParamGLMaxID,_MDCParamGLMax); 
+	   		    ((_MDOutCParamGLMaxID = MFVarGetID (MDVarCParamGLMax, "m/s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+	   		    (MFModelAddFunction (_MDCParamGLMax) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
@@ -371,15 +363,10 @@ int MDCParamLPMaxDef () {
 		case MDinput:  _MDOutCParamLPMaxID = MFVarGetID (MDVarCParamLPMax,  MFNoUnit, MFInput, MFState, false); break;
 		case MDlookup:
 			if (((_MDInCoverID = MDLandCoverDef ()) == CMfailed) ||
-	    		 ((_MDOutCParamLPMaxID = MFVarGetID (MDVarCParamLPMax, MFNoUnit, MFOutput, MFState, false)) == CMfailed))
-				return (CMfailed);
-			_MDOutCParamLPMaxID = MFVarSetFunction (_MDOutCParamLPMaxID,_MDCParamLPMax); 
+	    	    ((_MDOutCParamLPMaxID = MFVarGetID (MDVarCParamLPMax, MFNoUnit, MFOutput, MFState, false)) == CMfailed) ||
+	    	    (MFModelAddFunction (_MDCParamLPMax) == CMfailed)) return (CMfailed);
 			break;
-		default:
-			CMmsgPrint (CMmsgInfo,"Help [%s options]:",optName);
-			for (optID = 1;options [optID] != (char *) NULL;++optID) CMmsgPrint (CMmsgInfo," %s",options [optID]);
-			CMmsgPrint (CMmsgInfo,"\n");
-			return (CMfailed);
+		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
 	MFDefLeaving ("LPMax");
 	return (_MDOutCParamLPMaxID); 
@@ -398,9 +385,8 @@ static void _MDCParamZ0g (int itemID) {
 		CMmsgPrint (CMmsgWarning,"Warning: Invalid cover [%d] in: %s:%d\n",cover,__FILE__,__LINE__);
 		return;
 	}
-
 	MFVarSetFloat (_MDOutCParamZ0gID,itemID, lookup [cover]);	
-	}
+}
 
 int MDCParamZ0gDef () {
 	int optID = MDinput;
@@ -416,15 +402,10 @@ int MDCParamZ0gDef () {
 		case MDinput: _MDOutCParamZ0gID = MFVarGetID (MDVarCParamZ0g,  "m", MFInput, MFState, false); break;
 		case MDlookup:
 			if (((_MDInCoverID = MDLandCoverDef ()) == CMfailed) ||
-	    		 ((_MDOutCParamZ0gID = MFVarGetID (MDVarCParamZ0g, "m", MFOutput, MFState, false)) == CMfailed))
-				return (CMfailed);
-			_MDOutCParamZ0gID = MFVarSetFunction (_MDOutCParamZ0gID,_MDCParamZ0g); 
+	    		 ((_MDOutCParamZ0gID = MFVarGetID (MDVarCParamZ0g, "m", MFOutput, MFState, false)) == CMfailed) ||
+	    		 (MFModelAddFunction (_MDCParamZ0g) == CMfailed)) return (CMfailed);
 			break;
-		default:
-			CMmsgPrint (CMmsgInfo,"Help [%s options]:",optName);
-			for (optID = 1;options [optID] != (char *) NULL;++optID) CMmsgPrint (CMmsgInfo," %s",options [optID]);
-			CMmsgPrint (CMmsgInfo,"\n");
-			return (CMfailed);
+		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
 	MFDefLeaving ("Z0g");
 	return (_MDOutCParamZ0gID); 

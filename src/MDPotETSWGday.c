@@ -168,8 +168,8 @@ int MDPotETSWGdayDef () {
 		 ((_MDInAtMinID   = MFVarGetID (MDVarAirTempMinimum, "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
 		 ((_MDInVPressID  = MFVarGetID (MDVarVaporPressure,  "kPa",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
 		 ((_MDInWSpeedID  = MFVarGetID (MDVarWindSpeed,      "m/s",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		 ((_MDOutPetID    = MFVarGetID (MDVarPotEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed))
-		return (CMfailed);
+		 ((_MDOutPetID    = MFVarGetID (MDVarPotEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+		 (MFModelAddFunction (_MDPotETSWGday) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("PotET Shuttleworth - Wallace (day)");
-	return(MFVarSetFunction (_MDOutPetID,_MDPotETSWGday));
+	return(_MDOutPetID);
 }

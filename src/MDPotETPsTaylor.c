@@ -83,7 +83,8 @@ int MDPotETPsTaylorDef () {
 		 ((_MDInSolRadID        = MDSolarRadDef      ()) == CMfailed) ||
 		 ((_MDInAtMeanID  = MFVarGetID (MDVarAirTemperature, "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
 		 ((_MDInVPressID  = MFVarGetID (MDVarVaporPressure,  "kPa",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		 ((_MDOutPetID    = MFVarGetID (MDVarPotEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed)) return (CMfailed);
+		 ((_MDOutPetID    = MFVarGetID (MDVarPotEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+		 (MFModelAddFunction (_MDPotETPsTaylor) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("PotET Priestley - Taylor Definition");
-	return (MFVarSetFunction (_MDOutPetID,_MDPotETPsTaylor));
+	return (_MDOutPetID);
 }

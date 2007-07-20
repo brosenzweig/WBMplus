@@ -70,9 +70,8 @@ int MDWetDaysDef ()
 			if (((_MDInPrecipID   = MFVarGetID (MDVarPrecipitation, "mm",     MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
 			    ((_MDInAlphaID    = MFVarGetID (MDVarWetDaysAlpha,  MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDInBetaID     = MFVarGetID (MDVarWetDaysBeta,   MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDOutWetDaysID = MFVarGetID (MDVarWetDays,       MFNoUnit, MFOutput, MFFlux,  MFBoundary)) == CMfailed))
-				return (CMfailed);
-			_MDOutWetDaysID = MFVarSetFunction (_MDOutWetDaysID,_MDWetDays); 
+			    ((_MDOutWetDaysID = MFVarGetID (MDVarWetDays,       MFNoUnit, MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+			    (MFModelAddFunction (_MDWetDays) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 		}

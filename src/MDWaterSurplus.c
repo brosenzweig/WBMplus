@@ -50,10 +50,8 @@ int MDWaterSurplusDef () {
 	    ((_MDInSMoistChgID      = MDSMoistChgDef   ()) == CMfailed) ||
 	    ((_MDInPrecipID         = MFVarGetID (MDVarPrecipitation,      "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
 	    ((_MDInEvapoTransID     = MFVarGetID (MDVarEvapotranspiration, "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-	
-	    ((_MDOutWaterSurplusID = MFVarGetID (MDVarWaterSurplus,    "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed)) {
-		return (CMfailed);
-	}
+	    ((_MDOutWaterSurplusID  = MFVarGetID (MDVarWaterSurplus,       "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+	    (MFModelAddFunction (_MDWaterSurplus) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Water Surplus");
-	return (_MDOutWaterSurplusID = MFVarSetFunction (_MDOutWaterSurplusID,_MDWaterSurplus));
+	return (_MDOutWaterSurplusID);
 }

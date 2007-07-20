@@ -58,10 +58,9 @@ int MDRelHumidityDef () {
 		case MDinput:  _MDOutRelHumidityID = MFVarGetID (MDVarRelHumidity,  "%", MFInput, MFState, MFBoundary); break;
 		case MDcalc:
 			if (((_MDInAtMeanID       = MFVarGetID (MDVarAirTemperature, "degC",  MFInput, MFState, MFBoundary)) == CMfailed) ||
-	    		 ((_MDInVaporPressID   = MFVarGetID (MDVarVaporPressure,  "kPa",   MFInput, MFState, MFBoundary)) == CMfailed) ||
-		  		 ((_MDOutRelHumidityID = MFVarGetID (MDVarRelHumidity,    "mm",    MFOutput,MFState, MFBoundary)) == CMfailed))
-				return (CMfailed);
-			_MDOutRelHumidityID = MFVarSetFunction (_MDOutRelHumidityID,_MDRelHumidity);
+	    	    ((_MDInVaporPressID   = MFVarGetID (MDVarVaporPressure,  "kPa",   MFInput, MFState, MFBoundary)) == CMfailed) ||
+		  	    ((_MDOutRelHumidityID = MFVarGetID (MDVarRelHumidity,    "mm",    MFOutput,MFState, MFBoundary)) == CMfailed) ||
+		  	    (MFModelAddFunction (_MDRelHumidity) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
