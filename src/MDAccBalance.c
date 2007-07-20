@@ -27,11 +27,12 @@ static int _MDOutAccBalanceID  = MFUnset;
 
 static void _MDAccumBalance (int itemID)
 {
-	double precip;
-	double evap;
-	double sMoistChg;
-	double grdWatChg;
-	double runoff;
+// Input
+	double precip;    // Precipitation [mm/dt]
+	double evap;      // Evapotranspiration [mm/dt]
+	double sMoistChg; // Soil moisture change [mm/dt]
+	double grdWatChg; // Groundwater change [mm/dt]
+	double runoff;    // Runoff [mm/dt]
 
 	if (MFVarTestMissingVal (_MDInAccPrecipID,    itemID) ||
 	    MFVarTestMissingVal (_MDInAccEvapID,      itemID) ||
