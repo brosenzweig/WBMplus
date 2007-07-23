@@ -5,7 +5,7 @@ OBJ    = ../obj
 BIN    = ../bin
 CC     = gcc -g -Wall -I$(INC) -I../../CMlib/include -I../../MFlib/include
 LINK   = gcc
-LIBS   = -L../../CMlib/lib -L../../MFlib/lib -lMF10 -lCM10 -lm
+LIBS   = -L../../CMlib/lib -L../../MFlib/lib -lMF10 -lCM10 $(UNIXLIBS)
 TARGET = $(BIN)/wbmplus.bin
 
 INCLUDES = $(INC)/MD.h
