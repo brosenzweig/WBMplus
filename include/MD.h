@@ -198,6 +198,7 @@ extern "C" {
 
 #define MDVarRootingDepth	                       "RootingDepth"
 #define MDVarRunoff                                "Runoff"
+#define MDVarRunoffCorretion                       "RunoffCorrection"
 #define MDVarRunoffVolume                          "RunoffVolume"
 #define MDVarSAGEVegCover                          "SAGEVegCover"
 #define MDVarSnowPack                              "SnowPack"
