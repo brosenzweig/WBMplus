@@ -63,7 +63,7 @@ int MDDischLevel2Def() {
 	if (((optStr = MFOptionGet (MDOptIrrigation)) != (char *) NULL) && (CMoptLookup (options,optStr,true) == CMfailed)) {
 		if (((MDIrrGrossDemandDef ()) == CMfailed) ||
 		    ((_MDInIrrUptakeExternalID = MFVarGetID (MDVarIrrUptakeExternal, "m/3", MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		    ((_MDOutIrrUptakeRiverID   = MFVarGetID (MDVarIrrUptakeRiver,    "m/3", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+		    ((_MDOutIrrUptakeRiverID   = MFVarGetID (MDVarIrrUptakeRiver,    "m/3", MFOutput, MFState, MFBoundary)) == CMfailed) ||
 		    ((_MDOutIrrUptakeExcessID  = MFVarGetID (MDVarIrrUptakeExcess,   "mm",  MFOutput, MFFlux,  MFBoundary)) == CMfailed))
 			return (CMfailed);
 	}
