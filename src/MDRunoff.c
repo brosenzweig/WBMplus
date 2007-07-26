@@ -20,7 +20,7 @@ static int _MDInSurfaceROID  = MFUnset;
 static int _MDInBaseFlowID   = MFUnset;
 static int _MDInRunoffCorrID = MFUnset;
 // Output
-static int _MDOutRunoffID   = MFUnset;
+static int _MDOutRunoffID    = MFUnset;
 
 static void _MDRunoff (int itemID) {
 // Input
