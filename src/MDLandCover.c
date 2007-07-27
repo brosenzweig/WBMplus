@@ -68,8 +68,8 @@ static void _MDLCTEMVegToCover (int itemID) {
 		case  13: MFVarSetInt (_MDOutCoverID,itemID, 3); break;
 		case   2: // Tundra
 		case   3: MFVarSetInt (_MDOutCoverID,itemID, 4); break;
-					 // Cultivation
-					 // Desert
+				  // Cultivation
+				  // Desert
 		case  21: MFVarSetInt (_MDOutCoverID,itemID, 6); break;
 		case -36: // Water
 		case -37: MFVarSetInt (_MDOutCoverID,itemID, 7); break;
