@@ -9,11 +9,11 @@ MDPrecipitation.c
 balazs.fekete@unh.edu
 ******************************************************************************/
 
-#include<stdio.h>
-#include<math.h>
-#include<cm.h>
-#include<MF.h>
-#include<MD.h>
+#include <stdio.h>
+#include <math.h>
+#include <cm.h>
+#include <MF.h>
+#include <MD.h>
 
 bool MDEvent (int nSteps,int nEvents,int step)
 

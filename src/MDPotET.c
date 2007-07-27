@@ -10,10 +10,10 @@ balazs.fekete@unh.edu
 
 *******************************************************************************/
 
-#include<stdio.h>
-#include<cm.h>
-#include<MF.h>
-#include<MD.h>
+#include <stdio.h>
+#include <cm.h>
+#include <MF.h>
+#include <MD.h>
 
 static int _MDPotETID = MFUnset;
 

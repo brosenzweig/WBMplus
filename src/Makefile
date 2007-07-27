@@ -31,6 +31,7 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDInfiltration.o\
        $(OBJ)/MDIntercept.o\
        $(OBJ)/MDIrrGrossDemand.o\
+       $(OBJ)/MDIrrigation.o\
        $(OBJ)/MDGrossRad.o\
        $(OBJ)/MDPrecipitation.o\
        $(OBJ)/MDPotET.o\

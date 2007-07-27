@@ -10,11 +10,11 @@ balazs.fekete@unh.edu
 
 *******************************************************************************/
 
-#include<stdio.h>
-#include<math.h>
-#include<cm.h>
-#include<MF.h>
-#include<MD.h>
+#include <stdio.h>
+#include <math.h>
+#include <cm.h>
+#include <MF.h>
+#include <MD.h>
 
 // Input
 static int _MDInRechargeID              = MFUnset;
@@ -38,7 +38,7 @@ static void _MDBaseFlow (int itemID) {
 // Input
 	float irrDemand;          // Irrigation demand [mm]
 	float irrReturnFlow;      // Irrigation return flow (a combination of percolation from rice and the
-	float irrAreaFrac;        // Irrigated area fraction [-]
+ 
 	                          // residual from irrigation inefficiency
 // Output
 	float grdWater;           // Groundwater size   [mm]
@@ -49,12 +49,11 @@ static void _MDBaseFlow (int itemID) {
 	float baseFlow;           // Base flow from groundwater [mm]
 
 	grdWaterChg = grdWater    = MFVarGetFloat (_MDOutGrdWatID,  itemID, 0.0);
-	// Abstraction here.........................
-	if (_MDInIrrAreaFractionID  != MFUnset) {
-		irrAreaFrac    = MFVarGetFloat (_MDInIrrAreaFractionID, itemID, 0.0);
-		irrDemand      = MFVarGetFloat (_MDInIrrGrossDemandID,  itemID, 0.0) * irrAreaFrac;
-		irrReturnFlow  = MFVarGetFloat (_MDInIrrReturnFlowID,   itemID, 0.0) * irrAreaFrac;
-		irrAreaFrac    = MFVarGetFloat (_MDInIrrAreaFractionID, itemID, 0.0) * irrAreaFrac;
+
+	if ((_MDInIrrGrossDemandID != MFUnset) && (_MDInIrrReturnFlowID  != MFUnset)) {
+	// Abstraction here.....	 
+		irrDemand      = MFVarGetFloat (_MDInIrrGrossDemandID,  itemID, 0.0);
+		irrReturnFlow  = MFVarGetFloat (_MDInIrrReturnFlowID,   itemID, 0.0);
 
 		if (irrDemand >= grdWater) {
 			irrUptakeGrdWater = grdWater;
@@ -68,13 +67,11 @@ static void _MDBaseFlow (int itemID) {
 		}
 		grdWater += irrReturnFlow;
 		grdWaterChg = grdWaterChg + irrReturnFlow - irrDemand;
-
 		MFVarSetFloat (_MDOutIrrUptakeGrdWaterID, itemID, irrUptakeGrdWater);
-		MFVarSetFloat (_MDOutIrrUptakeExternalID, itemID, IrrUptakeExt); 
+		MFVarSetFloat (_MDOutIrrUptakeExternalID, itemID, IrrUptakeExt);
 	}
-	else irrAreaFrac = 0.0;
 
-	baseFlow    = _MDRecharge = MFVarGetFloat (_MDInRechargeID, itemID, 0.0) * (1.0 - irrAreaFrac);
+	baseFlow    = _MDRecharge = MFVarGetFloat (_MDInRechargeID, itemID, 0.0) ;
 	if (grdWater + _MDRecharge > MFMathEpsilon) {
 		if ((grdWater = MFRungeKutta ((float) 0.0,1.0, grdWater,_MDGroundWaterFunc)) < 0.0) grdWater = 0.0;
 		grdWaterChg = grdWater - grdWaterChg;
@@ -82,7 +79,7 @@ static void _MDBaseFlow (int itemID) {
 	}
 	else grdWaterChg = baseFlow = 0.0;
 
-	//alles in mm!
+	// in mm!
 	MFVarSetFloat (_MDOutGrdWatID,            itemID, grdWater);
 	MFVarSetFloat (_MDOutGrdWatChgID,         itemID, grdWaterChg);
 	MFVarSetFloat (_MDOutBaseFlowID,          itemID, baseFlow);
@@ -103,9 +100,9 @@ int MDBaseFlowDef () {
 	if (((optStr = MFOptionGet (MDOptIrrigation)) != (char *) NULL) && (CMoptLookup (options,optStr,true) == CMfailed)) {
 		if (((_MDInIrrGrossDemandID     = MDIrrGrossDemandDef ()) == CMfailed) ||
 		    ((_MDInIrrReturnFlowID      = MFVarGetID (MDVarIrrReturnFlow,     "mm", MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		    ((_MDInIrrAreaFractionID    = MFVarGetID (MDVarIrrAreaFraction,   "%",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
+//		    ((_MDInIrrAreaFractionID    = MFVarGetID (MDVarIrrAreaFraction,   "%",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
 		    ((_MDOutIrrUptakeGrdWaterID = MFVarGetID (MDVarIrrUptakeGrdWater, "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-		    ((_MDOutIrrUptakeExternalID = MFVarGetID (MDVarIrrUptakeExternal, "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed))
+		    ((_MDOutIrrUptakeExternalID = MFVarGetID (MDVarIrrUptakeExternal, "mm", MFOutput, MFState,  MFBoundary)) == CMfailed))
 			return (CMfailed);
 	}
 	if (((_MDOutGrdWatID                = MFVarGetID (MDVarGroundWater,       "mm", MFOutput, MFState, MFInitial))  == CMfailed) ||
@@ -113,6 +110,6 @@ int MDBaseFlowDef () {
 	    ((_MDOutBaseFlowID              = MFVarGetID (MDVarBaseFlow,          "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
 	    (MFModelAddFunction (_MDBaseFlow) == CMfailed)) return (CMfailed);
 
-	MFDefLeaving ("Base flow");
+	MFDefLeaving ("Base flow ");
 	return (_MDOutBaseFlowID);
 }
