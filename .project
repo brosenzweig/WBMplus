@@ -3,6 +3,8 @@
 	<name>WBMplus</name>
 	<comment></comment>
 	<projects>
+		<project>CMlib</project>
+		<project>MFlib</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
@@ -20,6 +22,10 @@
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.enableAutoBuild</key>
 					<value>false</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.buildLocation</key>
+					<value>${workspace_loc:/WBMplus}</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.enableFullBuild</key>
