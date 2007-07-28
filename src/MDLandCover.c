@@ -95,29 +95,27 @@ static void _MDLCTEMVegToCover (int itemID) {
 	}
 }
 
-enum { MDinput, MDLCLookup, MDLCSAGEVeg, MDLCTEMVeg };
+enum { MDinput, MDLCSAGEVeg, MDLCTEMVeg };
 
 int MDLandCoverDef () {
 	int optID = MDinput;
 	const char *optStr, *optName = MDVarWBMCover;
-	const char *options [] = { MDInputStr, "lookup", "SAGEVeg", "TEMVeg",(char *) NULL };
+	const char *options [] = { MDInputStr, "SAGEVeg", "TEMVeg",(char *) NULL };
 
 	if (_MDOutCoverID != MFUnset) return (_MDOutCoverID);
 
 	MFDefEntering ("Landcover");
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options,optStr,true);
 	switch (optID) {
-		case MDinput: _MDOutCoverID = MFVarGetID (MDVarWBMCover,   MFNoUnit, MFInput, MFState, MFBoundary); break;
-		case MDLCLookup:
-			break;
+		case MDinput: _MDOutCoverID = MFVarGetID (MDVarWBMCover,     MFNoUnit, MFInput, MFState, MFBoundary); break;
 		case MDLCSAGEVeg:
-			  if (((_MDInSAGEVegID     = MFVarGetID (MDVarSAGEVegCover, MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed) ||
-			      ((_MDOutCoverID      = MFVarGetID (MDVarWBMCover,     MFNoUnit, MFByte,  MFState, MFBoundary)) == CMfailed) ||
+			  if (((_MDInSAGEVegID  = MFVarGetID (MDVarSAGEVegCover, MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed) ||
+			      ((_MDOutCoverID   = MFVarGetID (MDVarWBMCover,     MFNoUnit, MFByte,  MFState, MFBoundary)) == CMfailed) ||
 			      (MFModelAddFunction (_MDLCSAGEVegToCover) == CMfailed)) return (CMfailed);
 			break;
 		case MDLCTEMVeg:
-			  if (((_MDInTEMVegID      = MFVarGetID (MDVarTEMVegCover,  MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed) ||
-			      ((_MDOutCoverID      = MFVarGetID (MDVarWBMCover,     MFNoUnit, MFByte,  MFState, MFBoundary)) == CMfailed) ||
+			  if (((_MDInTEMVegID   = MFVarGetID (MDVarTEMVegCover,  MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed) ||
+			      ((_MDOutCoverID   = MFVarGetID (MDVarWBMCover,     MFNoUnit, MFByte,  MFState, MFBoundary))  == CMfailed) ||
 			      (MFModelAddFunction (_MDLCTEMVegToCover) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);

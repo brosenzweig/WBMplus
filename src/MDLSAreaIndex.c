@@ -55,10 +55,10 @@ int MDLeafAreaIndexDef () {
 		case MDinput:  _MDOutLeafAreaIndexID = MFVarGetID (MDVarLeafAreaIndex, MFNoUnit, MFInput, MFState, MFBoundary); break;
 		case MDstandard:
 			if (((_MDInCParamLPMaxID    = MDCParamLPMaxDef ()) == CMfailed) ||
-				 ((_MDInCoverID          = MFVarGetID (MDVarWBMCover,       MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
-				 ((_MDInAtMeanID         = MFVarGetID (MDVarAirTemperature, "degC",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-				 ((_MDOutLeafAreaIndexID = MFVarGetID (MDVarLeafAreaIndex,  MFNoUnit, MFOutput, MFState, MFBoundary)) == CMfailed) ||
-				 (MFModelAddFunction (_MDLeafAreaIndex) == CMfailed)) return (CMfailed);
+				((_MDInCoverID          = MDLandCoverDef ()) == CMfailed) ||
+				((_MDInAtMeanID         = MFVarGetID (MDVarAirTemperature, "degC",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+				((_MDOutLeafAreaIndexID = MFVarGetID (MDVarLeafAreaIndex,  MFNoUnit, MFOutput, MFState, MFBoundary)) == CMfailed) ||
+				(MFModelAddFunction (_MDLeafAreaIndex) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
