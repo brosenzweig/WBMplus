@@ -63,7 +63,7 @@ static void _MDBaseFlow (int itemID) {
 			IrrUptakeExt = 0.0;
 		}
 		grdWater += irrReturnFlow;
-		grdWaterChg = grdWaterChg + irrReturnFlow - irrDemand;
+		grdWaterChg = grdWaterChg + irrReturnFlow - irrUptakeGrdWater;
 		MFVarSetFloat (_MDOutIrrUptakeGrdWaterID, itemID, irrUptakeGrdWater);
 		MFVarSetFloat (_MDOutIrrUptakeExternalID, itemID, IrrUptakeExt);
 	}
