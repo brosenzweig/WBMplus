@@ -35,7 +35,6 @@ static int _MDInGrossIrrDemandID          = MFUnset;
 static int _MDInIrrReturnFlowID           = MFUnset;
 static int _MDInExcessAbstractionID       = MFUnset;
 static int _MDDischargeID                 = MFUnset;
-static int _MDBgcRoutingID                = MFUnset;
 //Output
 static int _MDOutWaterBalanceID           = MFUnset;
 static int _MDInAirTemperatureID          = MFUnset;
@@ -72,7 +71,6 @@ static void _MDWaterBalance(int itemID) {
 	float irrAreaFraction  = MFVarGetFloat(_MDInIrrAreaID,              itemID, 0.0);
 	float waterbalance;
 	float infiltration     = MFVarGetFloat(_MDInInfiltrationID,         itemID, 0.0);
-	float irrReturnFlow    = MFVarGetFloat(_MDInIrrReturnFlowID,        itemID, 0.0);
 	float gwAbstraction    = MFVarGetFloat(_MDInGrdWaterAbstractionID,  itemID, 0.0);
 	float disAbstraction   = MFVarGetFloat(_MDInDischargeAbstractionID, itemID, 0.0);
 	float exAbstraction    = MFVarGetFloat(_MDInExcessAbstractionID,    itemID, 0.0);

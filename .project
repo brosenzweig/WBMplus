@@ -3,8 +3,8 @@
 	<name>WBMplus</name>
 	<comment></comment>
 	<projects>
-		<project>CMlib</project>
 		<project>MFlib</project>
+		<project>CMlib</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
