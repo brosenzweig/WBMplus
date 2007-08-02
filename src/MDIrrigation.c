@@ -39,34 +39,34 @@ static MDIrrigatedCrop *_MDirrigCropStruct = (MDIrrigatedCrop *) NULL;
 static int *_MDInCropFractionID = (int *) NULL;
 static int *_MDOutCropDeficitID = (int *) NULL;
 
- //Input
-static int _MDInPrecipID=MFUnset;
-static int _MDInRefETPID=MFUnset;
-static int _MDInIrrAreaID=MFUnset;
-static int _MDInIrrIntensityID=MFUnset;
-static int _MDInIrrEfficiencyID=MFUnset;
-static int _MDInSPackChgID=MFUnset;
-static int _MDGrowingSeason1ID=MFUnset;
-static int _MDGrowingSeason2ID=MFUnset;
-static int _MDGrowingSeason3ID=MFUnset;
-static int _MDInFldCapaID=MFUnset;
-static int _MDInWltPntID=MFUnset;
-static int _MDNumberOfIrrCrops=MFUnset;
+//Input
+static int _MDInPrecipID               = MFUnset;
+static int _MDInRefETPID               = MFUnset;
+static int _MDInIrrAreaID              = MFUnset;
+static int _MDInIrrIntensityID         = MFUnset;
+static int _MDInIrrEfficiencyID        = MFUnset;
+static int _MDInSPackChgID             = MFUnset;
+static int _MDGrowingSeason1ID         = MFUnset;
+static int _MDGrowingSeason2ID         = MFUnset;
+static int _MDGrowingSeason3ID         = MFUnset;
+static int _MDInFldCapaID              = MFUnset;
+static int _MDInWltPntID               = MFUnset;
+static int _MDNumberOfIrrCrops         = MFUnset;
  
 
-static int _MDGrowingSeasonStartCalcID=MFUnset;
-static int _MDGrowingSeasonEndCalcID=MFUnset;
-static int _MDIrrConstantKc=MFUnset;
+static int _MDGrowingSeasonStartCalcID = MFUnset;
+static int _MDGrowingSeasonEndCalcID   = MFUnset;
+static int _MDIrrConstantKc            = MFUnset;
 //Output
 
 
 // The following Outputs are given in mm/d and related to the total cell area!! Module is called from MDRunoff!
-static int _MDOutNetIrrDemandID=MFUnset;
-static int _MDOutIrrigationDrainageID=MFUnset;
-static int _MDOutTotalCropETPDepthID=MFUnset;
-static int _MDOutGrossIrrDemandID = MFUnset;
-static int _MDOutIrrAreaSMChangeID=MFUnset;
-static int _MDInAirTemperatureID=MFUnset;
+static int _MDOutNetIrrDemandID        = MFUnset;
+static int _MDOutIrrigationDrainageID  = MFUnset;
+static int _MDOutTotalCropETPDepthID   = MFUnset;
+static int _MDOutGrossIrrDemandID      = MFUnset;
+static int _MDOutIrrAreaSMChangeID     = MFUnset;
+static int _MDInAirTemperatureID       = MFUnset;
 
 
 //Parameters
@@ -84,7 +84,7 @@ static float getEffectivePrecipitation(float);
 static float getCorrDeplFactor(const MDIrrigatedCrop *, float);
 static int   readCropParameters(const char *);
 static void  printCrops(const MDIrrigatedCrop *);
-static int getNumGrowingSeasons(float);
+static int   getNumGrowingSeasons(float);
 
 static float getIrrGrossWaterDemand(float, float);
 static float irrAreaFraction;
@@ -315,8 +315,8 @@ static void _MDIrrigationWater(int itemID) {
 		float totGrossDemand = getIrrGrossWaterDemand(totalNetIrrDemand, irrEffeciency);
 		float loss=0;
 		if (actuallyIrrArea>0){loss= totGrossDemand-totalNetIrrDemand+(dailyPrecip-dailyEffPrecip);}
-		float OUT =totalCropETP+totalIrrPercolation+meanSMChange+loss;
-		float IN = totGrossDemand+dailyPrecip;
+//		float OUT =totalCropETP+totalIrrPercolation+meanSMChange+loss;
+//		float IN = totGrossDemand+dailyPrecip;
 //      if (itemID == 58704) printf ("IN totGrossDemand %f dailyprecip %f EffPrecip %f \n", totGrossDemand, dailyPrecip, dailyEffPrecip);
 //      if (itemID == 58704) printf ("OUT totalGross %f IrrPercol %f meanSMChange %f loss %f \n", totGrossDemand, totalIrrPercolation,meanSMChange,loss);
 //		if (fabs(IN-OUT) > 0.1) printf ("WaterBalance in MDIrrigation!!! IN %f OUT %f BALANCE %f LOSS %f %i DEMAND %f %i EffPrecip %f   itemID %i \n", IN, OUT, IN-OUT, loss, itemID, totGrossDemand, itemID, dailyEffPrecip,itemID);

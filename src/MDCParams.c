@@ -220,12 +220,10 @@ static void _MDCParamCD (int itemID) {
 	static float lookup []     = { 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 0.10 };
 
 	cover = MFVarGetInt (_MDInCoverID, itemID, 7); // defaulting missing value to water.
-//	if (itemID==2)printf ("Hier Land cover no  %i \n", cover );
 	if ((cover < 0) || (cover >= (int) (sizeof (lookup) / sizeof (lookup [0])))) {
 		CMmsgPrint (CMmsgWarning,"Warning: Invalid cover [%d] in: %s:%d\n",cover,__FILE__,__LINE__);
 		return;
 	}
-
 	MFVarSetFloat (_MDOutCParamCDID,itemID, lookup [cover]);	
 }
 

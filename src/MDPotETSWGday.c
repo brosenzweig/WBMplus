@@ -41,7 +41,7 @@ static void _MDPotETSWGday (int itemID) {
 // daily Shuttleworth-Wallace-Gurney (1985, 1990) PE in mm for day
 // Input
 	float dayLen;  // daylength in fraction of day
- 	float i0hDay;  //  daily potential insolation on horizontal [MJ/m2]
+ 	float i0hDay;  // daily potential insolation on horizontal [MJ/m2]
 	float albedo;  // albedo 
 	float height;  // canopy height [m]
 	float lWidth;  // average leaf width [m]
@@ -128,19 +128,19 @@ static void _MDPotETSWGday (int itemID) {
 	z0      = MDPETlibRoughness (disp,height,lai,sai,z0g);
 
 	lngNet  = MDSRadNETLong (i0hDay,airT,solRad,vPress);
-	rn = solNet + lngNet;
-   aa = rn - sHeat;
-   rns = rn * exp (-cr * (lai + sai));
-	asubs = rns - sHeat;
+	rn      = solNet + lngNet;
+	aa      = rn - sHeat;
+	rns     = rn * exp (-cr * (lai + sai));
+	asubs   = rns - sHeat;
 	es      = MDPETlibVPressSat   (airT);
 	delta   = MDPETlibVPressDelta (airT);
 	dd      = es - vPress; 
 
 	rsc     = MDPETlibCanopySurfResistance (airTMin,solRad,dd,lai,sai,r5,cd,cr,glMax);
-	raa     = MDPETlibBoundaryResistance (wSpeed,height,z0g,z0c,dispc,z0,disp);
-	rac     = MDPETlibLeafResistance (wSpeed,height,lWidth,z0g,lai,sai,z0c,dispc);
-	ras     = MDPETlibGroundResistance (wSpeed,height,z0g,z0c,dispc,z0,disp);
-	le      = MDPETlibShuttleworthWallace (rss,aa,asubs,dd,raa,rac,ras,rsc,delta);
+	raa     = MDPETlibBoundaryResistance   (wSpeed,height,z0g,z0c,dispc,z0,disp);
+	rac     = MDPETlibLeafResistance       (wSpeed,height,lWidth,z0g,lai,sai,z0c,dispc);
+	ras     = MDPETlibGroundResistance     (wSpeed,height,z0g,z0c,dispc,z0,disp);
+	le      = MDPETlibShuttleworthWallace  (rss,aa,asubs,dd,raa,rac,ras,rsc,delta);
 
 	pet = MDConstEtoM * MDConstIGRATE * le;
    MFVarSetFloat (_MDOutPetID,itemID,pet);
