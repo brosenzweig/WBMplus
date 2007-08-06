@@ -25,7 +25,7 @@ static void _MDRunoffVolume (int itemID) {
 	/* Input */
 	float runoff;
 
-	runoff = MFVarGetFloat (_MDInRunoffID, itemID, 0.0) * MFModelGetArea (itemID) / 86400000.0;
+	runoff = MFVarGetFloat (_MDInRunoffID, itemID, 0.0) * MFModelGetArea (itemID) / (MFModelGet_dt () * 1000.0);
 	MFVarSetFloat (_MDOutRunoffVolumeID, itemID, runoff);
 }
  

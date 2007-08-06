@@ -33,31 +33,33 @@ static void _MDInfiltrationSimple (int itemID) {
 	MFVarSetFloat (_MDOutInfiltrationID, itemID,  _MDInfiltrationFrac        * surplus);
 }
 
-enum { MDsimple, MDvarying };
+enum { MDinput, MDsimple, MDvarying };
 
 
 int MDInfiltrationDef () {
 	int  optID = MDsimple;
 	const char *optStr, *optName = "Infiltration";
-	const char *options [] = { "simple", "varying", (char *) NULL };
+	const char *options [] = { MDInputStr, "simple", "varying", (char *) NULL };
 	float par;
 
 	if (_MDOutInfiltrationID != MFUnset) return (_MDOutInfiltrationID);
 	
 	MFDefEntering ("Infiltration");
  	
-	if ((_MDInWaterSurplusID = MDWaterSurplusDef ()) == CMfailed) return (CMfailed);
-	
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);
 		
 	switch (optID) {
-		case MDsimple: 		
+		case MDinput:
+			_MDOutInfiltrationID = MFVarGetID (MDVarInfiltration, "mm", MFInput, MFFlux, MFBoundary);
+			break;
+		case MDsimple:
+		case MDvarying:	
+			if ((_MDInWaterSurplusID = MDWaterSurplusDef ()) == CMfailed) return (CMfailed);
 			if (((optStr = MFOptionGet (MDParInfiltrationFrac))  != (char *) NULL) && (sscanf (optStr,"%f",&par) == 1))
 				_MDInfiltrationFrac = par;
 			if (((_MDOutSurfaceROID    = MFVarGetID (MDVarSurfaceRO,    "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
 			    ((_MDOutInfiltrationID = MFVarGetID (MDVarInfiltration, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
 			    (MFModelAddFunction (_MDInfiltrationSimple) == CMfailed)) return (CMfailed);
-		case MDvarying:
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
