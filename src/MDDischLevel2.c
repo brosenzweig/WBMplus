@@ -30,22 +30,25 @@ static void _MDDischLevel2 (int itemID) {
 // Outputs
 	float irrUptakeRiver;  // Irrigational water uptake from river [mm/dt]
 	float irrUptakeExcess; // Irrigational water uptake from unsustainable source [mm/dt]
+	float discharge_mm;
 
-	discharge = MFVarGetFloat (_MDInDischLevel3ID, itemID, 0.0) * 1000.0 * MFModelGet_dt () / MFModelGetArea (itemID);
+	discharge = MFVarGetFloat (_MDInDischLevel3ID, itemID, 0.0);
 	if (_MDInIrrUptakeExternalID != MFUnset) {
+		discharge_mm =  discharge * 1000.0 * MFModelGet_dt () / MFModelGetArea (itemID);
 		irrUptakeExt = MFVarGetFloat (_MDInIrrUptakeExternalID, itemID, 0.0);
-		if (discharge > irrUptakeExt) {
+		if (discharge_mm > irrUptakeExt) {
 			irrUptakeRiver  = irrUptakeExt;
 			irrUptakeExcess = 0.0;
-			discharge = discharge - irrUptakeRiver;
+			discharge_mm = discharge_mm - irrUptakeRiver;
 		}
 		else {
-			irrUptakeRiver  = discharge;
-			irrUptakeExcess = irrUptakeExt - discharge;
-			discharge = 0.0;
+			irrUptakeRiver  = discharge_mm;
+			irrUptakeExcess = irrUptakeExt - discharge_mm;
+			discharge_mm = 0.0;
 		}
 		MFVarSetFloat (_MDOutIrrUptakeRiverID,  itemID, irrUptakeRiver);
 		MFVarSetFloat (_MDOutIrrUptakeExcessID, itemID, irrUptakeExcess);
+		discharge = discharge_mm * MFModelGetArea (itemID) / (1000.0 * MFModelGet_dt ());
 	}
 	MFVarSetFloat (_MDOutDischLevel2ID,  itemID, discharge);
 }

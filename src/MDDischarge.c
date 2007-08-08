@@ -49,7 +49,7 @@ int MDDischargeDef() {
 			if ((_MDInDischObservedID   = MFVarGetID (MDVarDischObserved, "m3/s",  MFInput,  MFState, MFBoundary)) == CMfailed)
 				return (CMfailed);
 		case MDsimulated:
-			if (((_MDOutDischargeID     = MFVarGetID (MDVarDischarge,     "m3/s",  MFRoute,  MFState, MFBoundary))  == CMfailed) ||
+			if (((_MDOutDischargeID     = MFVarGetID (MDVarDischarge,     "m3/s",  MFRoute,  MFState, MFBoundary)) == CMfailed) ||
 				((_MDInDischLevel1ID    = MDDischLevel1Def ()) == CMfailed) ||
 				(MFModelAddFunction (_MDDischarge) == CMfailed)) return (CMfailed);
 			break;
