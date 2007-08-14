@@ -99,9 +99,9 @@ int MDPrecipitationDef ()
 		case MDinput: _MDOutPrecipID = MFVarGetID (MDVarPrecipitation, "mm", MFInput,  MFFlux,  MFBoundary); break;
 		case MDwetdays:
 			if (((_MDInWetDaysID    = MDWetDaysDef ()) == CMfailed) ||
-				 ((_MDInPrecipID     = MFVarGetID (MDVarPrecipMonthly,  "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-				 ((_MDOutPrecipID    = MFVarGetID (MDVarPrecipitation,  "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-				 (MFModelAddFunction (_MDPrecipWetDays) == CMfailed)) return (CMfailed);
+				((_MDInPrecipID     = MFVarGetID (MDVarPrecipMonthly,  "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+				((_MDOutPrecipID    = MFVarGetID (MDVarPrecipitation,  "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+				(MFModelAddFunction (_MDPrecipWetDays) == CMfailed)) return (CMfailed);
 			break;
 		case MDfraction:
 			if (((_MDInPrecipID     = MFVarGetID (MDVarPrecipMonthly,  "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||

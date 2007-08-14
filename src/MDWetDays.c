@@ -67,7 +67,7 @@ int MDWetDaysDef ()
 		{
 		case MDinput: _MDOutWetDaysID = MFVarGetID (MDVarWetDays,   MFNoUnit, MFInput,  MFState, MFBoundary); break;
 		case MDlbg:
-			if (((_MDInPrecipID   = MFVarGetID (MDVarPrecipitation, "mm",     MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+			if (((_MDInPrecipID   = MFVarGetID (MDVarPrecipMonthly, "mm",     MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
 			    ((_MDInAlphaID    = MFVarGetID (MDVarWetDaysAlpha,  MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDInBetaID     = MFVarGetID (MDVarWetDaysBeta,   MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDOutWetDaysID = MFVarGetID (MDVarWetDays,       MFNoUnit, MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
