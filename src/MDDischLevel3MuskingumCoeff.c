@@ -48,7 +48,7 @@ static void _MDDischRouteMuskingumCoeff (int itemID) {
 	float dL;               // Cell length [m]
 	
 	dL        = MFModelGetLength (itemID);
-	discharge = fabs (MFVarGetFloat(_MDInDischargeID,         itemID, 0.0));
+	discharge = fabs (MFVarGetFloat(_MDInDischargeID,        itemID, 0.0));
 	slope     = MFVarGetFloat (_MDInRiverbedSlopeID,         itemID, 0.0) / 1000.0;
 	yMean     = MFVarGetFloat (_MDInRiverbedAvgDepthMeanID,  itemID, 0.0);
 	wMean     = MFVarGetFloat (_MDInRiverbedWidthMeanID,     itemID, 0.0);

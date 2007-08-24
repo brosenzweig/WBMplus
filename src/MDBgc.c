@@ -17,7 +17,7 @@ wil.wollheim@unh.edu
 static int _MDAirTemperatureID        = MFUnset;
 static int _MDDischargeID             = MFUnset;
 static int _MDRunoffVolumeID          = MFUnset;
-static int _MDVarRiverStorageChangeID = MFUnset;
+static int _MDVarRiverStorageChgID    = MFUnset;
 static int _MDVarRiverStorageID       = MFUnset;
 static int _MDResCapacityID           = MFUnset;
 static int _MDResStorageID            = MFUnset;
@@ -77,36 +77,18 @@ static void _MDBgcRouting (int itemID) {
 	float tnVfref = 35;
 	float tnTref = 20;
 
+	airT               = MFVarGetFloat (_MDAirTemperatureID,         itemID, 0.0);
+	discharge          = MFVarGetFloat (_MDDischargeID,              itemID, 0.0);
+	runoff             = MFVarGetFloat (_MDRunoffVolumeID,           itemID, 0.0);
+	waterStorageChange = MFVarGetFloat ( _MDVarRiverStorageChgID,    itemID, 0.0);
+	waterStorage       = MFVarGetFloat ( _MDVarRiverStorageID,       itemID, 0.0);
 
-	if (MFVarTestMissingVal (_MDAirTemperatureID,          itemID) ||
-	    MFVarTestMissingVal (_MDDischargeID,               itemID) ||
-	    MFVarTestMissingVal (_MDRunoffVolumeID,            itemID) ||
-	    MFVarTestMissingVal (_MDVarRiverStorageChangeID,   itemID) ||
-	    MFVarTestMissingVal (_MDVarRiverStorageID,         itemID) ||
-	    MFVarTestMissingVal (_MDNonPointTNSourcesContID,   itemID) ||
-	    MFVarTestMissingVal (_MDPointTNSourcesID,          itemID)) {
-		MFVarSetFloat (_MDAirTemperatureID,          itemID, 0.0);
-		MFVarSetFloat (_MDDischargeID,               itemID, 0.0);
-		MFVarSetFloat (_MDRunoffVolumeID,            itemID, 0.0);
-		MFVarSetFloat (_MDVarRiverStorageChangeID,   itemID, 0.0);
-		MFVarSetFloat (_MDVarRiverStorageID,         itemID, 0.0);
-		MFVarSetFloat (_MDNonPointTNSourcesContID,   itemID, 0.0);
-		MFVarSetFloat (_MDPointTNSourcesID,          itemID, 0.0);
-	}		  
-	else {
-		airT               = MFVarGetFloat (_MDAirTemperatureID,         itemID, 0.0);
-		discharge          = MFVarGetFloat (_MDDischargeID,              itemID, 0.0);
-		runoff             = MFVarGetFloat (_MDRunoffVolumeID,           itemID, 0.0);
-		waterStorageChange = MFVarGetFloat ( _MDVarRiverStorageChangeID, itemID, 0.0);
-		waterStorage       = MFVarGetFloat ( _MDVarRiverStorageID,       itemID, 0.0);
+	tnNonpointLoadConc = MFVarGetFloat (_MDNonPointTNSourcesContID,  itemID, 0.0);
+	tnPointLoadFlux    = MFVarGetFloat (_MDPointTNSourcesID,         itemID, 0.0);
 
-		tnNonpointLoadConc = MFVarGetFloat (_MDNonPointTNSourcesContID,  itemID, 0.0);
-		tnPointLoadFlux    = MFVarGetFloat (_MDPointTNSourcesID,         itemID, 0.0);
-
-		tnFlux             = MFVarGetFloat ( _MDTNFluxID,                itemID, 0.0);
-		tnStoreWater       = MFVarGetFloat ( _MDTNStoreWaterID,          itemID, 0.0);
-		tnStoreSeds        = MFVarGetFloat ( _MDTNStoreSedsID,           itemID, 0.0);
-   }
+	tnFlux             = MFVarGetFloat ( _MDTNFluxID,                itemID, 0.0);
+	tnStoreWater       = MFVarGetFloat ( _MDTNStoreWaterID,          itemID, 0.0);
+	tnStoreSeds        = MFVarGetFloat ( _MDTNStoreSedsID,           itemID, 0.0);
 
 //////////////////////////////  GUTS
 //		  if (itemID==6447) printf("tnStoreWater, %f tnFlux %f \n\n", tnStoreWater, tnFlux);
@@ -171,18 +153,18 @@ static void _MDBgcRouting (int itemID) {
 
 // define the variable needed by the function
 int MDBgcRoutingDef () {
-  
+	const char *optStr;
+	const char *options [] = { MDNoneStr, (char *) NULL };
+
 	MFDefEntering ("Nutrient Calculation");
 			
 	if (_MDTNFluxID != MFUnset)	return (_MDTNFluxID);
    // Input
-	if (((_MDAirTemperatureID        = MFVarGetID (MDVarAirTemperature,         "degC",    MFInput, MFState, MFBoundary)) == CMfailed) ||
+	if (((_MDDischargeID             = MDDischargeDef ()) == CMfailed)    ||
 	    ((_MDRunoffVolumeID          = MDRunoffVolumeDef ()) == CMfailed) ||
-	    ((_MDDischargeID             = MDDischargeDef ()) == CMfailed) ||
-	    ((_MDVarRiverStorageChangeID = MFVarGetID (MDVarRiverStorageChange,     "m3/s",    MFInput, MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDAirTemperatureID        = MFVarGetID (MDVarAirTemperature,         "degC",    MFInput, MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDVarRiverStorageChgID    = MFVarGetID (MDVarRiverStorageChg,        "m3/s",    MFInput, MFState, MFBoundary))  == CMfailed) ||
 	    ((_MDVarRiverStorageID       = MFVarGetID (MDVarRiverStorage,           "m3",      MFInput, MFState, MFInitial))   == CMfailed) ||
-	    ((_MDResCapacityID           = MFVarGetID (MDVarReservoirCapacity,      "km3",     MFInput, MFState, MFBoundary))  == CMfailed) ||
-	    ((_MDResStorageID            = MFVarGetID (MDVarReservoirStorage,       "km3",     MFInput, MFState, MFInitial))   == CMfailed) ||
 	    ((_MDNonPointTNSourcesContID = MFVarGetID (MDVarNonPointTNSourcesCont,  "kg/m3",   MFInput, MFState, MFBoundary))  == CMfailed) ||
 	    ((_MDPointTNSourcesID        = MFVarGetID (MDVarPointTNSources,         "kg/day",  MFInput, MFState, MFBoundary))  == CMfailed) ||
 	// Output
@@ -195,6 +177,11 @@ int MDBgcRoutingDef () {
 	    ((_MDTNConcID                = MFVarGetID (MDVarBgcTNConc,              "kg/m3",   MFOutput, MFState, MFBoundary))  == CMfailed) ||
 	    ((_MDTNFluxID                = MFVarGetID (MDVarBgcTNFlux  ,            "kg/day",  MFRoute,  MFState, MFBoundary))  == CMfailed) ||
 	    (MFModelAddFunction (_MDBgcRouting) == CMfailed)) return (CMfailed); 
+	if (((optStr = MFOptionGet (MDOptReservoirs)) != (char *) NULL) && (CMoptLookup (options,optStr,true) == CMfailed)) {
+		if (((_MDResCapacityID       = MFVarGetID (MDVarReservoirCapacity,      "km3",     MFInput, MFState, MFBoundary))  == CMfailed) ||
+		    ((_MDResStorageID        = MFVarGetID (MDVarReservoirStorage,       "km3",     MFInput, MFState, MFInitial))   == CMfailed))
+	    	return (CMfailed);
+	}
 	MFDefLeaving ("Nutrient Calculation");
 	return (_MDTNFluxID); 
 }

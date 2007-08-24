@@ -193,8 +193,10 @@ extern "C" {
 #define MDVarRiverbedSlope	                       "RiverbedSlope"
 #define MDVarRiverbedShapeExponent	               "RiverbedShapeExponent"
 #define MDVarRiverbedWidthMean	                   "RiverbedWidthMean"
+#define MDVarRiverDepth          	               "RiverDepth"
 #define MDVarRiverStorage                          "RiverStorage"
-#define MDVarRiverStorageChange                    "RiverStorageChange"
+#define MDVarRiverStorageChg                       "RiverStorageChange"
+#define MDVarRiverWidth          	               "RiverbedWidth"
 
 #define MDVarRootingDepth	                       "RootingDepth"
 #define MDVarRunoff                                "Runoff"

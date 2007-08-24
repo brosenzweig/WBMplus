@@ -29,8 +29,8 @@ int main (int argc,char *argv []) {
 		case MDinfiltration: return (MFModelRun (argc,argv,argNum,MDInfiltrationDef));
 		case MDrunoff:       return (MFModelRun (argc,argv,argNum,MDRunoffDef));
 		case MDdischarge:    return (MFModelRun (argc,argv,argNum,MDDischargeDef));
-		case MDbgc:          return (MFModelRun (argc,argv,argNum,MDBgcRoutingDef));
 		case MDbalance:      return (MFModelRun (argc,argv,argNum,MDWaterBalanceDef));
+		case MDbgc:          return (MFModelRun (argc,argv,argNum,MDBgcRoutingDef));
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
 	return (CMfailed);
