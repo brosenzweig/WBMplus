@@ -32,6 +32,7 @@ extern "C" {
 #define MDOptRiverbed   "Riverbed"
 #define MDOptRouting    "Routing"
 #define MDOptMuskingum  "Muskingum"
+#define MDOptIrrReferenceET  "IrrReferenceETP"
 
  //MD BGCInput
 # define MDVarNonPointTNSourcesCont				"NonPointTNSourcesCont" 
@@ -75,7 +76,7 @@ extern "C" {
 #define MDVarIrrPercolationWater					"IrrPercolationWater"
 
 #define MDParIrrDailyPercolationRate 				"IrrDailyPercolationRate"
-#define MDParIrrRiceWaterLayerDepth 				"IrrRiceWaterLayerDepth"
+ 
 #define MDVarIrrSoilMoistureChange                  "IrrSoilMoistChange"
 
 #define MDVarIrrGrossDemand               "IrrGrossDemand"      // IrrGrossDemand = IrrUptakeGroundWater + IrrUptakeRiver + IrrUptakeExcess
@@ -284,9 +285,6 @@ extern "C" {
  
 int MDParNumberOfCrops;
 //+++++++++++++++++++++++++++++++++++=
-int MDVarIrrAreaFractionDef ();
-int MDVarIrrIntensityDef ();
-int MDVarIrrEfficiencyDef ();
 int MDIrrigationDef();
 int MDIrrGrossDemandDef();
 int MDReferenceETPDef ();
