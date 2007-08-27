@@ -65,7 +65,7 @@ static void _MDDischLevel3Muskingum (int itemID) {
 
 int MDDischLevel3MuskingumDef () {
 
-	if (_MDOutDischLevel3ID != CMfailed) return (_MDOutDischLevel3ID);
+	if (_MDOutDischLevel3ID != MFUnset) return (_MDOutDischLevel3ID);
 
 	MFDefEntering ("Discharge Muskingum");
 

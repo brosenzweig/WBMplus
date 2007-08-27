@@ -49,6 +49,7 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDRelHumidity.o\
        $(OBJ)/MDReservoirs.o\
        $(OBJ)/MDRiverbedShapeExp.o\
+       $(OBJ)/MDRiverWidth.o\
        $(OBJ)/MDRunoff.o\
        $(OBJ)/MDRunoffVolume.o\
        $(OBJ)/MDSMoistChg.o\

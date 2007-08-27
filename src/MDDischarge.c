@@ -24,7 +24,7 @@ static int _MDInDischObservedID = MFUnset;
 static int _MDOutDischargeID     = MFUnset;
 
 static void _MDDischarge (int itemID) {
-	float discharge;
+	float discharge; // Discharge [m3/s]
 
 	discharge = MFVarGetFloat (_MDInDischLevel1ID,   itemID, 0.0);
 
@@ -40,6 +40,8 @@ int MDDischargeDef() {
 	int optID = MDinput;
 	const char *optStr, *optName = MDOptDischarge;
 	const char *options [] = { MDInputStr, MDCalculateStr, "corrected", (char *) NULL };
+
+	if (_MDOutDischargeID != MFUnset) return (_MDOutDischargeID);
 
 	MFDefEntering (MDOptDischarge);
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options,optStr,true);

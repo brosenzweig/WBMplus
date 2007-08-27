@@ -39,7 +39,7 @@ int MDDischMeanDef () {
 	const char *optStr, *optName = MDVarDischMean;
 	const char *options [] = { MDInputStr, MDCalculateStr, (char *) NULL };
 
-	if (_MDOutDischMeanID != CMfailed) return (_MDOutDischMeanID);
+	if (_MDOutDischMeanID != MFUnset) return (_MDOutDischMeanID);
 	MFDefEntering ("Discharge Mean");
 
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);

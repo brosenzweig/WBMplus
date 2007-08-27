@@ -36,6 +36,8 @@ int MDDischLevel1Def() {
 	const char *optStr;
 	const char *options [] = { MDNoneStr, (char *) NULL };
 
+	if (_MDOutDischLevel1ID != MFUnset) return (_MDOutDischLevel1ID);
+
 	MFDefEntering ("Discharge Level 1");
 	if ((_MDInDischLevel2ID = MDDischLevel2Def ()) == CMfailed) return (CMfailed);
 

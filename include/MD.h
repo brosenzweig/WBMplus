@@ -340,6 +340,7 @@ int MDPotETTurcDef ();
 int MDPotFAOReferenceETDef ();
 int MDRelHumidityDef ();
 int MDRiverbedShapeExponentDef ();
+int MDRiverWidthDef ();
 //int MDRootDepthDef ();
 int MDRunoffDef ();
 int MDRunoffVolumeDef ();

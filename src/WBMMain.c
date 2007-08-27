@@ -11,13 +11,13 @@ balazs.fekete@unh.edu
 *******************************************************************************/
 #include "wbm.h"
 
-enum { MDpet, MDsurplus, MDinfiltration, MDrunoff, MDdischarge, MDbgc, MDbalance };
+enum { MDpet, MDsurplus, MDinfiltration, MDrunoff, MDdischarge,  MDbalance, MDgeometry, MDbgc};
 
 int main (int argc,char *argv []) {
 	int argNum;
 	int  optID = MDbalance;
 	const char *optStr, *optName = MDOptModel;
-	const char *options [] = { "pet", "surplus", "infiltration", "runoff", "discharge", "bgc", "balance", (char *) NULL };
+	const char *options [] = { "pet", "surplus", "infiltration", "runoff", "discharge",  "balance", "geometry", "bgc", (char *) NULL };
 
 	argNum = MFOptionParse (argc,argv);
 
@@ -30,6 +30,7 @@ int main (int argc,char *argv []) {
 		case MDrunoff:       return (MFModelRun (argc,argv,argNum,MDRunoffDef));
 		case MDdischarge:    return (MFModelRun (argc,argv,argNum,MDDischargeDef));
 		case MDbalance:      return (MFModelRun (argc,argv,argNum,MDWaterBalanceDef));
+		case MDgeometry:     return (MFModelRun (argc,argv,argNum,MDRiverWidthDef));
 		case MDbgc:          return (MFModelRun (argc,argv,argNum,MDBgcRoutingDef));
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
