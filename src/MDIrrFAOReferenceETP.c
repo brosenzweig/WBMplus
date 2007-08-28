@@ -18,16 +18,6 @@ balazs.fekete@unh.edu
 
 static int _MDInDayLengthID     = MFUnset;
 static int _MDInI0HDayID        = MFUnset;
-static int _MDInCParamAlbedoID  = MFUnset;
-static int _MDInCParamCHeightID = MFUnset;
-static int _MDInCParamR5ID      = MFUnset;
-static int _MDInCParamCDID      = MFUnset;
-static int _MDInCParamCRID      = MFUnset;
-static int _MDInCParamGLMaxID   = MFUnset;
-static int _MDInCParamZ0gID     = MFUnset;
-static int _MDInLeafAreaIndexID = MFUnset;
-static int _MDInStemAreaIndexID = MFUnset;
-
 static int _MDInAtMeanID        = MFUnset;
 static int _MDInAtMinID         = MFUnset;
 static int _MDInAtMaxID         = MFUnset;
@@ -37,55 +27,46 @@ static int _MDInWSpeedID        = MFUnset;
 static int _MDFAOReferenceETPID = MFUnset;
 
 static void _MDFAOReferenceETP (int itemID) {
-/* day-night Penman-Monteith PE in mm for day */
-/* Input */
-	float dayLen;  /* daylength in fraction of day */
- 	float i0hDay;  /*  daily potential insolation on horizontal [MJ/m2] */
-	float albedo;  /* albedo  */
-	float height;  /* canopy height [m] */
-	float r5;      /* solar radiation at which conductance is halved [W/m2] */
-	float cd;      /* vpd at which conductance is halved [kPa] */
-	float cr;      /* light extinction coefficient for projected LAI */
-	float glMax;   /* maximum leaf surface conductance for all sides of leaf [m/s] */
-	float z0g;     /* z0g       - ground surface roughness [m] */
- 	float lai;     /* projected leaf area index */
-	float sai;     /* projected stem area index */
-	float airT;    /* air temperatur [degree C] */
-	float airTMin; /* daily minimum air temperature [degree C]  */
-	float airTMax; /* daily maximum air temperature [degree C]  */
-	float solRad;  /* daily solar radiation on horizontal [MJ/m2] */
-	float vPress;  /* daily average vapor pressure [kPa] */
-	float wSpeed;  /* average wind speed for the day [m/s]  */
-	float sHeat = 0.0; /* average subsurface heat storage for day [W/m2] */
-/* Local */
-	float solNet;  /* average net solar radiation for daytime [W/m2] */
-	float airTDtm, airTNtm; /* air temperature for daytime and nighttime [degC] */
-	float uaDtm,   uaNtm;	/* average wind speed for daytime and nighttime [m/s] */
-	float lngDtm,	lngNtm;	/* average net longwave radiation for daytime and nighttime [W/m2] */
-	float za;      /* reference height [m] */
- 	float disp;    /* height of zero-plane [m] */
-	float z0;      /* roughness parameter [m]  */
-	float aa;		/* available energy [W/m2] */
-	float es;      /* vapor pressure at airT [kPa] */
-	float delta;   /* dEsat/dTair [kPa/K] */
- 	float dd;      /* vapor pressure deficit [kPa] */
-	float ra;		/*	aerodynamic 			_MDOutPrecipID = MFVarSetFunction (_MDOutPrecipID,_MDPrecipFraction);
-	resistance [s/ma] */
- 	float rc;		/* canopy resistance [s/m] */
-	float led, len;/* daytime and nighttime latent heat [W/m2] */
-/* Output */
+// day-night Penman-Monteith PE in mm for day
+// Input
+	float dayLen;           // daylength in fraction of day
+ 	float i0hDay;           // daily potential insolation on horizontal [MJ/m2]
+	float airT;             // air temperatur [degree C]
+	float airTMin;          // daily minimum air temperature [degree C]
+	float airTMax;          // daily maximum air temperature [degree C]
+	float solRad;           // daily solar radiation on horizontal [MJ/m2]
+	float vPress;           // daily average vapor pressure [kPa]
+	float wSpeed;           // average wind speed for the day [m/s]
+	float sHeat = 0.0;      // average subsurface heat storage for day [W/m2]
+// Local
+	float albedo;           // albedo
+	float height;           // canopy height [m]
+	float r5;               // solar radiation at which conductance is halved [W/m2]
+	float cd;               // vpd at which conductance is halved [kPa]
+	float cr;               // light extinction coefficient for projected LAI
+	float glMax;            // maximum leaf surface conductance for all sides of leaf [m/s]
+	float z0g;              // z0g       - ground surface roughness [m]
+ 	float lai;              // projected leaf area index
+	float sai;              // projected stem area index
+	float solNet;           // average net solar radiation for daytime [W/m2]
+	float airTDtm, airTNtm; // air temperature for daytime and nighttime [degC]
+	float uaDtm,   uaNtm;	// average wind speed for daytime and nighttime [m/s]
+	float lngDtm,	lngNtm;	// average net longwave radiation for daytime and nighttime [W/m2]
+	float za;               // reference height [m]
+ 	float disp;             // height of zero-plane [m]
+	float z0;               // roughness parameter [m]
+	float aa;		        // available energy [W/m2]
+	float es;               // vapor pressure at airT [kPa]
+	float delta;            // dEsat/dTair [kPa/K]
+ 	float dd;               // vapor pressure deficit [kPa]
+	float ra;               // aerodynamic resistance [s/ma]
+ 	float rc;               // canopy resistance [s/m]
+	float led, len;         // daytime and nighttime latent heat [W/m2]
+// Output
 	float pet;
 
 	if (MFVarTestMissingVal (_MDInDayLengthID,    itemID) ||
 	    MFVarTestMissingVal (_MDInI0HDayID,       itemID) ||
-	    MFVarTestMissingVal (_MDInCParamCHeightID,itemID) ||
-	    MFVarTestMissingVal (_MDInCParamR5ID,     itemID) ||
-	    MFVarTestMissingVal (_MDInCParamCDID,     itemID) ||
-	    MFVarTestMissingVal (_MDInCParamCRID,     itemID) ||
-	    MFVarTestMissingVal (_MDInCParamGLMaxID,  itemID) ||
-	    MFVarTestMissingVal (_MDInCParamZ0gID,    itemID) ||
-	    MFVarTestMissingVal (_MDInLeafAreaIndexID,itemID) ||
-	    MFVarTestMissingVal (_MDInStemAreaIndexID,itemID) ||
 	    MFVarTestMissingVal (_MDInAtMeanID,       itemID) ||
 	    MFVarTestMissingVal (_MDInAtMinID,        itemID) ||
 	    MFVarTestMissingVal (_MDInAtMaxID,        itemID) ||
@@ -98,15 +79,15 @@ static void _MDFAOReferenceETP (int itemID) {
 
 	dayLen  = MFVarGetFloat (_MDInDayLengthID,    itemID, 12.0);
 	i0hDay  = MFVarGetFloat (_MDInI0HDayID,       itemID,  0.0);
-	albedo  = 0.23; // MFVarGetFloat (_MDInCParamAlbedoID, itemID,  0.0);
-	height  = 0.12; // MFVarGetFloat (_MDInCParamCHeightID,itemID,  0.0);
-	r5      = MFVarGetFloat (_MDInCParamR5ID,     itemID,  0.0);
-	cd      = MFVarGetFloat (_MDInCParamCDID,     itemID,  0.0);
-	cr      = MFVarGetFloat (_MDInCParamCRID,     itemID,  0.0);
-	glMax   = MFVarGetFloat (_MDInCParamGLMaxID,  itemID,  0.0);
-	z0g     = MFVarGetFloat (_MDInCParamZ0gID,    itemID,  0.0);
-	lai     = MFVarGetFloat (_MDInLeafAreaIndexID,itemID,  0.0);
-	sai     = MFVarGetFloat (_MDInStemAreaIndexID,itemID,  0.0);
+	albedo  =   0.230;
+	height  =   0.120;
+	r5      = 100.000;
+	cd      =   2.000;
+	cr      =   0.700;
+	glMax   =   0.008;
+	z0g     =   0.010;
+	lai     =   3.000;
+	sai     = 3.0 > MDConstLPC ? MDConstCS * height : (3.0 / MDConstLPC) * MDConstCS * height;;
 	airT    = MFVarGetFloat (_MDInAtMeanID,       itemID,  0.0);
 	airTMin = MFVarGetFloat (_MDInAtMinID,        itemID,  0.0);
 	airTMax = MFVarGetFloat (_MDInAtMaxID,        itemID,  0.0);
@@ -166,15 +147,6 @@ int MDIrrFAOReferenceETPDef () {
 	MFDefEntering ("FAO Reference ETP ");
 	if (((_MDInDayLengthID     = MDSRadDayLengthDef ()) == CMfailed) ||
 	    ((_MDInI0HDayID        = MDSRadI0HDayDef    ()) == CMfailed) ||
-	    ((_MDInCParamAlbedoID  = MDCParamAlbedoDef  ()) == CMfailed) ||
-	    ((_MDInCParamCHeightID = MDCParamCHeightDef ()) == CMfailed) ||
-	    ((_MDInCParamR5ID      = MDCParamR5Def      ()) == CMfailed) ||
-	    ((_MDInCParamCDID      = MDCParamCDDef      ()) == CMfailed) ||
-	    ((_MDInCParamCRID      = MDCParamCRDef      ()) == CMfailed) ||
-	    ((_MDInCParamGLMaxID   = MDCParamGLMaxDef   ()) == CMfailed) ||
-	    ((_MDInCParamZ0gID     = MDCParamZ0gDef     ()) == CMfailed) ||
-	    ((_MDInLeafAreaIndexID = MDLeafAreaIndexDef ()) == CMfailed) ||
-	    ((_MDInStemAreaIndexID = MDStemAreaIndexDef ()) == CMfailed) ||
 	    ((_MDInSolRadID        = MDSolarRadDef      ()) == CMfailed) ||
 	    ((_MDInAtMeanID        = MFVarGetID (MDVarAirTemperature, "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDInAtMinID         = MFVarGetID (MDVarAirTempMinimum, "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||

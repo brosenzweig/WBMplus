@@ -360,7 +360,6 @@ int MDIrrigationDef() {
 	 
 	if (((optStr1 = MFOptionGet(MDParIrrDailyPercolationRate)) != (char *) NULL) && (sscanf(optStr1, "%f", &par) == 1))
 		_MDParIrrDailyPercolation = par;
-		
 	 
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options,optStr,true);
 	switch(optID) {

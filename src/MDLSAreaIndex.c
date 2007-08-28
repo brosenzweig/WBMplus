@@ -55,7 +55,7 @@ int MDLeafAreaIndexDef () {
 		case MDinput:  _MDOutLeafAreaIndexID = MFVarGetID (MDVarLeafAreaIndex, MFNoUnit, MFInput, MFState, MFBoundary); break;
 		case MDstandard:
 			if (((_MDInCParamLPMaxID    = MDCParamLPMaxDef ()) == CMfailed) ||
-				((_MDInCoverID          = MDLandCoverDef ()) == CMfailed) ||
+				((_MDInCoverID          = MDLandCoverDef   ()) == CMfailed) ||
 				((_MDInAtMeanID         = MFVarGetID (MDVarAirTemperature, "degC",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
 				((_MDOutLeafAreaIndexID = MFVarGetID (MDVarLeafAreaIndex,  MFNoUnit, MFOutput, MFState, MFBoundary)) == CMfailed) ||
 				(MFModelAddFunction (_MDLeafAreaIndex) == CMfailed)) return (CMfailed);
@@ -99,8 +99,8 @@ int MDStemAreaIndexDef () {
 	switch (optID) {
 		case MDinput:  _MDOutStemAreaIndexID = MFVarGetID (MDVarStemAreaIndex, MFNoUnit, MFInput, MFState, MFBoundary); break;
 		case MDstandard:
-			if (((_MDInCParamLPMaxID    = MFVarGetID (MDVarCParamLPMax,    MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDInCParamCHeightID  = MFVarGetID (MDVarCParamCHeight,  "m",      MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			if (((_MDInCParamLPMaxID    = MDCParamLPMaxDef   ()) == CMfailed) ||
+			    ((_MDInCParamCHeightID  = MDCParamCHeightDef ()) == CMfailed) ||
 			    ((_MDOutStemAreaIndexID = MFVarGetID (MDVarStemAreaIndex,  MFNoUnit, MFOutput, MFState, MFBoundary)) == CMfailed) ||
 				(MFModelAddFunction (_MDStemAreaIndex) == CMfailed)) return (CMfailed);
 			break;

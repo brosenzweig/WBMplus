@@ -246,40 +246,34 @@ extern "C" {
 
 #define MDConst_m3PerSecTOmmKm2PerDay 86400000.0
 #define MDConst_mmKm2PerDayTOm3PerSec (1.0 / 86400000.0)
-#define MDConstInterceptCI  0.3	/* Interception LAI+SAI constant */
-#define MDConstInterceptCH 10.0  /* Interception canopy height constant */ 
-#define MDConstInterceptD   0.2  /* Interception rain fraction of the day */
+#define MDConstInterceptCI  0.3	   // Interception LAI+SAI constant
+#define MDConstInterceptCH 10.0    // Interception canopy height constant 
+#define MDConstInterceptD   0.2    // Interception rain fraction of the day
 
-#define MDConstLPC 4.0        /* minimum projected LAI for "closed" canopy */
-#define MDConstC1 0.25        /* intercept in actual/potential solar radiation to sunshine duration */
-#define MDConstC2 0.5         /* slope in actual/potential solar radiation to sunshine duration */
-#define MDConstC3 0.2         /* longwave cloud correction coefficient */
-#define MDConstPTALPHA 1.26   /* Priestley-Taylor coefficient */
-#define MDConstCZS 0.13       /* ratio of roughness to height for smooth closed canopies */
-#define MDConstCZR 0.05       /* ratio of roughness to height for rough closed canopies */
-#define MDConstHR 10.0        /* height above which CZR applies, m */
-#define MDConstHS 1.0         /* height below which CZS applies, m */
-#define MDConstZMINH 2.0      /* reference height above the canopy height m */
-#define MDConstRSS 500.0      /* soil surface resistance, s/m */
-#define MDConstWNDRAT 0.3     /* ratio of nighttime to daytime wind speed */
-#define MDConstN 2.5          /* wind/diffusivity extinction coefficient */
-#define MDConstCS 0.035       /* ratio of projected stem area to height for closed canopy */
-#define MDConstGLMIN 0.0003   /* cuticular leaf surface conductance for all sides of leaf, m/s */
-#define MDConstRM 1000.0      /* maximum solar radiation, at which FR = 1,  W/m2 */
-#define MDConstRHOTP 2.0      /* ratio of total leaf surface area to projected leaf area */
+#define MDConstLPC          4.0    // minimum projected LAI for "closed" canopy
+#define MDConstC1           0.25   // intercept in actual/potential solar radiation to sunshine duration
+#define MDConstC2           0.5    // slope in actual/potential solar radiation to sunshine duration
+#define MDConstC3           0.2    // longwave cloud correction coefficient
+#define MDConstPTALPHA      1.26   // Priestley-Taylor coefficient
+#define MDConstCZS          0.13   // Ratio of roughness to height for smooth closed canopies
+#define MDConstCZR          0.05   // ratio of roughness to height for rough closed canopies
+#define MDConstHR          10.0    // height above which CZR applies, m
+#define MDConstHS           1.0    // height below which CZS applies, m
+#define MDConstZMINH        2.0    // reference height above the canopy height m
+#define MDConstRSS        500.0    // soil surface resistance, s/m
+#define MDConstWNDRAT       0.3    // ratio of nighttime to daytime wind speed
+#define MDConstN            2.5    // wind/diffusivity extinction coefficient
+#define MDConstCS           0.035  // ratio of projected stem area to height for closed canopy
+#define MDConstGLMIN        0.0003 // cuticular leaf surface conductance for all sides of leaf, m/s
+#define MDConstRM        1000.0    // maximum solar radiation, at which FR = 1,  W/m2
+#define MDConstRHOTP        2.0    // ratio of total leaf surface area to projected leaf area
 
-#define MDConstCPRHO 1240     /* volumetric heat capacity of air, J/(K m3) */
-#define MDConstPSGAMMA 0.067  /* psychrometric constant, kPa/K */
-#define MDConstIGRATE 0.0864  /* integrates W/m2 over 1 d to MJ/m2 */
-#define MDConstEtoM 0.4085    /* converts MJ/m2 to mm of water */
-#define MDConstSIGMA 5.67E-08 /* Stefan-Boltzmann constant, W/(m2/K4) */
-#define MDConstK 0.4          /* von Karman constant */
-
-#define MDMinimum(a,b) (((a) < (b)) ? (a) : (b))
-#define MDMaximum(a,b) (((a) > (b)) ? (a) : (b))
-
-#define DWDebug 1;
-
+#define MDConstCPRHO     1240.0    // volumetric heat capacity of air, J/(K m3)
+#define MDConstPSGAMMA      0.067  // psychrometric constant, kPa/K
+#define MDConstIGRATE       0.0864 // integrates W/m2 over 1 d to MJ/m2
+#define MDConstEtoM         0.4085 // converts MJ/m2 to mm of water
+#define MDConstSIGMA      5.67E-08 // Stefan-Boltzmann constant, W/(m2/K4)
+#define MDConstK            0.4    // von Karman constant
 
 //IrrigationStuff+++++++++++++++++++++++++++=
  
