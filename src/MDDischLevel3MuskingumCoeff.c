@@ -91,7 +91,7 @@ static void _MDDischRouteMuskingumCoeff (int itemID) {
 enum { MDinput, MDstatic };
 
 int MDDischLevel3MuskingumCoeffDef () {
-	int  optID = MDinput;
+	int  optID = MFUnset;
 	const char *optStr, *optName = MDOptMuskingum;
 	const char *options [] = { MDInputStr, "static", (char *) NULL };
 

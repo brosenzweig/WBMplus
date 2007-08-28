@@ -353,9 +353,9 @@ int MDIrrigationDef() {
    if (_MDOutGrossIrrDemandID != MFUnset)	return (_MDOutGrossIrrDemandID);
 	float par;
 	const char *optStr1;
-	int optID=MFUnset;
+	int optID = MFUnset;
 	const char *optStr, *optName = MDOptIrrReferenceET;
-	const char *options [] = {"Hamon","FAO", (char *) NULL };
+	const char *options [] = {"Hamon", "FAO", (char *) NULL };
 	MFDefEntering("Irrigation");
 	 
 	if (((optStr1 = MFOptionGet(MDParIrrDailyPercolationRate)) != (char *) NULL) && (sscanf(optStr1, "%f", &par) == 1))

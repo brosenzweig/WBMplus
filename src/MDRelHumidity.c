@@ -45,7 +45,7 @@ static void _MDRelHumidity (int itemID) {
 enum { MDinput, MDcalc };
 
 int MDRelHumidityDef () {
-	int optID = MDinput;
+	int optID = MFUnset;
 	const char *optStr, *optName = MDVarRelHumidity;
 	const char *options [] = { MDInputStr, MDCalculateStr, (char *) NULL };
 	

@@ -63,7 +63,7 @@ static void _MDIntercept (int itemID) {
 enum { MDinput, MDnone, MDcalc };
 
 int MDInterceptDef () {
-	int optID = MDinput;
+	int optID = MFUnset;
 	const char *optStr, *optName = MDVarInterception;
 	const char *options [] = { MDInputStr, MDNoneStr, MDCalculateStr, (char *) NULL };
 

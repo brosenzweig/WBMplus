@@ -98,7 +98,7 @@ static void _MDLCTEMVegToCover (int itemID) {
 enum { MDinput, MDLCSAGEVeg, MDLCTEMVeg };
 
 int MDLandCoverDef () {
-	int optID = MDinput;
+	int optID = MFUnset;
 	const char *optStr, *optName = MDVarWBMCover;
 	const char *options [] = { MDInputStr, "SAGEVeg", "TEMVeg",(char *) NULL };
 

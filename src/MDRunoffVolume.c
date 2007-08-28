@@ -32,7 +32,7 @@ static void _MDRunoffVolume (int itemID) {
 enum { MDinput, MDcalculate };
 
 int MDRunoffVolumeDef () {
-	int optID = MDinput;
+	int optID = MFUnset;
 	const char *optStr, *optName = MDVarRunoffVolume;
 	const char *options [] = { MDInputStr, MDCalculateStr, (char *) NULL };
 

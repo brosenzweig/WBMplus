@@ -159,7 +159,7 @@ enum { MDinput, MDcloud, MDsun };
 enum { MDstandard = 1,  MDOtto = 2 }; 
 
 int MDSolarRadDef () {
-	int optID = MDinput;
+	int optID = MFUnset;
 	const char *optStr, *optName = MDVarSolarRadiation;
 	const char *options [] = { MDInputStr, "cloud", "sun", (char *) NULL };
 

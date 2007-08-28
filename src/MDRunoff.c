@@ -38,7 +38,7 @@ static void _MDRunoff (int itemID) {
 enum { MDinput, MDcalculate, MDcorrected };
 
 int MDRunoffDef () {
-	int  optID = MDinput;
+	int  optID = MFUnset;
 	const char *optStr, *optName = MDVarRunoff;
 	const char *options [] = { MDInputStr, MDCalculateStr, "corrected", (char *) NULL };
 

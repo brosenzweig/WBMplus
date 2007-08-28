@@ -35,7 +35,7 @@ static void _MDDischMean (int itemID) {
 enum { MDinput, MDcalculate };
 
 int MDDischMeanDef () {
-	int  optID = MDinput;
+	int  optID = MFUnset;
 	const char *optStr, *optName = MDVarDischMean;
 	const char *options [] = { MDInputStr, MDCalculateStr, (char *) NULL };
 

@@ -43,7 +43,7 @@ static void _MDLeafAreaIndex (int itemID) {
 enum { MDinput, MDstandard };
 
 int MDLeafAreaIndexDef () {
-	int optID = MDinput;
+	int optID = MFUnset;
 	const char *optStr, *optName = MDVarLeafAreaIndex;
 	const char *options [] = { MDInputStr, "standard", (char *) NULL };
 
@@ -88,7 +88,7 @@ static void _MDStemAreaIndex (int itemID) {
 }
 
 int MDStemAreaIndexDef () {
-	int optID = MDinput;
+	int optID = MFUnset;
 	const char *optStr, *optName = MDVarStemAreaIndex;
 	const char *options [] = { MDInputStr, "standard", (char *) NULL };
 

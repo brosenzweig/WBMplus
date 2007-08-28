@@ -54,7 +54,7 @@ enum { MDinput, MDlbg };
 
 int MDWetDaysDef ()
 	{
-	int optID = MDinput;
+	int optID = MFUnset;
 	const char *optStr, *optName = MDVarWetDays;
 	const char *options [] = { MDInputStr, "LBG", (char *) NULL };
 
