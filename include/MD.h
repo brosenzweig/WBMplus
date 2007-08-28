@@ -287,7 +287,9 @@ int MDParNumberOfCrops;
 //+++++++++++++++++++++++++++++++++++=
 int MDIrrigationDef();
 int MDIrrGrossDemandDef();
-int MDReferenceETPDef ();
+int MDIrrReferenceETPDef ();
+int MDIrrFAOReferenceETPDef ();
+int MDIrrHamonReferenceETPDef ();
 int MDReservoirDef ();
 
 int MDAccumPrecipDef();
@@ -320,7 +322,6 @@ int MDDischLevel3MuskingumDef ();
 int MDDischLevel3MuskingumCoeffDef ();
 int MDDischMeanDef ();
 int MDGrossRadDef ();
-int MDHamonReferenceETPDef ();
 int MDLandCoverDef ();
 int MDLeafAreaIndexDef ();
 int MDInfiltrationDef ();

@@ -115,7 +115,7 @@ static void _MDFAOReferenceETP (int itemID) {
 	wSpeed  = fabs (MFVarGetFloat (_MDInWSpeedID, itemID,  0.0));
 	if (wSpeed < 0.2) wSpeed = 0.2;
 
-/* daytime */
+// daytime
 	if (dayLen < 0.0) {
 		solNet  = (1.0 - albedo) * solRad / (MDConstIGRATE * dayLen);
 
@@ -138,7 +138,7 @@ static void _MDFAOReferenceETP (int itemID) {
 	}
 	else led = 0.0;
 
-/* nighttime */
+// nighttime
 	if (dayLen < 1.0) {
 		airTNtm = airT - ((airTMax - airTMin) / (2 * M_PI * (1 - dayLen))) * sin (M_PI * dayLen);
 		uaNtm   = MDConstWNDRAT * uaDtm;
@@ -160,7 +160,7 @@ static void _MDFAOReferenceETP (int itemID) {
    MFVarSetFloat (_MDFAOReferenceETPID,itemID,pet);
 }
 
-int MDFAOReferenceETPDef () {
+int MDIrrFAOReferenceETPDef () {
 	if (_MDFAOReferenceETPID != MFUnset) return (_MDFAOReferenceETPID);
 
 	MFDefEntering ("FAO Reference ETP ");

@@ -42,7 +42,7 @@ static void _MDPotETHamon (int itemID) {
    MFVarSetFloat (_MDOutPetID,itemID,pet);
 }
 
-int MDHamonReferenceETPDef () {
+int MDIrrHamonReferenceETPDef () {
 	if (_MDOutPetID != MFUnset) return (_MDOutPetID);
 
 	MFDefEntering ("Hamon as ReferenceETP");

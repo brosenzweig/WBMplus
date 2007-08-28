@@ -27,7 +27,8 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDDischMean.o\
        $(OBJ)/MDLandCover.o\
        $(OBJ)/MDLSAreaIndex.o\
-       $(OBJ)/MDHamonReferenceETP.o\
+       $(OBJ)/MDIrrHamonReferenceETP.o\
+       $(OBJ)/MDIrrFAOReferenceETP.o\
        $(OBJ)/MDInfiltration.o\
        $(OBJ)/MDIntercept.o\
        $(OBJ)/MDIrrGrossDemand.o\
@@ -45,7 +46,6 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDPotETSWGdn.o\
        $(OBJ)/MDPotETTurc.o\
        $(OBJ)/MDPotETlib.o\
-       $(OBJ)/MDReferenceETP.o\
        $(OBJ)/MDRelHumidity.o\
        $(OBJ)/MDReservoirs.o\
        $(OBJ)/MDRiverbedShapeExp.o\
