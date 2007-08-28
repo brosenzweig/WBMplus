@@ -78,13 +78,13 @@ int MDPotETPsTaylorDef () {
 
 	MFDefEntering ("PotET Priestley - Taylor Definition");
 	if (((_MDInDayLengthID     = MDSRadDayLengthDef ()) == CMfailed) ||
-		 ((_MDInI0HDayID        = MDSRadI0HDayDef    ()) == CMfailed) ||
+	    ((_MDInI0HDayID        = MDSRadI0HDayDef    ()) == CMfailed) ||
 	    ((_MDInCParamAlbedoID  = MDCParamAlbedoDef  ()) == CMfailed) ||
-		 ((_MDInSolRadID        = MDSolarRadDef      ()) == CMfailed) ||
-		 ((_MDInAtMeanID  = MFVarGetID (MDVarAirTemperature, "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		 ((_MDInVPressID  = MFVarGetID (MDVarVaporPressure,  "kPa",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		 ((_MDOutPetID    = MFVarGetID (MDVarPotEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-		 (MFModelAddFunction (_MDPotETPsTaylor) == CMfailed)) return (CMfailed);
+	    ((_MDInSolRadID        = MDSolarRadDef      ()) == CMfailed) ||
+	    ((_MDInAtMeanID  = MFVarGetID (MDVarAirTemperature, "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInVPressID  = MFVarGetID (MDVarVaporPressure,  "kPa",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDOutPetID    = MFVarGetID (MDVarPotEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+	    (MFModelAddFunction (_MDPotETPsTaylor) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("PotET Priestley - Taylor Definition");
 	return (_MDOutPetID);
 }

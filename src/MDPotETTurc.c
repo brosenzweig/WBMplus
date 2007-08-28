@@ -42,9 +42,9 @@ int MDPotETTurcDef () {
 
 	MFDefEntering ("PotET Turc");
 	if (((_MDInSolRadID = MDSolarRadDef ()) == CMfailed) ||
-		 ((_MDInAtMeanID = MFVarGetID (MDVarAirTemperature, "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		 ((_MDOutPetID   = MFVarGetID (MDVarPotEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-		 (MFModelAddFunction (_MDPotETTurc) == CMfailed)) return (CMfailed);
+	    ((_MDInAtMeanID = MFVarGetID (MDVarAirTemperature, "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDOutPetID   = MFVarGetID (MDVarPotEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+	    (MFModelAddFunction (_MDPotETTurc) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("PotET Turc");
 	return (_MDOutPetID);
 }
