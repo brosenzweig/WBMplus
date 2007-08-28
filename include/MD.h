@@ -25,18 +25,18 @@ extern "C" {
 #define MDOffStr       "off"
 
 // Options
-#define MDOptDischarge  "Discharge"
-#define MDOptIrrigation	"Irrigation"
-#define MDOptModel      "Model"
-#define MDOptReservoirs "Reservoirs"
-#define MDOptRiverbed   "Riverbed"
-#define MDOptRouting    "Routing"
-#define MDOptMuskingum  "Muskingum"
-#define MDOptIrrReferenceET  "IrrReferenceETP"
+#define MDOptDischarge                       "Discharge"
+#define MDOptIrrigation                      "Irrigation"
+#define MDOptModel                           "Model"
+#define MDOptReservoirs                      "Reservoirs"
+#define MDOptRiverbed                        "Riverbed"
+#define MDOptRouting                         "Routing"
+#define MDOptMuskingum                       "Muskingum"
+#define MDOptIrrReferenceET                  "IrrReferenceETP"
 
  //MD BGCInput
-# define MDVarNonPointTNSourcesCont				"NonPointTNSourcesCont" 
-# define MDVarPointTNSources						"PointTNSources"
+# define MDVarNonPointTNSourcesCont          "NonPointTNSourcesCont" 
+# define MDVarPointTNSources                 "PointTNSources"
 
  //MD BGCOutput
 # define MDVarBgcTNFlux                      "BgcTNFlux"
