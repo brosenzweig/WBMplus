@@ -275,6 +275,9 @@ extern "C" {
 #define MDConstSIGMA      5.67E-08 // Stefan-Boltzmann constant, W/(m2/K4)
 #define MDConstK            0.4    // von Karman constant
 
+#define MDMinimum(a,b) (((a) < (b)) ? (a) : (b))
+#define MDMaximum(a,b) (((a) > (b)) ? (a) : (b))
+
 //IrrigationStuff+++++++++++++++++++++++++++=
  
 int MDParNumberOfCrops;
