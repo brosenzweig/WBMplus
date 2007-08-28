@@ -15,14 +15,13 @@ balazs.fekete@unh.edu
 #include <MF.h>
 #include <MD.h>
 
-/* Input */
+// Input
 static int _MDInRunoffID        = MFUnset;
-/* Output */
+// Output
 static int _MDOutRunoffVolumeID = MFUnset;
 
 static void _MDRunoffVolume (int itemID) {
-// if (MFVarTestMissingVal (_MDInBaseFlowID, itemID)) printf("missing baseflow in runoff!\n");
-	/* Input */
+// Input
 	float runoff;
 
 	runoff = MFVarGetFloat (_MDInRunoffID, itemID, 0.0) * MFModelGetArea (itemID) / (MFModelGet_dt () * 1000.0);

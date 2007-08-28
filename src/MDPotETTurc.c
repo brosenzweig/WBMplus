@@ -21,10 +21,10 @@ static int _MDOutPetID   = MFUnset;
 
 static void _MDPotETTurc (int itemID) {
 /* Turc (1961) PE in mm for day */
-/* Input */
-	float airT;		/* air temperatur [degree C] */
-	float solRad;  /* daily solar radiation on horizontal [MJ/m2] */
-/* Output */ 
+// Input
+	float airT;    // air temperatur [degree C]
+	float solRad;  // daily solar radiation on horizontal [MJ/m2]
+// Output
 	float pet;
 	
 	if ((MFVarTestMissingVal (_MDInAtMeanID, itemID)) ||

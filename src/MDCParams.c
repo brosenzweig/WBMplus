@@ -373,9 +373,9 @@ int MDCParamLPMaxDef () {
 static int _MDOutCParamZ0gID = MFUnset; 
 
 static void _MDCParamZ0g (int itemID) {
-/* Input */
+// Input
 	int cover;
-/* Local */
+// Local
 	static float lookup []     = { 0.02, 0.02, 0.02, 0.01, 0.01, 0.005, 0.001, 0.001 };
 
 	cover = MFVarGetInt (_MDInCoverID, itemID, 7); // defaulting missing value to water.
