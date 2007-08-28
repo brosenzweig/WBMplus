@@ -99,12 +99,12 @@ int MDWaterBalanceDef() {
 	if ((                                  MDAccumBalanceDef  ()  == CMfailed) ||
 	    ((_MDInPrecipID                  = MDPrecipitationDef ()) == CMfailed) ||
 	    ((_MDInDischargeID               = MDDischargeDef     ()) == CMfailed) ||
+	    ((_MDInSnowPackChgID             = MDSPackChgDef      ()) == CMfailed) ||
+	    ((_MDInSoilMoistChgID            = MDSMoistChgDef     ()) == CMfailed) ||
+	    ((_MDInRunoffID                  = MDRunoffDef        ()) == CMfailed) ||
+	    ((_MDInInfiltrationID            = MDInfiltrationDef  ()) == CMfailed) ||
 	    ((_MDInEvaptrsID                 = MFVarGetID (MDVarEvapotranspiration,            "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDInSnowPackChgID             = MFVarGetID (MDVarSnowPackChange,                "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDInSoilMoistChgID            = MFVarGetID (MDVarSoilMoistChange,               "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDInRunoffID                  = MFVarGetID (MDVarRunoff,                        "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
 	    ((_MDInGrdWatChgID               = MFVarGetID (MDVarGroundWaterChange,             "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDInInfiltrationID            = MFVarGetID (MDVarInfiltration,                  "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
 	    ((_MDOutWaterBalanceID           = MFVarGetID (MDVarWaterBalance,                  "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed))
 	    return (CMfailed);
 	if (((optStr = MFOptionGet (MDOptIrrigation)) != (char *) NULL) && (CMoptLookup (options,optStr,true) == CMfailed)) {

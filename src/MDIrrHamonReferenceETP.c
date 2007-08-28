@@ -29,17 +29,16 @@ static void _MDPotETHamon (int itemID) {
 // Output
 	float pet;
 
-
 	if ((MFVarTestMissingVal (_MDInDayLengthID, itemID)) ||
-		 (MFVarTestMissingVal (_MDInAtMeanID,    itemID))) { MFVarSetMissingVal (_MDOutPetID,itemID);  return; }
+	    (MFVarTestMissingVal (_MDInAtMeanID,    itemID))) { MFVarSetMissingVal (_MDOutPetID,itemID);  return; }
 
 	dayLen = MFVarGetFloat (_MDInDayLengthID, itemID, 12);
 	airT   = MFVarGetFloat (_MDInAtMeanID,    itemID, 0.0);
 
-   rhoSat = 2.167 * MDPETlibVPressSat (airT) / (airT + 273.15);
-   pet = 165.1 * 2.0 * dayLen * rhoSat; // 2 * DAYLEN = daylength as fraction of 12 hours
-  // if (pet ==0) printf ("PET Null ? pet %f rhoSat %f dayLen %f \n", pet, rhoSat, dayLen); 
-   MFVarSetFloat (_MDOutPetID,itemID,pet);
+	rhoSat = 2.167 * MDPETlibVPressSat (airT) / (airT + 273.15);
+	pet = 165.1 * 2.0 * dayLen * rhoSat; // 2 * DAYLEN = daylength as fraction of 12 hours
+//	if (pet ==0) printf ("PET Null ? pet %f rhoSat %f dayLen %f \n", pet, rhoSat, dayLen); 
+	MFVarSetFloat (_MDOutPetID,itemID,pet);
 }
 
 int MDIrrHamonReferenceETPDef () {
@@ -47,9 +46,9 @@ int MDIrrHamonReferenceETPDef () {
 
 	MFDefEntering ("Hamon as ReferenceETP");
 	if (((_MDInDayLengthID = MDSRadDayLengthDef ()) == CMfailed) ||
-		 ((_MDInAtMeanID    = MFVarGetID (MDVarAirTemperature,              "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		 ((_MDOutPetID      = MFVarGetID (MDVarReferenceEvapotranspiration, "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-		 (MFModelAddFunction (_MDPotETHamon) == CMfailed)) return (CMfailed);
+	    ((_MDInAtMeanID    = MFVarGetID (MDVarAirTemperature,              "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDOutPetID      = MFVarGetID (MDVarReferenceEvapotranspiration, "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+	    (MFModelAddFunction (_MDPotETHamon) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Hamon as ReferenceETP");
 	return (_MDOutPetID);
 }

@@ -367,12 +367,12 @@ int MDIrrigationDef() {
 		case MDfao:   if ((_MDInRefETPID = MDIrrFAOReferenceETPDef   ()) == CMfailed) return (CMfailed); break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}	
-	if (((_MDInPrecipID               = MDPrecipitationDef ())     == CMfailed) ||	 		 
+	if (((_MDInPrecipID               = MDPrecipitationDef ()) == CMfailed) ||	 		 
+	    ((_MDInSPackChgID             = MDSPackChgDef      ()) == CMfailed) ||
 	    ((_MDInWltPntID               = MFVarGetID (MDVarWiltingPoint,           "mm/m", MFInput,  MFState, MFBoundary)) == CMfailed) ||	
 	    ((_MDInFldCapaID              = MFVarGetID (MDVarFieldCapacity,          "mm/m", MFInput,  MFState, MFBoundary)) == CMfailed) ||	
 	    ((_MDGrowingSeason1ID         = MFVarGetID (MDVarIrrGrowingSeason1Start, "DoY",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDGrowingSeason2ID         = MFVarGetID (MDVarIrrGrowingSeason2Start, "DoY",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDInSPackChgID             = MFVarGetID (MDVarSnowPackChange,         "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
 	    ((_MDGrowingSeason3ID         = MFVarGetID (MDVarIrrGrowingSeason3Start, "DoY",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDGrowingSeasonStartCalcID = MFVarGetID (MDVarStartGrowingSeasonCalc, "DoY",  MFOutput, MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDGrowingSeasonEndCalcID   = MFVarGetID (MDVarEndGrowingSeasonCalc,   "DoY",  MFOutput, MFState, MFBoundary)) == CMfailed) ||

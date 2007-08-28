@@ -119,11 +119,11 @@ int MDSMoistChgDef () {
 	if (((optStr = MFOptionGet (MDVarInterception)) != (char *) NULL) &&
 	    (CMoptLookup (options,optStr,true) == CMfailed) && 
 	    ((_MDInInterceptID  = MDInterceptDef ()) == CMfailed)) return (CMfailed);
-	if (((_MDInFldCapaID    = MFVarGetID (MDVarFieldCapacity,      "mm/m", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	if (((_MDInSPackChgID   = MDSPackChgDef ()) == CMfailed) ||
+	    ((_MDInFldCapaID    = MFVarGetID (MDVarFieldCapacity,      "mm/m", MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDInWltPntID     = MFVarGetID (MDVarWiltingPoint,       "mm/m", MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDInRootDepthID  = MFVarGetID (MDVarRootingDepth,       "mm",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDInAirTMeanID   = MFVarGetID (MDVarAirTemperature,     "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDInSPackChgID   = MFVarGetID (MDVarSnowPackChange,     "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
 	    ((_MDOutSoilMoistID = MFVarGetID (MDVarSoilMoisture,       "mm",   MFOutput, MFState, MFInitial))  == CMfailed) ||
         ((_MDOutSMoistChgID = MFVarGetID (MDVarSoilMoistChange,    "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
 	    ((_MDOutEvaptrsID   = MFVarGetID (MDVarEvapotranspiration, "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||

@@ -53,9 +53,9 @@ int MDCParamAlbedoDef () {
 		case MDinput:  _MDOutCParamAlbedoID = MFVarGetID (MDVarCParamAlbedo,  MFNoUnit, MFInput, MFState, MFBoundary); break;
 		case MDlookup:
 			if (((_MDInCoverID    = MDLandCoverDef ()) == CMfailed) ||
-			 	 ((_MDInSnowPackID = MFVarGetID (MDVarSnowPack, "mm", MFInput,  MFState, true)) == CMfailed) ||
-				 ((_MDOutCParamAlbedoID = MFVarGetID (MDVarCParamAlbedo, MFNoUnit, MFOutput, MFState, MFBoundary)) == CMfailed) ||
-				 (MFModelAddFunction (_MDCParamAlbedo) == CMfailed)) return (CMfailed);
+			    ((_MDInSnowPackID = MDSPackChgDef  ()) == CMfailed) ||
+			    ((_MDOutCParamAlbedoID = MFVarGetID (MDVarCParamAlbedo, MFNoUnit, MFOutput, MFState, MFBoundary)) == CMfailed) ||
+			    (MFModelAddFunction (_MDCParamAlbedo) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}

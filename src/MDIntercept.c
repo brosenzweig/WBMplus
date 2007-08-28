@@ -74,13 +74,13 @@ int MDInterceptDef () {
 	switch (optID) {
 		case MDinput: _MDOutInterceptID = MFVarGetID (MDVarInterception,  "mm", MFInput, MFFlux, false); break;
 		case MDcalc:
-			if	(((_MDInPrecipID        = MDPrecipitationDef ()) == CMfailed) ||
-	    		 ((_MDInSPackChgID      = MFVarGetID (MDVarSnowPackChange, "mm",     MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-				 ((_MDInPetID           = MFVarGetID (MDVarPotEvapotrans,  "mm",     MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-				 ((_MDInLeafAreaIndexID = MFVarGetID (MDVarLeafAreaIndex,  MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
-				 ((_MDInStemAreaIndexID = MFVarGetID (MDVarStemAreaIndex,  MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
-				 ((_MDOutInterceptID    = MFVarGetID (MDVarInterception,   "mm",     MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-				 (MFModelAddFunction (_MDIntercept) == CMfailed)) return (CMfailed);
+			if (((_MDInPrecipID        = MDPrecipitationDef ()) == CMfailed) ||
+	    	    ((_MDInSPackChgID      = MDSPackChgDef      ()) == CMfailed) ||
+	    	    ((_MDInPetID           = MFVarGetID (MDVarPotEvapotrans,  "mm",     MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+			    ((_MDInLeafAreaIndexID = MFVarGetID (MDVarLeafAreaIndex,  MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDInStemAreaIndexID = MFVarGetID (MDVarStemAreaIndex,  MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDOutInterceptID    = MFVarGetID (MDVarInterception,   "mm",     MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+			    (MFModelAddFunction (_MDIntercept) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
