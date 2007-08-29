@@ -386,13 +386,13 @@ int MDIrrigationDef() {
 		CMmsgPrint(CMmsgUsrError,"Error reading crop parameter file   : %s \n", CropParameterFileName);
 		return CMfailed;
 	}
-  	//Ouputs
- 	if ((_MDOutGrossIrrDemandID     = MFVarGetID (MDVarIrrGrossDemand,          "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) return (CMfailed);
-	if ((_MDOutNetIrrDemandID       = MFVarGetID (MDVarIrrNetIrrigationWaterDemand,            "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) return (CMfailed);
-	if ((_MDOutIrrAreaSMChangeID    = MFVarGetID (MDVarIrrSoilMoistureChange,                  "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) return (CMfailed);
-	if ((_MDOutIrrigationDrainageID = MFVarGetID (MDVarIrrReturnFlow,                    "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) return (CMfailed);
-	if ((_MDOutTotalCropETPDepthID  = MFVarGetID (MDVarIrrCropETP,                             "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) return (CMfailed);
-//	if ((_MDOutActIrrAreaID	        = MFVarGetID (MDVarActuallyIrrArea,			               "-",  MFOutput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
+//Ouputs
+ 	if ((_MDOutGrossIrrDemandID     = MFVarGetID (MDVarIrrGrossDemand,              "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) return (CMfailed);
+	if ((_MDOutNetIrrDemandID       = MFVarGetID (MDVarIrrNetIrrigationWaterDemand, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) return (CMfailed);
+	if ((_MDOutIrrAreaSMChangeID    = MFVarGetID (MDVarIrrSoilMoistureChange,       "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) return (CMfailed);
+	if ((_MDOutIrrigationDrainageID = MFVarGetID (MDVarIrrReturnFlow,               "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) return (CMfailed);
+	if ((_MDOutTotalCropETPDepthID  = MFVarGetID (MDVarIrrCropETP,                  "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) return (CMfailed);
+//	if ((_MDOutActIrrAreaID	        = MFVarGetID (MDVarActuallyIrrArea,             "-",  MFOutput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
  	MDParNumberOfCrops = _MDNumberOfIrrCrops;
 	CMmsgPrint(CMmsgInfo,"Number of crops read: %i \n", _MDNumberOfIrrCrops);
 	for (i=0;i<_MDNumberOfIrrCrops;i++) {
@@ -423,7 +423,8 @@ int MDIrrigationDef() {
 /*		if (CMfailed == (_MDInCropFractionID[i] = MFVarGetID (frac,"mm", MFInput, MFState, MFBoundary))) {
 			CMmsgPrint (CMmsgUsrError, "CMfailed in MDInCropFractionID \n");
 			return CMfailed;
-		}*/
+		}
+*/
 // Output Soil Moisture Deficit per croptype
 		if ((_MDOutCropDeficitID[i]=MFVarGetID (def,"mm", MFOutput,MFState, MFInitial))==CMfailed) {
 			CMmsgPrint (CMmsgUsrError,"MFFAult in MDCropDeficit\n");
