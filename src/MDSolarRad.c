@@ -120,21 +120,13 @@ static void _MDSolarRadiationCloud (int itemID) {
 	float solarRad;
 // Local
 
-	cloud = 0.0;
-	if (MFVarTestMissingVal (_MDInputID,  itemID) ||
-	    MFVarTestMissingVal (_MDGrossRadID, itemID)) { 
-		 MFVarSetMissingVal (_MDOutSolarRadID,   itemID); 
-		CMmsgPrint(CMmsgInfo,"Missing Vars in MDSolarRAd ! LAT %f LON %f  \n",MFModelGetLatitude(itemID), MFModelGetLongitude(itemID));
-		return;
-	}
-
 	solarRad = MFVarGetFloat (_MDGrossRadID, itemID, 0.0);
 	cloud    = MFVarGetFloat (_MDInputID,    itemID, 0.0) ;
 	if (fabs(cloud) > 100.0) printf ("cloud cover item %i  %f VarID %i \n",itemID, cloud, _MDInputID);
 	cloud = cloud / 100.0;
 		 
-   solarRad = solarRad * (0.803 - (0.340 * cloud) - (0.458 * (float) pow ((double) cloud,(double) 2.0)));
-	MFVarSetFloat (_MDOutSolarRadID,  itemID, solarRad);
+	solarRad = solarRad * (0.803 - (0.340 * cloud) - (0.458 * (float) pow ((double) cloud,(double) 2.0)));
+    MFVarSetFloat (_MDOutSolarRadID,  itemID, solarRad);
 }
 
 static void _MDSolarRadiationSun (int itemID) {
@@ -144,18 +136,14 @@ static void _MDSolarRadiationSun (int itemID) {
 	float solarRad;
 // Local
 
-	if (MFVarTestMissingVal (_MDInputID,  itemID) ||
-		 MFVarTestMissingVal (_MDGrossRadID, itemID)) { MFVarSetMissingVal (_MDOutSolarRadID,   itemID); return; }
-
 	solarRad = MFVarGetFloat (_MDGrossRadID, itemID,  0.0);
-	sunShine = MFVarGetFloat (_MDInputID,    itemID, 50.0) / 100.;
-printf ("Hier \n");
+	sunShine = MFVarGetFloat (_MDInputID,    itemID, 50.0) / 100.0;
+
 	solarRad = solarRad * (0.251 + 0.509 * sunShine);
 	MFVarSetFloat (_MDOutSolarRadID,  itemID, solarRad);
 }
 
 enum { MDinput, MDcloud, MDsun };
-enum { MDstandard = 1,  MDOtto = 2 }; 
 
 int MDSolarRadDef () {
 	int optID = MFUnset;

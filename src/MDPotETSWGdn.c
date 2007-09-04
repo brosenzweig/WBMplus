@@ -61,22 +61,22 @@ static void _MDPotETSWGdn (int itemID) {
 	float wSpeed;  // average wind speed for the day [m/s] 
 	float sHeat = 0.0; // average subsurface heat storage for day [W/m2]
 // Local
-	float solNet;  // average net solar radiation for daytime [W/m2]
+	float solNet;   // average net solar radiation for daytime [W/m2]
 	float airTDtm, airTNtm; // air temperature for daytime and nighttime [degree C]
 	float uaDtm,   uaNtm;	// average wind speed for daytime and nighttime [m/s]
 	float lngDtm,	lngNtm;	// average net longwave radiation for daytime and nighttime [W/m2]
-	float z0;      // roughness parameter [m] 
- 	float disp;    // height of zero-plane [m]
-	float z0c;     // roughness parameter (closed canopy)
-	float dispc;   // zero-plane displacement (closed canopy)
-	float aa;		// available energy [W/m2]
-	float asubs;	// available energy at ground [W/m2]
-	float es;      // vapor pressure at airT [kPa]
-	float delta;   // dEsat/dTair [kPa/K]
- 	float dd;      // vapor pressure deficit [kPa]
- 	float rsc;		// canopy resistance [s/m]
+	float z0;       // roughness parameter [m] 
+ 	float disp;     // height of zero-plane [m]
+	float z0c;      // roughness parameter (closed canopy)
+	float dispc;    // zero-plane displacement (closed canopy)
+	float aa;       // available energy [W/m2]
+	float asubs;    // available energy at ground [W/m2]
+	float es;       // vapor pressure at airT [kPa]
+	float delta;    // dEsat/dTair [kPa/K]
+ 	float dd;       // vapor pressure deficit [kPa]
+ 	float rsc;      // canopy resistance [s/m]
 	float led, len;	// daytime and nighttime latent heat [W/m2]
-	float rn;		// net radiation [W/m2]
+	float rn;       // net radiation [W/m2]
 	float rns;		// net radiation at ground [W/m2]
 	float raa;		// aerodynamic resistance [s/m]
 	float rac;		// leaf boundary layer resistance [s/m]
@@ -152,7 +152,10 @@ static void _MDPotETSWGdn (int itemID) {
 		ras     = MDPETlibGroundResistance (uaDtm,height,z0g,z0c,dispc,z0,disp);
 		led     = MDPETlibShuttleworthWallace (rss,aa,asubs,dd,raa,rac,ras,rsc,delta);
 	}
-	else led = 0.0;
+	else {
+		led = 0.0;
+		uaDtm = wSpeed / MDConstWNDRAT;
+	}
 
 // nighttime
 	if (dayLen < 1.0) {

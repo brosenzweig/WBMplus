@@ -47,7 +47,7 @@ int MDRunoffDef () {
 	MFDefEntering ("Runoff");
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);
 	switch (optID) {
-		case MDinput: _MDOutRunoffID = MFVarGetID (MDVarRunoff, "mm", MFInput, MFFlux, MFBoundary); break;
+		case MDinput: _MDOutRunoffID = MFVarGetID (MDVarRunoff,        "mm",     MFInput,  MFFlux, MFBoundary); break;
 		case MDcorrected:
 			if ((_MDInRunoffCorrID = MFVarGetID (MDVarRunoffCorretion, MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed)
 				return (CMfailed);
