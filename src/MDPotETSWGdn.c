@@ -104,7 +104,7 @@ static void _MDPotETSWGdn (int itemID) {
 		 MFVarTestMissingVal (_MDInVPressID,       itemID) ||
 		 MFVarTestMissingVal (_MDInWSpeedID,       itemID)) { MFVarSetMissingVal (_MDOutPetID,itemID); return; }
 
-	dayLen  = MFVarGetFloat (_MDInDayLengthID,    itemID, 12.0);
+	dayLen  = MFVarGetFloat (_MDInDayLengthID,    itemID, 0.0);
 	i0hDay  = MFVarGetFloat (_MDInI0HDayID,       itemID,  0.0);
 	albedo  = MFVarGetFloat (_MDInCParamAlbedoID, itemID,  0.0);
 	height  = MFVarGetFloat (_MDInCParamCHeightID,itemID,  0.0);
@@ -123,6 +123,7 @@ static void _MDPotETSWGdn (int itemID) {
 	solRad  = MFVarGetFloat (_MDInSolRadID,       itemID,  0.0);
 	vPress  = MFVarGetFloat (_MDInVPressID,       itemID,  0.0);
 	wSpeed  = fabs (MFVarGetFloat (_MDInWSpeedID, itemID,  0.0));
+	if (wSpeed ==0) printf ("Wsped\n");
 	if (wSpeed < 0.2) wSpeed = 0.2;
 
 	solNet  = (1.0 - albedo) * solRad / (MDConstIGRATE * dayLen);
@@ -137,7 +138,7 @@ static void _MDPotETSWGdn (int itemID) {
 		airTDtm = airT + ((airTMax - airTMin) / (2 * M_PI * dayLen)) * sin (M_PI * dayLen);
 		uaDtm   = wSpeed / (dayLen + (1.0 - dayLen) * MDConstWNDRAT);
 		lngDtm  = MDSRadNETLong (i0hDay,airTDtm,solRad,vPress);
-
+		if (uaDtm ==0) printf ("DayTimeuATMWsped dayLen %f\n",dayLen);
 		rn      = solNet + lngDtm; 
 		aa      = rn - sHeat; 
 		rns     = rn * exp (-cr * (lai + sai));
@@ -153,7 +154,7 @@ static void _MDPotETSWGdn (int itemID) {
 		led     = MDPETlibShuttleworthWallace (rss,aa,asubs,dd,raa,rac,ras,rsc,delta);
 	}
 	else {
-		led = 0.0;
+		led   = 0.0;
 		uaDtm = wSpeed / MDConstWNDRAT;
 	}
 
@@ -162,7 +163,7 @@ static void _MDPotETSWGdn (int itemID) {
 		airTNtm = airT - ((airTMax - airTMin) / (2 * M_PI * (1 - dayLen))) * sin (M_PI * dayLen);
 		uaNtm   = MDConstWNDRAT * uaDtm;
 		lngNtm  = MDSRadNETLong (i0hDay,airTNtm,solRad,vPress);
-
+		if (uaNtm ==0) printf ("NightTimeWsped uaDtm%f \n", uaDtm);
 		rn = lngNtm;
 		aa = rn - sHeat; 
 		rns = rn * exp (-cr * (lai + sai));
@@ -177,9 +178,17 @@ static void _MDPotETSWGdn (int itemID) {
 		ras     = MDPETlibGroundResistance (uaNtm,height,z0g,z0c,dispc,z0,disp);
 		len     = MDPETlibShuttleworthWallace (rss,aa,asubs,dd,raa,rac,ras,rsc,delta);
 	}
+	
+	
+
+	 
+	
+	
 	else len = 0.0;
 
 	pet = MDConstEtoM * MDConstIGRATE * (dayLen * led + (1.0 - dayLen) * len);
+
+	//if (itemID==38672) printf ("SWdn= %fes%f vPress%f delta%f\n",pet, es, vPress, delta);
    MFVarSetFloat (_MDOutPetID,itemID,pet);
 }
 
