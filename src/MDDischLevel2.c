@@ -34,17 +34,17 @@ static void _MDDischLevel2 (int itemID) {
 
 	discharge = MFVarGetFloat (_MDInDischLevel3ID, itemID, 0.0);
 	if (_MDInIrrUptakeExternalID != MFUnset) {
-		discharge_mm =  discharge * 1000.0 * MFModelGet_dt () / MFModelGetArea (itemID);
+		discharge_mm = discharge * 1000.0 * MFModelGet_dt () / MFModelGetArea (itemID);
 		irrUptakeExt = MFVarGetFloat (_MDInIrrUptakeExternalID, itemID, 0.0);
 		if (discharge_mm > irrUptakeExt) {
 			irrUptakeRiver  = irrUptakeExt;
 			irrUptakeExcess = 0.0;
-			discharge_mm = discharge_mm - irrUptakeRiver;
+			discharge_mm    = discharge_mm - irrUptakeRiver;
 		}
 		else {
 			irrUptakeRiver  = discharge_mm;
 			irrUptakeExcess = irrUptakeExt - discharge_mm;
-			discharge_mm = 0.0;
+			discharge_mm    = 0.0;
 		}
 		MFVarSetFloat (_MDOutIrrUptakeRiverID,  itemID, irrUptakeRiver);
 		MFVarSetFloat (_MDOutIrrUptakeExcessID, itemID, irrUptakeExcess);
