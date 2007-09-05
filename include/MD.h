@@ -111,7 +111,7 @@ extern "C" {
 #define MDVarStartGrowingSeasonCalc	"StartGrowingSeasonCalc"
 #define MDVarEndGrowingSeasonCalc	"EndGrowingSeasonCalc"
 #define MDVarIsGrowingSeasonCalc	"IsGrowingSeasonCalc"
-#define	MDVarMeanElevationMeters    "Elevation"
+
 #define MDVarCropSMDef_1                           "CropSMDef_1"
 #define MDVarCropSMDef_2                           "CropSMDef_2"
 #define MDVarCropSMDef_3                           "CropSMDef_3"

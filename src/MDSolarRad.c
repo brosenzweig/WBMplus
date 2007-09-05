@@ -45,12 +45,12 @@ static int _MDOutSRadDayLengthID = MFUnset;
 
 static void _MDSRadDayLength (int itemID) {
 /* daylength fraction of day */
-/* Input */
-	int doy;   /* day of the year */
-	float lat; /* latitude in decimal radians */
-/* Local */
+// Input
+	int doy;   // day of the year
+	float lat; // latitude in decimal radians
+// Local
 	float dec;
-/* Output */
+// Output
 	float dayLength;
 
 	doy = MFDateGetDayOfYear ();
@@ -78,12 +78,12 @@ static int _MDOutSRadI0HDayID = MFUnset;
 
 static void _MDSRadI0HDay (int itemID) {
 /* daily potential solar radiation from Sellers (1965) */
-/* Input */
-	int   doy; /* day of the year */
-	float lat; /* latitude in decimal degrees */
-/* Local */
+// Input
+	int   doy; // day of the year
+	float lat; // latitude in decimal degrees
+// Local
 	float isc, dec, h;
-/* Output */
+// Output
 	float i0hDay;
 
 	doy = MFDateGetDayOfYear ();
@@ -114,37 +114,31 @@ static int _MDInputID, _MDGrossRadID;
 static int _MDOutSolarRadID = MFUnset;
 
 static void _MDSolarRadiationCloud (int itemID) {
-/* Input */
+// Input
 	float cloud;
-/* Output */
+// Output
 	float solarRad;
-/* Local */
-
-	cloud = 0.0;
+// Local
 
 	solarRad = MFVarGetFloat (_MDGrossRadID, itemID, 0.0);
 	cloud    = MFVarGetFloat (_MDInputID,    itemID, 0.0) ;
-	//if (cloud >100 ) printf ("Error in Cloudcover! VarID %i MDSolarRad!CLD = %f \n",_MDInputID, cloud);
 	if (fabs(cloud) > 100.0) printf ("cloud cover item %i  %f VarID %i \n",itemID, cloud, _MDInputID);
 	cloud = cloud / 100.0;
 		 
-   solarRad = solarRad * (0.803 - (0.340 * cloud) - (0.458 * (float) pow ((double) cloud,(double) 2.0)));
-	MFVarSetFloat (_MDOutSolarRadID,  itemID, solarRad);
+	solarRad = solarRad * (0.803 - (0.340 * cloud) - (0.458 * (float) pow ((double) cloud,(double) 2.0)));
+    MFVarSetFloat (_MDOutSolarRadID,  itemID, solarRad);
 }
 
 static void _MDSolarRadiationSun (int itemID) {
-/* Input */
+// Input
 	float sunShine;
-/* Output */
+// Output
 	float solarRad;
-/* Local */
-
-	if (MFVarTestMissingVal (_MDInputID,  itemID) ||
-		 MFVarTestMissingVal (_MDGrossRadID, itemID)) { MFVarSetMissingVal (_MDOutSolarRadID,   itemID); return; }
+// Local
 
 	solarRad = MFVarGetFloat (_MDGrossRadID, itemID,  0.0);
-	sunShine = MFVarGetFloat (_MDInputID,    itemID, 50.0) / 100.;
- 
+	sunShine = MFVarGetFloat (_MDInputID,    itemID, 50.0) / 100.0;
+
 	solarRad = solarRad * (0.251 + 0.509 * sunShine);
 	MFVarSetFloat (_MDOutSolarRadID,  itemID, solarRad);
 }

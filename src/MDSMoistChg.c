@@ -49,8 +49,7 @@ static int _MDInRootDepthID  = MFUnset;
 static int _MDOutSoilMoistID = MFUnset;
 static int _MDOutSMoistChgID = MFUnset;
 static int _MDOutEvaptrsID   = MFUnset;
-static int _MDOutRelSoilMoistID =MFUnset;
-static int _MDOutPotEtpID =MFUnset;
+
 static void _MDSMoistChg (int itemID) {
 // Input
 	float airT;       // Air temperature [degreeC]
@@ -105,9 +104,6 @@ static void _MDSMoistChg (int itemID) {
 	MFVarSetFloat (_MDOutSoilMoistID,itemID,sMoist);
 	MFVarSetFloat (_MDOutSMoistChgID,itemID,sMoistChg);
 	MFVarSetFloat (_MDOutEvaptrsID,  itemID,intercept + transp);
-	MFVarSetFloat (_MDOutPotEtpID,itemID,pet);
-	MFVarSetFloat (_MDOutRelSoilMoistID,itemID,sMoist/_MDAWCap);
-	
 }
 
 int MDSMoistChgDef () {
@@ -129,9 +125,7 @@ int MDSMoistChgDef () {
 	    ((_MDInRootDepthID  = MFVarGetID (MDVarRootingDepth,       "mm",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDInAirTMeanID   = MFVarGetID (MDVarAirTemperature,     "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDOutSoilMoistID = MFVarGetID (MDVarSoilMoisture,       "mm",   MFOutput, MFState, MFInitial))  == CMfailed) ||
-	    ((_MDOutRelSoilMoistID = MFVarGetID (MDVarRelSoilMoisture,       "mm",   MFOutput, MFState, MFInitial))  == CMfailed) ||
         ((_MDOutSMoistChgID = MFVarGetID (MDVarSoilMoistChange,    "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-        ((_MDOutPotEtpID = MFVarGetID (MDVarPotEvapotranspiration,    "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
 	    ((_MDOutEvaptrsID   = MFVarGetID (MDVarEvapotranspiration, "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
 	    (MFModelAddFunction (_MDSMoistChg) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Soil Moisture");

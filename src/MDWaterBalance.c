@@ -36,7 +36,7 @@ static int _MDInGrdWaterAbstractionID     = MFUnset;
 static int _MDInGrossIrrDemandID          = MFUnset;
 static int _MDInIrrReturnFlowID           = MFUnset;
 static int _MDInExcessAbstractionID       = MFUnset;
-static int _MDOutPrecipitationID		  = MFUnset;
+
 //Output
 static int _MDOutWaterBalanceID           = MFUnset;
 static int _MDOutTotalEvapotranpirationID = MFUnset;
@@ -88,7 +88,6 @@ static void _MDWaterBalance(int itemID) {
 	}
 	MFVarSetFloat (_MDOutWaterBalanceID, itemID, waterbalance);
 	MFVarSetFloat (_MDInInfiltrationID,  itemID, infiltration);
-	MFVarSetFloat(_MDOutPrecipitationID,itemID,ppt);
 	if (_MDOutTotalEvapotranpirationID != MFUnset) MFVarSetFloat (_MDOutTotalEvapotranpirationID,itemID,totETP);
 }
 
@@ -104,7 +103,6 @@ int MDWaterBalanceDef() {
 	    ((_MDInSoilMoistChgID            = MDSMoistChgDef     ()) == CMfailed) ||
 	    ((_MDInRunoffID                  = MDRunoffDef        ()) == CMfailed) ||
 	    ((_MDInInfiltrationID            = MDInfiltrationDef  ()) == CMfailed) ||
-	    ((_MDOutPrecipitationID                 = MFVarGetID (MDVarPrecipitationOUT,            "mm",   MFOutput,  MFFlux,  MFBoundary)) == CMfailed) ||
 	    ((_MDInEvaptrsID                 = MFVarGetID (MDVarEvapotranspiration,            "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
 	    ((_MDInGrdWatChgID               = MFVarGetID (MDVarGroundWaterChange,             "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
 	    ((_MDOutWaterBalanceID           = MFVarGetID (MDVarWaterBalance,                  "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed))

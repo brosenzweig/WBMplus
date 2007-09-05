@@ -1,109 +1,160 @@
-#include<stdio.h>
-#include<math.h>
-#include<cm.h>
-#include<MF.h>
-#include<MD.h>
+/******************************************************************************
 
-static int _MDInDayLengthID, _MDInI0HDayID;
+GHAAS Water Balance/Transport Model V3.0
+Global Hydrologic Archive and Analysis System
+Copyright 1994-2007, University of New Hampshire
 
+MDPotETPMdn.c
 
-static int _MDInAtMeanID,  _MDInSolRadID, _MDInVPressID, _MDInWSpeedID;
+balazs.fekete@unh.edu
+
+*******************************************************************************/
+
+#include <stdio.h>
+#include <math.h>
+#include <cm.h>
+#include <MF.h>
+#include <MD.h>
+
+static int _MDInDayLengthID     = MFUnset;
+static int _MDInI0HDayID        = MFUnset;
+static int _MDInAtMeanID        = MFUnset;
+static int _MDInAtMinID         = MFUnset;
+static int _MDInAtMaxID         = MFUnset;
+static int _MDInSolRadID        = MFUnset;
+static int _MDInVPressID        = MFUnset;
+static int _MDInWSpeedID        = MFUnset;
 static int _MDFAOReferenceETPID = MFUnset;
-static int _MDInElevationID =MFUnset;
-static int _MDInAtMaxID = MFUnset;
-static int _MDInAtMinID =MFUnset;
 
 static void _MDFAOReferenceETP (int itemID) {
-/* day-night Penman-Monteith PE in mm for day */
-/* Input */
-	float dayLen;  /* daylength in fraction of day */
- 	float i0hDay;  /*  daily potential insolation on horizontal [MJ/m2] */
+// day-night Penman-Monteith PE in mm for day
+// Input
+	float dayLen;           // daylength in fraction of day
+ 	float i0hDay;           // daily potential insolation on horizontal [MJ/m2]
+	float airT;             // air temperatur [degree C]
+	float airTMin;          // daily minimum air temperature [degree C]
+	float airTMax;          // daily maximum air temperature [degree C]
+	float solRad;           // daily solar radiation on horizontal [MJ/m2]
+	float vPress;           // daily average vapor pressure [kPa]
+	float wSpeed;           // average wind speed for the day [m/s]
+	float sHeat = 0.0;      // average subsurface heat storage for day [W/m2]
+// Local
+	float albedo;           // albedo
+	float height;           // canopy height [m]
+	float r5;               // solar radiation at which conductance is halved [W/m2]
+	float cd;               // vpd at which conductance is halved [kPa]
+	float cr;               // light extinction coefficient for projected LAI
+	float glMax;            // maximum leaf surface conductance for all sides of leaf [m/s]
+	float z0g;              // z0g       - ground surface roughness [m]
+ 	float lai;              // projected leaf area index
+	float sai;              // projected stem area index
+	float solNet;           // average net solar radiation for daytime [W/m2]
+	float airTDtm, airTNtm; // air temperature for daytime and nighttime [degC]
+	float uaDtm,   uaNtm;	// average wind speed for daytime and nighttime [m/s]
+	float lngDtm,	lngNtm;	// average net longwave radiation for daytime and nighttime [W/m2]
+	float za;               // reference height [m]
+ 	float disp;             // height of zero-plane [m]
+	float z0;               // roughness parameter [m]
+	float aa;		        // available energy [W/m2]
+	float es;               // vapor pressure at airT [kPa]
+	float delta;            // dEsat/dTair [kPa/K]
+ 	float dd;               // vapor pressure deficit [kPa]
+	float ra;               // aerodynamic resistance [s/ma]
+ 	float rc;               // canopy resistance [s/m]
+	float led, len;         // daytime and nighttime latent heat [W/m2]
+// Output
+	float pet;
 
-	float airT;    /* air temperatur [degree C] */
-	float airTMin; /* daily minimum air temperature [degree C]  */
-	float airTMax; /* daily maximum air temperature [degree C]  */
-	float solRad;  /* daily solar radiation on horizontal [MJ/m2] */
-	float vPress;  /* daily average vapor pressure [kPa] */
-	float wSpeed;  /* average wind speed for the day [m/s]  */
-/* Local */
-	float solNet;  /* average net solar radiation for daytime [W/m2] */
-	float es;      /* vapor pressure at airT [kPa] */
-	float es_min;      /* vapor pressure at airT [kPa] */
-	float es_max;      /* vapor pressure at airT [kPa] */
-	float delta;   /* dEsat/dTair [kPa/K] */
-	float psychometricConstant;
-	float FAOEtp;
-	float solNet_MJm2d;
-	float nom;
-	float denom;
-	float meanAirTemp;
-	float atmosPressure;
-	float elevation;
- 
+	if (MFVarTestMissingVal (_MDInDayLengthID,    itemID) ||
+	    MFVarTestMissingVal (_MDInI0HDayID,       itemID) ||
+	    MFVarTestMissingVal (_MDInAtMeanID,       itemID) ||
+	    MFVarTestMissingVal (_MDInAtMinID,        itemID) ||
+	    MFVarTestMissingVal (_MDInAtMaxID,        itemID) ||
+	    MFVarTestMissingVal (_MDInSolRadID,       itemID) ||
+	    MFVarTestMissingVal (_MDInVPressID,       itemID) ||
+	    MFVarTestMissingVal (_MDInWSpeedID,       itemID)) {
+		MFVarSetMissingVal (_MDFAOReferenceETPID,itemID); 
+		return;
+	}
 
-
-	dayLen  = MFVarGetFloat (_MDInDayLengthID,    itemID,0);
-	i0hDay  = MFVarGetFloat (_MDInI0HDayID,       itemID,0);
-	elevation=MFVarGetFloat (_MDInElevationID,       itemID,0); 
-	airT    = MFVarGetFloat (_MDInAtMeanID,       itemID,0);
-	 
-	solRad  = MFVarGetFloat (_MDInSolRadID,       itemID,0);
-	vPress  = MFVarGetFloat (_MDInVPressID,       itemID,0);
-	wSpeed  = fabs (MFVarGetFloat (_MDInWSpeedID, itemID,0));
-	if (wSpeed < 0.2) wSpeed = 0.2;
-	
+	dayLen  = MFVarGetFloat (_MDInDayLengthID,    itemID, 12.0);
+	i0hDay  = MFVarGetFloat (_MDInI0HDayID,       itemID,  0.0);
+	albedo  =   0.230;
+	height  =   0.120;
+	r5      = 100.000;
+	cd      =   2.000;
+	cr      =   0.700;
+	glMax   =   0.008;
+	z0g     =   0.010;
+	lai     =   3.000;
+	sai     = 3.0 > MDConstLPC ? MDConstCS * height : (3.0 / MDConstLPC) * MDConstCS * height;;
+	airT    = MFVarGetFloat (_MDInAtMeanID,       itemID,  0.0);
 	airTMin = MFVarGetFloat (_MDInAtMinID,        itemID,  0.0);
 	airTMax = MFVarGetFloat (_MDInAtMaxID,        itemID,  0.0);
-	
- 
-	// if (MFModelGetLatitude(itemID) == 5.75)if(MFModelGetLongitude(itemID)==12.75) printf("ItemIDAngola %i\n",itemID);
-	atmosPressure=(293-0.0065*elevation)/293;
-	atmosPressure=pow(atmosPressure,5.26);
-	atmosPressure=atmosPressure*101.3;
-	psychometricConstant=0.665*atmosPressure/1000;
-	
- 
-	
-	meanAirTemp=(airTMin+airTMax) /2;
-	solNet = (1.0 - 0.23) * solRad ;// in MJ/m2 
-	es_min      = MDPETlibVPressSat (airTMin);
- 	es_max = MDPETlibVPressSat (airTMax);
- 	es=(es_min+es_max)/2;
-	solNet_MJm2d=solNet;//0.0864; FAO equation wants SolNet in MJ/m2.
-	float nen=4098*(0.6108*exp(17.27*airT/(airT+237.3)));
-	delta=nen/((airT+237.3)*(airT+237.3));
-//  	printf ("Gamma \t%f solNet\t%f\tes\t%f vPress\t%f",psychometricConstant,solNet, es, vPress);
-// 	((airT+237.3)*(airT+237.3));
- float temp = es-vPress;
- temp=temp;
-		nom=0.408*delta*solNet_MJm2d+psychometricConstant*900/(273+airT)*wSpeed*(temp);//FBM nimmt vapor pressure in kPA!
-		denom=delta+ psychometricConstant*(1+0.34*wSpeed);
- 		//if (nom <0) printf ("nom %f PressDefi\t%f SatPress%f vPress%f Teemp %f \n",nom, temp, es, vPress,airT);
-		FAOEtp=nom/denom;
-// if (FAOEtp<0) FAOEtp=0;
-	//pet = MDConstEtoM * MDConstIGRATE * (dayLen * led + (1.0 - dayLen) * len);
-	//printf("FAO\t%f\tBMF\t%f\n",FAOEtp,pet);
-//	if (itemID==38672) printf ("PETPFAO= %fes%f vPress%f delta%f Pressure%f\n",FAOEtp, es, vPress, delta,atmosPressure);
-   MFVarSetFloat (_MDFAOReferenceETPID,itemID,FAOEtp);
+	solRad  = MFVarGetFloat (_MDInSolRadID,       itemID,  0.0);
+	vPress  = MFVarGetFloat (_MDInVPressID,       itemID,  0.0);
+	wSpeed  = fabs (MFVarGetFloat (_MDInWSpeedID, itemID,  0.0));
+	if (wSpeed < 0.2) wSpeed = 0.2;
+
+// daytime
+	if (dayLen < 0.0) {
+		solNet  = (1.0 - albedo) * solRad / (MDConstIGRATE * dayLen);
+
+		airTDtm = airT + ((airTMax - airTMin) / (2 * M_PI * dayLen)) * sin (M_PI * dayLen);
+		uaDtm   = wSpeed / (dayLen + (1.0 - dayLen) * MDConstWNDRAT);
+		lngDtm  = MDSRadNETLong (i0hDay,airTDtm,solRad,vPress);
+
+		za      = height + MDConstZMINH;
+		disp    = MDPETlibZPDisplacement (height,lai,sai,z0g);
+		z0      = MDPETlibRoughness (disp,height,lai,sai,z0g);
+		
+		aa      = solNet + lngDtm - sHeat;
+		es      = MDPETlibVPressSat (airTDtm);
+		delta   = MDPETlibVPressDelta (airTDtm);
+		dd      = es - vPress; 
+		ra      = log ((za - disp) / z0);
+		ra      = ra * ra / (0.16 * uaDtm);
+		rc      = 70;MDPETlibCanopySurfResistance (airTDtm,solRad / dayLen,dd,lai,sai,r5,cd,cr,glMax);
+		led     = MDPETlibPenmanMontieth (aa, dd, delta, ra, rc);
+	}
+	else led = 0.0;
+
+// nighttime
+	if (dayLen < 1.0) {
+		airTNtm = airT - ((airTMax - airTMin) / (2 * M_PI * (1 - dayLen))) * sin (M_PI * dayLen);
+		uaNtm   = MDConstWNDRAT * uaDtm;
+		lngNtm  = MDSRadNETLong (i0hDay,airTNtm,solRad,vPress);
+
+		aa      = lngNtm - sHeat;
+		es      = MDPETlibVPressSat (airTNtm);
+		delta   = MDPETlibVPressDelta (airTNtm);
+		dd      = es - vPress;
+		rc      = 70;//;1 / (MDConstGLMIN * lai);
+		ra      = log ((za - disp) / z0);
+		ra      = (ra * ra) / (0.16 * uaNtm);
+
+		len     = MDPETlibPenmanMontieth (aa, dd, delta, ra, rc);
+	}
+	else len = 0.0;
+
+	pet = MDConstEtoM * MDConstIGRATE * (dayLen * led + (1.0 - dayLen) * len);
+   MFVarSetFloat (_MDFAOReferenceETPID,itemID,pet);
 }
 
 int MDIrrFAOReferenceETPDef () {
-	if (_MDFAOReferenceETPID != CMfailed) return (_MDFAOReferenceETPID);
+	if (_MDFAOReferenceETPID != MFUnset) return (_MDFAOReferenceETPID);
 
 	MFDefEntering ("FAO Reference ETP ");
 	if (((_MDInDayLengthID     = MDSRadDayLengthDef ()) == CMfailed) ||
-		 ((_MDInI0HDayID        = MDSRadI0HDayDef    ()) == CMfailed) ||
-	     ((_MDInElevationID  = MFVarGetID (MDVarMeanElevationMeters, "m",  MFInput,  MFState, false)) == CMfailed) ||
-		 ((_MDInSolRadID        = MDSolarRadDef      ()) == CMfailed) ||
-		 ((_MDInAtMeanID  = MFVarGetID (MDVarAirTemperature, "degC",  MFInput,  MFState, false)) == CMfailed) ||
-		 ((_MDInAtMinID   = MFVarGetID (MDVarAirTempMinimum, "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		 ((_MDInAtMaxID   = MFVarGetID (MDVarAirTempMaximum, "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		 ((_MDInVPressID  = MFVarGetID (MDVarVaporPressure,  "kPa",   MFInput,  MFState, false)) == CMfailed) ||
-		 ((_MDInWSpeedID  = MFVarGetID (MDVarWindSpeed,      "m/s",   MFInput,  MFState, false)) == CMfailed) ||
-		 ((_MDFAOReferenceETPID    = MFVarGetID (MDVarReferenceEvapotranspiration,  "mm",    MFOutput, MFFlux,  false)) == CMfailed)) return (CMfailed);
-    if (MFModelAddFunction (_MDFAOReferenceETP)== CMfailed) return (CMfailed);
-
-	//printf ("RefETP ID %i\n",_MDFAOReferenceETPID);
+	    ((_MDInI0HDayID        = MDSRadI0HDayDef    ()) == CMfailed) ||
+	    ((_MDInSolRadID        = MDSolarRadDef      ()) == CMfailed) ||
+	    ((_MDInAtMeanID        = MFVarGetID (MDVarAirTemperature, "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInAtMinID         = MFVarGetID (MDVarAirTempMinimum, "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInAtMaxID         = MFVarGetID (MDVarAirTempMaximum, "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInVPressID        = MFVarGetID (MDVarVaporPressure,  "kPa",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInWSpeedID        = MFVarGetID (MDVarWindSpeed,      "m/s",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDFAOReferenceETPID = MFVarGetID (MDVarReferenceEvapotranspiration,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+	    (MFModelAddFunction (_MDFAOReferenceETP) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("FAO Reference ETP");
 	return(_MDFAOReferenceETPID);
 }

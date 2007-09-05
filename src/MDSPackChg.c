@@ -22,7 +22,7 @@ static int _MDInPrecipID    = MFUnset;
 static int _MDOutSnowPackID = MFUnset;
 static int _MDOutSPackChgID = MFUnset;
 static int _MDOutSnowMeltID = MFUnset;
-static int _MDOutSnowFallID = MFUnset;
+
 static void _MDSPackChg (int itemID) {
 // Input
 	float airT;
@@ -64,7 +64,6 @@ int MDSPackChgDef () {
 	    ((_MDInAtMeanID    = MFVarGetID (MDVarAirTemperature, "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDOutSnowPackID = MFVarGetID (MDVarSnowPack,       "mm",   MFOutput, MFState, MFInitial))  == CMfailed) ||
 	    ((_MDOutSnowMeltID = MFVarGetID (MDVarSnowMelt,       "mm",   MFOutput, MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDOutSnowFallID = MFVarGetID (MDVarSnowfallOUT,       "mm",   MFOutput, MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDOutSPackChgID = MFVarGetID (MDVarSnowPackChange, "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
 	    (MFModelAddFunction (_MDSPackChg) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Snow Pack Change");
