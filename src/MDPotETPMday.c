@@ -118,7 +118,7 @@ static void _MDPotETPMday (int itemID) {
 	le     = MDPETlibPenmanMontieth (aa, dd, delta, ra, rc);
 
 	pet = MDConstEtoM * MDConstIGRATE * le; 
-	if (pet<=-2.0)printf("PMday negativ = %f solnet = %f le = %f height = %f wSpeed = %f SolRad =%f \n",pet,solNet,le,height,wSpeed, solRad);
+	if (pet <= -2.0) CMmsgPrint (CMmsgUsrError,"PMday negativ = %f solnet = %f le = %f height = %f wSpeed = %f SolRad =%f \n",pet,solNet,le,height,wSpeed, solRad);
    MFVarSetFloat (_MDOutPetID,itemID,pet);
 }
 

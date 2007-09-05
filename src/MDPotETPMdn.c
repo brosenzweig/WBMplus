@@ -133,7 +133,10 @@ static void _MDPotETPMdn (int itemID) {
 		rc      = MDPETlibCanopySurfResistance (airTDtm,solRad / dayLen,dd,lai,sai,r5,cd,cr,glMax);
 		led     = MDPETlibPenmanMontieth (aa, dd, delta, ra, rc);
 	}
-	else led = 0.0;
+	else {
+		led = 0.0;
+		uaDtm = wSpeed / MDConstWNDRAT;
+	}
 
 // nighttime
 	if (dayLen < 1.0) {

@@ -169,12 +169,23 @@ float MDPETlibGroundResistance (float windSpeed,float height, float z0g,float z0
  * dispc     - zero-plane displacement (closed canopy) */
 	float za;      /* reference height [m] */
 	float uStar, kh;
-
+    float output;
 	za    = height + MDConstZMINH;
 	uStar = MDConstK * windSpeed / log ((za - disp) / z0);
+	if (uStar==0)
+	{
+	printf ("uStar =0! MDConstK %f windSpeed %f za %f disp %f z0 %f \n",MDConstK , windSpeed ,za ,disp, z0);
+
+	}
 	kh    = MDConstK * uStar * (height - disp);
-	return ((height * exp (MDConstN) / (MDConstN * kh)) *
-			 	(exp (-MDConstN * z0g / height) - exp (-MDConstN * (z0c + dispc) / height)));
+ 
+	output=((height * exp (MDConstN) / (MDConstN * kh)) *
+		 	(exp (-MDConstN * z0g / height) - exp (-MDConstN * (z0c + dispc) / height)));
+   // output=70;
+	if (isinf(output))printf ("ras inf! height %f z0%f, dispc %f kh %f uStar %f za %f\n",height,z0c,dispc,kh,uStar,za);
+	//return ((height * exp (MDConstN) / (MDConstN * kh)) *
+		//	 	(exp (-MDConstN * z0g / height) - exp (-MDConstN * (z0c + dispc) / height)));
+	return output;
 }
 
 float MDPETlibVPressSat (float airT) {
@@ -249,13 +260,22 @@ float MDPETlibShuttleworthWallace (float rss,float aa,float asubs,float dd,float
  * rsc       - canopy surface resistance [s/m]
  * delta     - dEsat/dTair [kPa/K] */
 	float rs, rc, ra, ccs, ccc, pms, pmc;
-
+  float output;
    rs = (delta + MDConstPSGAMMA) * ras + MDConstPSGAMMA * rss; 
    rc = (delta + MDConstPSGAMMA) * rac + MDConstPSGAMMA * rsc; 
 	ra = (delta + MDConstPSGAMMA) * raa;
+	 if (isinf(ra)){
+//		   printf ("ra is INF!!  delta %f MDConstPSGAMMA %f  raa %f\n",delta ,MDConstPSGAMMA, raa);
+		   
+	   }
    ccs = 1.0 / (1.0 + rs * ra / (rc * (rs + ra)));
    ccc = 1.0 / (1.0 + rc * ra / (rs * (rc + ra)));
    pms = MDPETlibPenmanMontieth (aa,dd - delta * ras * (aa - asubs) / MDConstCPRHO,delta,raa + ras,rss);
    pmc = MDPETlibPenmanMontieth (aa,dd - delta * rac * asubs / MDConstCPRHO, delta,raa + rac, rsc);
+   output=(ccc * pmc + ccs * pms);
+   if (isnan(output)){
+	  // printf ("len is NAN in..LIB ccc %f pmc %f ccs %f pms%f rs %f ra %f rc %f ras %f rss %f rsc %f delta %f\n",ccc , pmc , ccs , pms, rs , ra, rc, ras, rss, rsc,delta);
+	   
+   }
    return (ccc * pmc + ccs * pms);
 }

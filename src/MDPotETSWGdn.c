@@ -104,7 +104,7 @@ static void _MDPotETSWGdn (int itemID) {
 		 MFVarTestMissingVal (_MDInVPressID,       itemID) ||
 		 MFVarTestMissingVal (_MDInWSpeedID,       itemID)) { MFVarSetMissingVal (_MDOutPetID,itemID); return; }
 
-	dayLen  = MFVarGetFloat (_MDInDayLengthID,    itemID, 12.0);
+	dayLen  = MFVarGetFloat (_MDInDayLengthID,    itemID, 0.0);
 	i0hDay  = MFVarGetFloat (_MDInI0HDayID,       itemID,  0.0);
 	albedo  = MFVarGetFloat (_MDInCParamAlbedoID, itemID,  0.0);
 	height  = MFVarGetFloat (_MDInCParamCHeightID,itemID,  0.0);
