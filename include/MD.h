@@ -232,12 +232,9 @@ extern "C" {
 #define MDVarWaterSurplus                          "WaterSurplus"
 #define MDVarWindSpeed                             "WindSpeed"
 
-#define MDVarSnowMelt			           	"SnowMelt"
+#define MDVarSnowMelt				"SnowMelt"
 #define MDVarPrecipitationOUT				"PrecipitationOut"
-#define MDVarSnowfallOUT				    "SnowfallOut"
-#define MDVarRelSoilMoisture 				"RelativeSoilMoisture"
-#define MDVarPotEvapotranspiration			"PotEvapotranspiration"
-#define MDVarRelSoilMoisture                "RelativeSoilMoisture"	
+
 #define MDParGrossRadTAU                           "GrossRadTAU"
 #define MDParGroundWatBETA                         "GroundWaterBETA"
 #define MDParInfiltrationFrac                      "InfiltrationFraction"
@@ -246,8 +243,7 @@ extern "C" {
 #define MDParIsotopeC2                             "IsotopeC2"
 #define MDParIsotopeVSMOW                          "IsotopeVSMOW"
 #define MDParIsotopeRhoRatio                       "IsotopeRhoRatio"
-#define MDDieFramework                       "die"
-	
+
 #define MDConst_m3PerSecTOmmKm2PerDay 86400000.0
 #define MDConst_mmKm2PerDayTOm3PerSec (1.0 / 86400000.0)
 #define MDConstInterceptCI  0.3	   // Interception LAI+SAI constant
