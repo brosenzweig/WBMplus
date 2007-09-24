@@ -35,18 +35,31 @@ extern "C" {
 #define MDOptIrrReferenceET                  "IrrReferenceETP"
 
  //MD BGCInput
-# define MDVarNonPointTNSourcesCont          "NonPointTNSourcesCont" 
-# define MDVarPointTNSources                 "PointTNSources"
+# define MDVarNonPoint_NO3                     "NinputsNO3_nonpoint" 
+# define MDVarPointSources_NO3                 "NinputsNO3_point"
+# define MDVarNonPoint_NH4                     "NinputsNH4_nonpoint" 
+# define MDVarPointSources_NH4                 "NinputsNH4_point"
+# define MDVarNonPoint_DON                     "NinputsDON_nonpoint" 
+# define MDVarNonPoint_PON                     "NinputsPON_nonpoint"
+	
+	//MD BGCOutput
+# define MDVarBgcFlux_NO3                      "BgcFlux_NO3"
+# define MDVarBgcFlux_NH4                      "BgcFlux_NH4"
+# define MDVarBgcFlux_DON                      "BgcFlux_DON"
+# define MDVarBgcFlux_PON                      "BgcFlux_PON"
+	
+# define MDVarBgcStoreWater_NO3                "BgcStoreWater_NO3"         
+# define MDVarBgcLocalLoad_NO3                 "BgcLocalLoad_NO3"
 
- //MD BGCOutput
-# define MDVarBgcTNFlux                      "BgcTNFlux"
-# define MDVarBgcTNStoreWater                "BgcTNStoreWater"         
-# define MDVarBgcTNStoreWaterChange          "BgcTNStoreWaterChange" 
-# define MDVarBgcTNStoreSeds                 "BgcTNStoreSeds" 
-# define MDVarBgcTNStoreSedsChange           "BgcTNStoreSedsChange" 
-# define MDVarBgcTNTotalUptake               "BgcTNTotalUptake" 
-# define MDVarBgcTNLocalLoad                 "BgcTNLocalLoad"
-# define MDVarBgcTNConc                      "BgcTNConc"
+# define MDVarBgcStoreWater_NH4                "BgcStoreWater_NH4"         
+# define MDVarBgcLocalLoad_NH4                 "BgcLocalLoad_NH4"
+	
+# define MDVarBgcStoreWater_DON                "BgcStoreWater_DON"         
+# define MDVarBgcLocalLoad_DON                 "BgcLocalLoad_DON"
+
+# define MDVarBgcStoreWater_PON                "BgcStoreWater_PON"         
+# define MDVarBgcLocalLoad_PON                 "BgcLocalLoad_PON"
+# define MDVarBgcStoreSeds_PON                 "BgcStoreSeds_PONkgm2"	
 
 #define MDConst_m3PerSecTOm3PerDay 86400.0
 
@@ -198,7 +211,7 @@ extern "C" {
 #define MDVarRiverDepth                      "RiverDepth"
 #define MDVarRiverStorage                    "RiverStorage"
 #define MDVarRiverStorageChg                 "RiverStorageChange"
-#define MDVarRiverWidth                      "RiverWidth"
+#define MDVarRiverWidth                      "RiverbedWidth"
 
 #define MDVarRootingDepth                    "RootingDepth"
 #define MDVarRunoff                          "Runoff"
