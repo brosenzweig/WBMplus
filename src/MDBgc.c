@@ -127,8 +127,6 @@ static void _MDBgcRouting (int itemID) {
 	
 	float waterT;
 
-	//
-	float tnQ10 = 2;
 	//float tnUmax = 2.9;
 	//float tnKs = 0.416;
 	float Vfref_NH4_assim = 0; //400; //4730; /* m/yr*/
