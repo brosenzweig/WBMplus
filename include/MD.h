@@ -249,7 +249,6 @@ extern "C" {
 #define MDVarPrecipitationOUT                "PrecipitationOut"
 #define MDVarSnowfallOUT                     "SnowfallOut"
 #define MDVarRelSoilMoisture                 "RelativeSoilMoisture"
-#define MDVarPotEvapotranspiration           "PotEvapotranspiration"
 #define MDVarRelSoilMoisture                 "RelativeSoilMoisture"	
 #define MDParGrossRadTAU                     "GrossRadTAU"
 #define MDParGroundWatBETA                   "GroundWaterBETA"
