@@ -20,50 +20,49 @@ balazs.fekete@unh.edu
 static int _MDInRechargeID              = MFUnset;
 static int _MDInIrrGrossDemandID        = MFUnset;
 static int _MDInIrrReturnFlowID         = MFUnset;
-static int _MDInSmallResReleaseID		=MFUnset;
+static int _MDInIrrAreaID               = MFUnset;
+static int _MDInSmallResReleaseID		= MFUnset;
 // Output
 static int _MDOutGrdWatID               = MFUnset;
 static int _MDOutGrdWatChgID            = MFUnset;
 static int _MDOutBaseFlowID             = MFUnset;
 static int _MDOutIrrUptakeGrdWaterID    = MFUnset;
 static int _MDOutIrrUptakeExternalID    = MFUnset;
-static int _MDOutSmallResReleaseID  =MFUnset;
-static float _MDGroundWatBETA  = 0.016666667;
-static float _MDInIrrAreaID=MFUnset;
+
+static float _MDGroundWatBETA = 0.016666667;
 static float _MDRecharge;
 
 float _MDGroundWaterFunc (float t, float grdH2O) { return (_MDRecharge - _MDGroundWatBETA * grdH2O); }
 
 static void _MDBaseFlow (int itemID) {
 // Input
-	float irrDemand=0;          // Irrigation demand [mm/dt]
-	float irrReturnFlow=0;      // Irrigation return flow [mm/dt]
-	float smallResRelease=0.0;	  // Release from small reservoirs that can be used for irrigation (preferentially!), mm/dt
+	float irrDemand        = 0.0; // Irrigation demand [mm/dt]
+	float irrReturnFlow    = 0.0; // Irrigation return flow [mm/dt]
+	float smallResRelease  = 0.0; // Release from small reservoirs that can be used for irrigation (preferentially!), mm/dt
 // Output
-	float grdWater=0;           // Groundwater size   [mm]
-	float grdWaterChg=0;        // Groundwater change [mm/dt]
-	float irrUptakeGrdWater=0;  // Irrigational water uptake from shallow groundwater [mm/dt]
-	float IrrUptakeExt=0;       // Unmet irrigational water demand [mm/dt]
+	float grdWater          = 0.0; // Groundwater size   [mm]
+	float grdWaterChg       = 0.0; // Groundwater change [mm/dt]
+	float irrUptakeGrdWater = 0.0; // Irrigational water uptake from shallow groundwater [mm/dt]
+	float IrrUptakeExt      = 0.0; // Unmet irrigational water demand [mm/dt]
 // Local
-	float baseFlow=0;           // Base flow from groundwater [mm/dt]
-	float irrAreaFraction=0;
-	float baseFlowBalance=0;
+	float baseFlow          = 0.0; // Base flow from groundwater [mm/dt]
+	float irrAreaFraction   = 0.0;
+	float baseFlowBalance   = 0.0;
 	float prevGW;
-	grdWaterChg = grdWater  =prevGW  = MFVarGetFloat (_MDOutGrdWatID,  itemID, 0.0);
+
+	grdWaterChg = grdWater = prevGW = MFVarGetFloat (_MDOutGrdWatID,  itemID, 0.0);
 
 	if ((_MDInIrrGrossDemandID != MFUnset) && (_MDInIrrReturnFlowID  != MFUnset)) {
 	// Abstraction here..
-		irrAreaFraction=MFVarGetFloat(_MDInIrrAreaID,itemID,0.0);
-		irrDemand      = MFVarGetFloat (_MDInIrrGrossDemandID,  itemID, 0.0);
-	 	irrReturnFlow  = MFVarGetFloat (_MDInIrrReturnFlowID,   itemID, 0.0);
+		irrAreaFraction = MFVarGetFloat(_MDInIrrAreaID,itemID,0.0);
+		irrDemand       = MFVarGetFloat (_MDInIrrGrossDemandID,  itemID, 0.0);
+	 	irrReturnFlow   = MFVarGetFloat (_MDInIrrReturnFlowID,   itemID, 0.0);
 		
-		if(_MDOutSmallResReleaseID!=MFUnset)smallResRelease = MFVarGetFloat(_MDOutSmallResReleaseID,itemID,0.0);
+		if(_MDInSmallResReleaseID ! = MFUnset) smallResRelease = MFVarGetFloat(_MDInSmallResReleaseID,itemID,0.0);
 		
 		if (smallResRelease < 0) printf ("SR release %f\n",smallResRelease);
-	
-		
-		if (irrDemand <= smallResRelease)
-		{
+
+		if (irrDemand <= smallResRelease) {
 			IrrUptakeExt=0.0;
 			irrUptakeGrdWater=0.0;
 		}
@@ -75,7 +74,6 @@ static void _MDBaseFlow (int itemID) {
 		else   {
 			irrUptakeGrdWater = irrDemand-smallResRelease;
 			IrrUptakeExt = 0.0;
-		
 		}
 		 
 		
@@ -89,29 +87,24 @@ static void _MDBaseFlow (int itemID) {
 	}
  	baseFlow    = _MDRecharge = MFVarGetFloat (_MDInRechargeID, itemID, 0.0) ;
 
-	if (grdWater + _MDRecharge > MFMathEpsilon) {
+	if (grdWater + _MDRecharge > 0.0) {
 		if ((grdWater = MFRungeKutta ((float) 0.0,1.0, grdWater,_MDGroundWaterFunc)) < 0.0) grdWater = 0.0;
 		grdWaterChg = grdWater - grdWaterChg;
 		baseFlow    = _MDRecharge = MFVarGetFloat (_MDInRechargeID, itemID, 0.0);
 		
 		baseFlow    = baseFlow - grdWaterChg;
-		 
-			
 	}
-	else 
-		{
+	else {
 		grdWaterChg = baseFlow = 0.0;
-	 
-		}
+	}
 //	if (itemID ==6)printf ("DEM in Baseflow  %f uptake %f\n",irrDemand,irrUptakeGrdWater);
  
-//if (itemID==6)printf ("BaseFlowwaterBalcne!= %f Recharge %f,baseflow %f  irrreturnflow %f irrUptakeGW %f GWChange %f grdWater %f itemID %i\n",baseFlowBalance,_MDRecharge,baseFlow,irrReturnFlow,irrUptakeGrdWater,grdWaterChg,grdWater,itemID);
-baseFlowBalance = _MDRecharge   -baseFlow- grdWaterChg;
-if (fabs(baseFlowBalance)>0.0001)printf ("BaseFlowwaterBalcne!= %f Recharge %f,baseflow %f  irrreturnflow %f irrUptakeGW %f GWChange %f itemID %i\n",baseFlowBalance,_MDRecharge,baseFlow,irrReturnFlow,irrUptakeGrdWater,grdWaterChg,itemID);
-if ((baseFlow)<-0.001)printf ("BaseFlowNEGASTIVE= %f Recharge %f,baseflow %f  irrreturnflow %f irrUptakeGW %f GWChange %f itemID %i\n",baseFlowBalance,_MDRecharge,baseFlow,irrReturnFlow,irrUptakeGrdWater,grdWaterChg,itemID);
+// if (itemID==6)printf ("BaseFlowwaterBalcne!= %f Recharge %f,baseflow %f  irrreturnflow %f irrUptakeGW %f GWChange %f grdWater %f itemID %i\n",baseFlowBalance,_MDRecharge,baseFlow,irrReturnFlow,irrUptakeGrdWater,grdWaterChg,grdWater,itemID);
+	baseFlowBalance = _MDRecharge - baseFlow - grdWaterChg;
+	if (fabs(baseFlowBalance)>0.0001)printf ("BaseFlowwaterBalcne!= %f Recharge %f,baseflow %f  irrreturnflow %f irrUptakeGW %f GWChange %f itemID %i\n",baseFlowBalance,_MDRecharge,baseFlow,irrReturnFlow,irrUptakeGrdWater,grdWaterChg,itemID);
+	if ((baseFlow)<-0.001)printf ("BaseFlowNEGASTIVE= %f Recharge %f,baseflow %f  irrreturnflow %f irrUptakeGW %f GWChange %f itemID %i\n",baseFlowBalance,_MDRecharge,baseFlow,irrReturnFlow,irrUptakeGrdWater,grdWaterChg,itemID);
 	
 	// in mm!
-
 	MFVarSetFloat (_MDOutGrdWatID,            itemID, grdWater);
     MFVarSetFloat (_MDOutGrdWatChgID,         itemID, grdWaterChg);
 	MFVarSetFloat (_MDOutBaseFlowID,          itemID, baseFlow);
@@ -125,22 +118,17 @@ int MDBaseFlowDef () {
 	if (_MDOutBaseFlowID != MFUnset) return (_MDOutBaseFlowID);
 
 	MFDefEntering ("Base flow");
-	if ((_MDInRechargeID        = MDInfiltrationDef ())   == CMfailed) return (CMfailed);
- 
 	if (((optStr = MFOptionGet (MDParGroundWatBETA))  != (char *) NULL) && (sscanf (optStr,"%f",&par) == 1)) _MDGroundWatBETA = par;
 
+	if ((_MDInRechargeID = MDInfiltrationDef ()) == CMfailed) return (CMfailed);
 	if (((optStr = MFOptionGet (MDOptIrrigation)) != (char *) NULL) && (CMoptLookup (options,optStr,true) == CMfailed)) {
-		    if (((_MDInIrrGrossDemandID     = MDIrrGrossDemandDef ()) == CMfailed) ||
-		     
-		    		((_MDInIrrReturnFlowID      = MFVarGetID (MDVarIrrReturnFlow,     "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+		if (((_MDInIrrGrossDemandID     = MDIrrGrossDemandDef  ()) == CMfailed) ||
+		    ((_MDInSmallResReleaseID    = MDSmallReservoirsDef ()) == CMfailed) ||
+		    ((_MDInIrrReturnFlowID      = MFVarGetID (MDVarIrrReturnFlow,     "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
 		    ((_MDOutIrrUptakeGrdWaterID = MFVarGetID (MDVarIrrUptakeGrdWater, "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-		    ((_MDOutIrrUptakeExternalID = MFVarGetID (MDVarIrrUptakeExternal, "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed)||
-		     ((_MDInIrrAreaID          = MFVarGetID (MDVarIrrAreaFraction,          "-",    MFInput,  MFState, MFBoundary)) == CMfailed))
+		    ((_MDOutIrrUptakeExternalID = MFVarGetID (MDVarIrrUptakeExternal, "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+		    ((_MDInIrrAreaID            = MFVarGetID (MDVarIrrAreaFraction,   "-",  MFInput,  MFState, MFBoundary)) == CMfailed))
 			return CMfailed;
-		    if (((optStr = MFOptionGet (MDOptIrrSmallReservoirs)) != (char *) NULL) && (CMoptLookup (options,optStr,true) == CMfailed)) {
-	   			if ((_MDInSmallResReleaseID    = MDSmallReservoirsDef()) == CMfailed) return CMfailed;
-		    		 if (((_MDOutSmallResReleaseID = MFVarGetID (MDVarSmallResRelease,              "mm", MFInput, MFFlux, MFBoundary)) == CMfailed))return CMfailed;		
-		    }	
 	}
 	if (((_MDOutGrdWatID                = MFVarGetID (MDVarGroundWater,       "mm", MFOutput, MFState, MFInitial))  == CMfailed) ||
 	    ((_MDOutGrdWatChgID             = MFVarGetID (MDVarGroundWaterChange, "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||

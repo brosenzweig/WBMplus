@@ -67,7 +67,7 @@ int MDDischLevel2Def() {
 
 	MFDefEntering ("Discharge Level 2");
 	if (((_MDInDischLevel3ID  = MDDischLevel3Def ()) == CMfailed) ||
-	    ((_MDOutDischLevel2ID = MFVarGetID (MDVarDischLevel2,  "m/3", MFOutput, MFState, false)) == CMfailed))
+	    ((_MDOutDischLevel2ID = MFVarGetID ("__DischLevel2",  "m/3", MFOutput, MFState, false)) == CMfailed))
 	    return (CMfailed);
 	if (((optStr = MFOptionGet (MDOptIrrigation)) != (char *) NULL) && (CMoptLookup (options,optStr,true) == CMfailed)) {
 		if (((MDIrrGrossDemandDef ()) == CMfailed) ||

@@ -29,11 +29,10 @@ static void _MDInfiltrationSimple (int itemID) {
 
 	surplus = MFVarGetFloat(_MDInWaterSurplusID, itemID, 0.0);
 	MFVarSetFloat (_MDOutSurfaceROID,    itemID, (1.0 - _MDInfiltrationFrac) * surplus);
-	MFVarSetFloat (_MDOutInfiltrationID, itemID,  _MDInfiltrationFrac        * surplus);
+	MFVarSetFloat (_MDOutInfiltrationID, itemID, _MDInfiltrationFrac         * surplus);
 }
 
 enum { MDinput, MDsimple, MDvarying };
-
 
 int MDInfiltrationDef () {
 	int  optID = MDsimple;
@@ -62,10 +61,6 @@ int MDInfiltrationDef () {
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
-	
-
-		
-		
 	MFDefLeaving  ("Infiltration");
 	return (_MDOutInfiltrationID);
 }

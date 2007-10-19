@@ -48,8 +48,6 @@ extern "C" {
 # define MDVarBgcTNLocalLoad                 "BgcTNLocalLoad"
 # define MDVarBgcTNConc                      "BgcTNConc"
 
-#define MDConst_m3PerSecTOm3PerDay 86400.0
-
 //MD IrrigationInput
 #define MDIrrConstantKc                      "IrrConstantKc"
 #define MDVarIrrEfficiency                   "IrrigationEfficiency"
@@ -67,8 +65,8 @@ extern "C" {
 //MD Small Reservoirs
 #define MDVarSmallResCapacity               "SmallResCapacity"
 #define MDVarSmallResStorage                "SmallResStorage" 
-#define MDVarSmallResRelease               "SmallResRelease"
-#define MDVarSmallResStorageChange           "SmallResStorageChange"	
+#define MDVarSmallResRelease                "SmallResRelease"
+#define MDVarSmallResStorageChange          "SmallResStorageChange"	
 	
 //MD IrrigationOutput
 #define MDVarIrrNetIrrigationWaterDemand     "IrrNetWaterDemand"
@@ -78,7 +76,6 @@ extern "C" {
 #define MDVarCombinedEvapotranspiration       "CombinedEvapotranspiration"
 //MD Runoff Output	
 #define MDVarWaterBalance                    "WaterBalance"
-#define MDVarSoilTexture					"SoilTexture"
  
 #define MDVarReferenceEvapotranspiration     "ReferenceETP"
 #define MDVarIrrPercolationWater             "IrrPercolationWater"
@@ -152,7 +149,6 @@ extern "C" {
 #define MDVarAirTempMinimum                  "AirTempMinimum"
 #define MDVarAirTempMaximum                  "AirTempMaximum"
 #define MDVarAvgNSteps                       "AverageNSteps"
-#define MDVarGrossIrrDemandAccumulated       "AccumIrrGrossDemand"
 #define MDVarCParamAlbedo                    "Albedo"
 #define MDVarCParamCHeight                   "CanopyHeight"
 #define MDVarCParamLWidth                    "LeafWidth"
@@ -170,9 +166,6 @@ extern "C" {
 #define MDVarDischarge                       "Discharge"
 #define MDVarDischarge0                      "Discharge0"
 #define MDVarDischarge1                      "Discharge1"
-#define MDVarDischLevel1                     "__DischargeLevel1"
-#define MDVarDischLevel2                     "__DischargeLevel2"
-#define MDVarDischLevel3                     "__DischargeLevel3"
 #define MDVarDischObserved                   "DischargeObserved"
 #define MDVarDischMean                       "DischargeMean"
 
@@ -255,6 +248,7 @@ extern "C" {
 #define MDParIsotopeVSMOW                    "IsotopeVSMOW"
 #define MDParIsotopeRhoRatio                 "IsotopeRhoRatio"
 
+#define MDConst_m3PerSecTOm3PerDay    86400.0
 #define MDConst_m3PerSecTOmmKm2PerDay 86400000.0
 #define MDConst_mmKm2PerDayTOm3PerSec (1.0 / 86400000.0)
 #define MDConstInterceptCI  0.3	   // Interception LAI+SAI constant
