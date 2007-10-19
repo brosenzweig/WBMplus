@@ -21,7 +21,6 @@ static int _MDInWaterSurplusID  = MFUnset;
 // Output
 static int _MDOutSurfaceROID    = MFUnset;
 static int _MDOutInfiltrationID = MFUnset;
-
 static float _MDInfiltrationFrac = 0.5;
 
 static void _MDInfiltrationSimple (int itemID) {
@@ -63,6 +62,10 @@ int MDInfiltrationDef () {
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
+	
+
+		
+		
 	MFDefLeaving  ("Infiltration");
 	return (_MDOutInfiltrationID);
 }

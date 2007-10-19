@@ -297,7 +297,7 @@ static void _MDCParamGLMax (int itemID) {
 	int cover;
 // Local
 	static float lookup []     = { 0.0053, 0.0053, 0.0053, 0.008, 0.0066, 0.011, 0.005, 0.001 };
-
+//in m/s !!!!!!!!!!!!!!
 	cover = MFVarGetInt (_MDInCoverID, itemID, 7); // defaulting missing value to water.
 	if ((cover < 0) || (cover >= (int) (sizeof (lookup) / sizeof (lookup [0])))) {
 		CMmsgPrint (CMmsgWarning,"Warning: Invalid cover [%d] in: %s:%d\n",cover,__FILE__,__LINE__);

@@ -180,6 +180,7 @@ static void _MDPotETSWGdn (int itemID) {
 	else len = 0.0;
 
 	pet = MDConstEtoM * MDConstIGRATE * (dayLen * led + (1.0 - dayLen) * len);
+//	   if (pet<0)printf("pet <! dayLen=%f\n",dayLen);
    MFVarSetFloat (_MDOutPetID,itemID,pet);
 }
 

@@ -16,14 +16,14 @@ balazs.fekete@unh.edu
 #include <math.h>
 #include <MD.h>
 
-float MDPETlibLeafAreaIndex (float laiFac,float lpMax) {
-/* projected leaf area index (lai) pulled out from cover dependent PET functions 
- * laiFac    - lai Factor (originally fl) seasonal reduction factor for maximum LAI, 0 to 1
- * lpMax     - maximum projected leaf area index */
-	float lai;
-   lai = laiFac * lpMax; 
-   return (0.001 > lai ? 0.001 : lai);
-}
+//float MDPETlibLeafAreaIndex (float laiFac,float lpMax) {
+///* projected leaf area index (lai) pulled out from cover dependent PET functions 
+// * laiFac    - lai Factor (originally fl) seasonal reduction factor for maximum LAI, 0 to 1
+// * lpMax     - maximum projected leaf area index */
+//	float lai;
+//   lai = laiFac * lpMax; 
+//   return (0.001 > lai ? 0.001 : lai);
+//}
 
 float MDPETlibSteamAreaIndex (float lpMax,float canopyH) {
 /* Projected Stem area index (sai) pulled out from McNaugthon and Black PET function 
@@ -79,7 +79,9 @@ float MDPETlibZPDisplacement (float height,float lai,float sai,float z0g) {
 	if (lai + sai > MDConstLPC + MDConstCS * height) return (dispc); /* closed canopy */
 
 	xx = pow (-1.0 + exp(0.909 - 3.03 * z0c / height),4.0) / (MDConstLPC + MDConstCS * height) * (lai + sai);
+	//printf("Height %f Discpl %f \n",height,dispc);
 	return (1.1 * height * log (1.0 + pow (xx,0.25)));
+ 
 }
 
 float MDPETlibCanopySurfResistance (float airTmin,float solRad,float dd,
@@ -134,12 +136,17 @@ float MDPETlibBoundaryResistance (float windSpeed,float height,float z0g,float z
  * disp      - height of zero-plane [m] */
 	float za;		/* reference height [m] */
 	float uStar, kh;
+
+	// Sufrace 
+	
 	
 	za    = height + MDConstZMINH;
 	uStar = MDConstK * windSpeed / log ((za - disp) / z0);
 	kh    = MDConstK * uStar * (height - disp);
 	return (log ((za - disp) / (height - disp)) / (MDConstK * uStar) +
 				(height / (MDConstN * kh)) * (-1.0 + exp (MDConstN * (1.0 - (z0c + dispc) / height))));
+
+
 }
 
 float MDPETlibLeafResistance (float windSpeed,float height, float lWidth,float z0g,float lai, float sai,float z0, float disp) {
@@ -174,7 +181,7 @@ float MDPETlibGroundResistance (float windSpeed,float height, float z0g,float z0
 	uStar = MDConstK * windSpeed / log ((za - disp) / z0);
 	if (uStar==0)
 	{
-	printf ("uStar =0! MDConstK %f windSpeed %f za %f disp %f z0 %f \n",MDConstK , windSpeed ,za ,disp, z0);
+//	printf ("uStar =0! MDConstK %f windSpeed %f za %f disp %f z0 %f \n",MDConstK , windSpeed ,za ,disp, z0);
 
 	}
 	kh    = MDConstK * uStar * (height - disp);
@@ -260,10 +267,14 @@ float MDPETlibShuttleworthWallace (float rss,float aa,float asubs,float dd,float
  * rsc       - canopy surface resistance [s/m]
  * delta     - dEsat/dTair [kPa/K] */
 	float rs, rc, ra, ccs, ccc, pms, pmc;
-  float output;
+  float output;  
+  //printf ("Hier\n");
+
    rs = (delta + MDConstPSGAMMA) * ras + MDConstPSGAMMA * rss; 
    rc = (delta + MDConstPSGAMMA) * rac + MDConstPSGAMMA * rsc; 
 	ra = (delta + MDConstPSGAMMA) * raa;
+//	printf ("rs %f rc %f ra %f \n",rs,rc,ra);
+	//rs=70;
 	 if (isinf(ra)){
 //		   printf ("ra is INF!!  delta %f MDConstPSGAMMA %f  raa %f\n",delta ,MDConstPSGAMMA, raa);
 		   
@@ -273,6 +284,7 @@ float MDPETlibShuttleworthWallace (float rss,float aa,float asubs,float dd,float
    pms = MDPETlibPenmanMontieth (aa,dd - delta * ras * (aa - asubs) / MDConstCPRHO,delta,raa + ras,rss);
    pmc = MDPETlibPenmanMontieth (aa,dd - delta * rac * asubs / MDConstCPRHO, delta,raa + rac, rsc);
    output=(ccc * pmc + ccs * pms);
+ //  printf ("Hier\n");
    if (isnan(output)){
 	  // printf ("len is NAN in..LIB ccc %f pmc %f ccs %f pms%f rs %f ra %f rc %f ras %f rss %f rsc %f delta %f\n",ccc , pmc , ccs , pms, rs , ra, rc, ras, rss, rsc,delta);
 	   

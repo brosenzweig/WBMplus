@@ -36,7 +36,7 @@ static int _MDInSolRadID        = MFUnset;
 static int _MDInVPressID        = MFUnset;
 static int _MDInWSpeedID        = MFUnset;
 static int _MDOutPetID          = MFUnset;
-
+static int _MDInRefETPIDDEBUG   =MFUnset;
 static void _MDPotETSWGday (int itemID) {
 // daily Shuttleworth-Wallace-Gurney (1985, 1990) PE in mm for day
 // Input
@@ -100,7 +100,7 @@ static void _MDPotETSWGday (int itemID) {
 		 MFVarTestMissingVal (_MDInVPressID,       itemID) ||
 		 MFVarTestMissingVal (_MDInWSpeedID,       itemID)) { MFVarSetMissingVal (_MDOutPetID,itemID); return; }
 
-	dayLen  = MFVarGetFloat (_MDInDayLengthID,     itemID, 12.0);
+	dayLen  = MFVarGetFloat (_MDInDayLengthID,     itemID, 0.1);
 	i0hDay  = MFVarGetFloat (_MDInI0HDayID,        itemID,  0.0);
 	albedo  = MFVarGetFloat (_MDInCParamAlbedoID,  itemID,  0.0);
 	height  = MFVarGetFloat (_MDInCParamCHeightID, itemID,  0.0);
@@ -121,7 +121,7 @@ static void _MDPotETSWGday (int itemID) {
 	if (wSpeed < 0.2) wSpeed = 0.2;
 
 	solNet  = (1.0 - albedo) * solRad / MDConstIGRATE;
-
+	
 	z0c     = MDPETlibRoughnessClosed (height,z0g);
 	dispc   = height - z0c / 0.3;
 	disp    = MDPETlibZPDisplacement (height,lai,sai,z0g);
@@ -140,15 +140,21 @@ static void _MDPotETSWGday (int itemID) {
 	raa     = MDPETlibBoundaryResistance   (wSpeed,height,z0g,z0c,dispc,z0,disp);
 	rac     = MDPETlibLeafResistance       (wSpeed,height,lWidth,z0g,lai,sai,z0c,dispc);
 	ras     = MDPETlibGroundResistance     (wSpeed,height,z0g,z0c,dispc,z0,disp);
+//	ras=70;
+//	raa=50;
+	rsc=70;
 	le      = MDPETlibShuttleworthWallace  (rss,aa,asubs,dd,raa,rac,ras,rsc,delta);
 
 	pet = MDConstEtoM * MDConstIGRATE * le;
-   MFVarSetFloat (_MDOutPetID,itemID,pet);
+//	float pet1 = MFVarGetFloat (_MDInRefETPIDDEBUG,   itemID,  0.0);
+//	printf ("height %f lWidth %f rss %f r4 %f cd %f cr %f glMax %f z0g %f lai %f sai %f \n",height , lWidth ,rss, r5 ,cd ,cr, glMax ,z0g ,lai , sai );
+//	printf ("pet BMF %f pet FAO %f albedo %f\n",pet,pet1,albedo);
+	MFVarSetFloat (_MDOutPetID,itemID,pet);
 }
 
 int MDPotETSWGdayDef () {
 	if (_MDOutPetID != MFUnset) return (_MDOutPetID);
-
+	if ((_MDInRefETPIDDEBUG = MDIrrFAOReferenceETPDef   ()) == CMfailed) return (CMfailed); 
 	MFDefEntering ("PotET Shuttleworth - Wallace (day)");
 	if (((_MDInDayLengthID     = MDSRadDayLengthDef ()) == CMfailed) ||
 	    ((_MDInI0HDayID        = MDSRadI0HDayDef    ()) == CMfailed) ||

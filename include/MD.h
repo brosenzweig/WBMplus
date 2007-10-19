@@ -33,33 +33,20 @@ extern "C" {
 #define MDOptRouting                         "Routing"
 #define MDOptMuskingum                       "Muskingum"
 #define MDOptIrrReferenceET                  "IrrReferenceETP"
-
+#define MDOptIrrSmallReservoirs				 "SmallReservoirs"
  //MD BGCInput
-# define MDVarNonPoint_NO3                     "NinputsNO3_nonpoint" 
-# define MDVarPointSources_NO3                 "NinputsNO3_point"
-# define MDVarNonPoint_NH4                     "NinputsNH4_nonpoint" 
-# define MDVarPointSources_NH4                 "NinputsNH4_point"
-# define MDVarNonPoint_DON                     "NinputsDON_nonpoint" 
-# define MDVarNonPoint_PON                     "NinputsPON_nonpoint"
-	
-	//MD BGCOutput
-# define MDVarBgcFlux_NO3                      "BgcFlux_NO3"
-# define MDVarBgcFlux_NH4                      "BgcFlux_NH4"
-# define MDVarBgcFlux_DON                      "BgcFlux_DON"
-# define MDVarBgcFlux_PON                      "BgcFlux_PON"
-	
-# define MDVarBgcStoreWater_NO3                "BgcStoreWater_NO3"         
-# define MDVarBgcLocalLoad_NO3                 "BgcLocalLoad_NO3"
+# define MDVarNonPointTNSourcesCont          "NonPointTNSourcesCont" 
+# define MDVarPointTNSources                 "PointTNSources"
 
-# define MDVarBgcStoreWater_NH4                "BgcStoreWater_NH4"         
-# define MDVarBgcLocalLoad_NH4                 "BgcLocalLoad_NH4"
-	
-# define MDVarBgcStoreWater_DON                "BgcStoreWater_DON"         
-# define MDVarBgcLocalLoad_DON                 "BgcLocalLoad_DON"
-
-# define MDVarBgcStoreWater_PON                "BgcStoreWater_PON"         
-# define MDVarBgcLocalLoad_PON                 "BgcLocalLoad_PON"
-# define MDVarBgcStoreSeds_PON                 "BgcStoreSeds_PONkgm2"	
+ //MD BGCOutput
+# define MDVarBgcTNFlux                      "BgcTNFlux"
+# define MDVarBgcTNStoreWater                "BgcTNStoreWater"         
+# define MDVarBgcTNStoreWaterChange          "BgcTNStoreWaterChange" 
+# define MDVarBgcTNStoreSeds                 "BgcTNStoreSeds" 
+# define MDVarBgcTNStoreSedsChange           "BgcTNStoreSedsChange" 
+# define MDVarBgcTNTotalUptake               "BgcTNTotalUptake" 
+# define MDVarBgcTNLocalLoad                 "BgcTNLocalLoad"
+# define MDVarBgcTNConc                      "BgcTNConc"
 
 #define MDConst_m3PerSecTOm3PerDay 86400.0
 
@@ -76,6 +63,13 @@ extern "C" {
 #define MDVarReservoirStorage                "ReservoirStorage" 
 #define MDVarReservoirStorageChange          "ReservoirStorageChange"
 #define MDVarReservoirRelease                "ReservoirRelease"
+	
+//MD Small Reservoirs
+#define MDVarSmallResCapacity               "SmallResCapacity"
+#define MDVarSmallResStorage                "SmallResStorage" 
+#define MDVarSmallResRelease               "SmallResRelease"
+#define MDVarSmallResStorageChange           "SmallResStorageChange"	
+	
 //MD IrrigationOutput
 #define MDVarIrrNetIrrigationWaterDemand     "IrrNetWaterDemand"
 #define MDVarIrrCropETP                      "IrrCropEvapotranspiration"
@@ -84,7 +78,8 @@ extern "C" {
 #define MDVarCombinedEvapotranspiration       "CombinedEvapotranspiration"
 //MD Runoff Output	
 #define MDVarWaterBalance                    "WaterBalance"
-
+#define MDVarSoilTexture					"SoilTexture"
+ 
 #define MDVarReferenceEvapotranspiration     "ReferenceETP"
 #define MDVarIrrPercolationWater             "IrrPercolationWater"
 
@@ -157,7 +152,7 @@ extern "C" {
 #define MDVarAirTempMinimum                  "AirTempMinimum"
 #define MDVarAirTempMaximum                  "AirTempMaximum"
 #define MDVarAvgNSteps                       "AverageNSteps"
-
+#define MDVarGrossIrrDemandAccumulated       "AccumIrrGrossDemand"
 #define MDVarCParamAlbedo                    "Albedo"
 #define MDVarCParamCHeight                   "CanopyHeight"
 #define MDVarCParamLWidth                    "LeafWidth"
@@ -249,6 +244,7 @@ extern "C" {
 #define MDVarPrecipitationOUT                "PrecipitationOut"
 #define MDVarSnowfallOUT                     "SnowfallOut"
 #define MDVarRelSoilMoisture                 "RelativeSoilMoisture"
+
 #define MDVarRelSoilMoisture                 "RelativeSoilMoisture"	
 #define MDParGrossRadTAU                     "GrossRadTAU"
 #define MDParGroundWatBETA                   "GroundWaterBETA"
@@ -357,6 +353,7 @@ int MDRunoffDef ();
 int MDRunoffVolumeDef ();
 int MDSMoistChgDef ();
 int MDSPackChgDef ();
+int MDSmallReservoirsDef ();
 int MDSolarRadDef ();
 int MDSRadDayLengthDef ();
 int MDSRadI0HDayDef ();

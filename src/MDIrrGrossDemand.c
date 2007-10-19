@@ -27,7 +27,7 @@ int MDIrrGrossDemandDef () {
 	const char *options [] = { MDInputStr, MDCalculateStr, (char *) NULL };
 	
 	if (_MDOutIrrGrossDemandID != MFUnset) return (_MDOutIrrGrossDemandID);
-
+   
 	MFDefEntering ("Irrigation Gross Demand");
 
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options,optStr,true);

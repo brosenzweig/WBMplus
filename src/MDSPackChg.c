@@ -12,6 +12,7 @@ balazs.fekete@unh.edu
 
 #include <stdio.h>
 #include <cm.h>
+#include <math.h>
 #include <MF.h>
 #include <MD.h>
 
@@ -22,7 +23,7 @@ static int _MDInPrecipID    = MFUnset;
 static int _MDOutSnowPackID = MFUnset;
 static int _MDOutSPackChgID = MFUnset;
 static int _MDOutSnowMeltID = MFUnset;
-
+static int _MDOutSFallOUTID =MFUnset;
 static void _MDSPackChg (int itemID) {
 // Input
 	float airT;
@@ -40,19 +41,21 @@ static void _MDSPackChg (int itemID) {
 	if (airT < -1.0) {  /* Accumulating snow pack */
 		MFVarSetFloat (_MDOutSPackChgID,itemID,precip);
 		MFVarSetFloat (_MDOutSnowPackID,itemID,sPack + precip);
+		MFVarSetFloat(_MDOutSFallOUTID,itemID,precip);
 	}
 	else if (airT > 1.0) { /* Melting snow pack */
 		sPackChg = 2.63 + 2.55 * airT + 0.0912 * airT * precip;
 		sPackChg = - (sPack < sPackChg ? sPack : sPackChg);
 		MFVarSetFloat (_MDOutSPackChgID,itemID,sPackChg);
 		MFVarSetFloat (_MDOutSnowPackID,itemID,sPack + sPackChg);
-		MFVarSetFloat(_MDOutSnowMeltID,itemID,sPackChg);
+		MFVarSetFloat(_MDOutSnowMeltID,itemID,fabs(sPackChg));
 	}
 	else { /* No change when air temperature is in [-1.0,1.0] range */
 		MFVarSetFloat (_MDOutSPackChgID,itemID,0.0);
 		MFVarSetFloat (_MDOutSnowPackID,itemID,sPack);
 		
 	}
+	if (itemID == 43844)printf ("sPack %f sPackChg %f\n",sPack , sPackChg);
 }
 
 int MDSPackChgDef () {
@@ -63,8 +66,10 @@ int MDSPackChgDef () {
 	if (((_MDInPrecipID    = MDPrecipitationDef ()) == CMfailed) ||
 	    ((_MDInAtMeanID    = MFVarGetID (MDVarAirTemperature, "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDOutSnowPackID = MFVarGetID (MDVarSnowPack,       "mm",   MFOutput, MFState, MFInitial))  == CMfailed) ||
-	    ((_MDOutSnowMeltID = MFVarGetID (MDVarSnowMelt,       "mm",   MFOutput, MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDOutSnowMeltID = MFVarGetID (MDVarSnowMelt,       "mm",   MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
 	    ((_MDOutSPackChgID = MFVarGetID (MDVarSnowPackChange, "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+	    ((_MDOutSFallOUTID=MFVarGetID (MDVarSnowfallOUT, "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+	    	
 	    (MFModelAddFunction (_MDSPackChg) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Snow Pack Change");
 	return (_MDOutSPackChgID);

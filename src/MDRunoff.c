@@ -30,9 +30,9 @@ static void _MDRunoff (int itemID) {
 
 	baseFlow  = MFVarGetFloat (_MDInBaseFlowID,  itemID, 0.0);
 	surfaceRO = MFVarGetFloat (_MDInSurfaceROID, itemID, 0.0);
-
 	runoffCorr = _MDInRunoffCorrID == MFUnset ? 1.0 : MFVarGetFloat (_MDInRunoffCorrID, itemID, 1.0);
 	MFVarSetFloat (_MDOutRunoffID, itemID, (baseFlow + surfaceRO) * runoffCorr);
+//	if (baseFlow+surfaceRO <0)printf("Negative in Runoff base %f surface %f\n",baseFlow,surfaceRO);
 }
  
 enum { MDinput, MDcalculate, MDcorrected };

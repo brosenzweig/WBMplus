@@ -16,7 +16,7 @@ static int _MDInAtMinID =MFUnset;
 static void _MDFAOReferenceETP (int itemID) {
 /* day-night Penman-Monteith PE in mm for day */
 // Input
-	float dayLen;  // daylength in fraction of day
+//	float dayLen;  // daylength in fraction of day
  	float i0hDay;  //  daily potential insolation on horizontal [MJ/m2]
 
 	float airT;    // air temperatur [degree C]
@@ -42,7 +42,7 @@ static void _MDFAOReferenceETP (int itemID) {
 	float nen;
 	float temp;
  
-	dayLen    = MFVarGetFloat (_MDInDayLengthID,    itemID,0);
+//	dayLen    = MFVarGetFloat (_MDInDayLengthID,    itemID,0);
 	i0hDay    = MFVarGetFloat (_MDInI0HDayID,       itemID,0);
 	elevation = MFVarGetFloat (_MDInElevationID,    itemID,0); 
 	airT      = MFVarGetFloat (_MDInAtMeanID,       itemID,0);

@@ -40,17 +40,23 @@ static void _MDDischLevel2 (int itemID) {
 			irrUptakeRiver  = irrUptakeExt;
 			irrUptakeExcess = 0.0;
 			discharge_mm    = discharge_mm - irrUptakeRiver;
+			
 		}
 		else {
 			irrUptakeRiver  = discharge_mm;
 			irrUptakeExcess = irrUptakeExt - discharge_mm;
+			if (irrUptakeRiver < -0.000001)printf("riverabstr = %f Q %f irrUptakeExt %f irrUptakeExcess %f\n",irrUptakeRiver, discharge_mm,irrUptakeExt, irrUptakeExcess);
 			discharge_mm    = 0.0;
+			
 		}
+		 
 		MFVarSetFloat (_MDOutIrrUptakeRiverID,  itemID, irrUptakeRiver);
 		MFVarSetFloat (_MDOutIrrUptakeExcessID, itemID, irrUptakeExcess);
 		discharge = discharge_mm * MFModelGetArea (itemID) / (1000.0 * MFModelGet_dt ());
 	}
 	MFVarSetFloat (_MDOutDischLevel2ID,  itemID, discharge);
+	
+
 }
 
 int MDDischLevel2Def() {

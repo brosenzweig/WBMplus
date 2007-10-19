@@ -40,8 +40,10 @@ static int _MDOutPrecipitationID		  = MFUnset;
 //Output
 static int _MDOutWaterBalanceID           = MFUnset;
 static int _MDOutTotalEvapotranpirationID = MFUnset;
+static int _MDOutSmallResStorageChangeID  =  MFUnset;
+static int _MDOutSmallResReleaseID       =  MFUnset;
 
-float etpThreshold=0.5;
+
 
 static void _MDWaterBalance(int itemID) {
 
@@ -49,45 +51,85 @@ static void _MDWaterBalance(int itemID) {
 	float etp              = MFVarGetFloat(_MDInEvaptrsID,        itemID, 0.0);	
 	float snowPChange      = MFVarGetFloat(_MDInSnowPackChgID,    itemID, 0.0);	
 	float soilMChange      = MFVarGetFloat(_MDInSoilMoistChgID,   itemID, 0.0);
-	float infiltration     = MFVarGetFloat(_MDInInfiltrationID,   itemID, 0.0);
 	float runoffPoolChange = MFVarGetFloat(_MDInGrdWatChgID,      itemID, 0.0);
 	float runoff           = MFVarGetFloat(_MDInRunoffID,         itemID, 0.0);
-	float irrAreaFraction;
-	float waterbalance;
+ 	float waterbalance;
 	float totETP = 0.0;
+	float smallResStorageChange=0; 
+	float cropETP=0;    
+	float irrSmallResRelease=0;  
+	float		gwAbstraction=0;   
+	float		disAbstraction=0;  
+	float		exAbstraction=0;  
+	float		irrDemand=0;       
+	float		irrSMChange=0;     
+	float		irrAreaFraction=0; 
+	float 		irrReturnFlow=0;
+	if ((_MDInGrossIrrDemandID)!=MFUnset)
+	{
+		 
+		cropETP        = MFVarGetFloat (_MDInCropEtpID,              itemID, 0.0);
+		gwAbstraction  = MFVarGetFloat (_MDInGrdWaterAbstractionID,  itemID, 0.0);
+		disAbstraction = MFVarGetFloat (_MDInDischargeAbstractionID, itemID, 0.0);
+		exAbstraction  = MFVarGetFloat (_MDInExcessAbstractionID,    itemID, 0.0);
+		irrReturnFlow=MFVarGetFloat(_MDInIrrReturnFlowID,itemID,0.0);
+		irrDemand      = MFVarGetFloat (_MDInGrossIrrDemandID,       itemID, 0.0);
+		irrSMChange    = MFVarGetFloat (_MDInIrrSoilMoistChgID,      itemID, 0.0);
+		irrAreaFraction  = MFVarGetFloat (_MDInIrrAreaID,		  itemID,0.0);
+		if (_MDOutSmallResStorageChangeID!=MFUnset)
+			{
+			irrSmallResRelease= MFVarGetFloat(_MDOutSmallResReleaseID,itemID,0.0);
+			smallResStorageChange= MFVarGetFloat(_MDOutSmallResStorageChangeID,itemID,0.0);
+			}
+	}	
+	 
+	float irrBalance;
+ 
+	float totSMChange, in, out;
+	
+	 
+	// Irrigation Water Balance Check! 
+		irrBalance = irrDemand - gwAbstraction - disAbstraction - exAbstraction- irrSmallResRelease;
+//	if (fabs(irrBalance) > 0.001)     printf ("IrrBalance %f Demand %f gwAb %f disAbstr %f  exAbstr %f smallResRelease%f itemID=%i\n",  irrBalance,  irrDemand, gwAbstraction, disAbstraction, exAbstraction,irrSmallResRelease,itemID);
 
-	if ((_MDInIrrAreaID == MFUnset) || MFMathEqualValues (irrAreaFraction = MFVarGetFloat (_MDInIrrAreaID, itemID, 0.0), 0.0)) {
-		waterbalance= ppt-etp - snowPChange-soilMChange-runoffPoolChange-runoff;
-		totETP = etp;
-	}
-	else {
-		float cropETP        = MFVarGetFloat (_MDInCropEtpID,              itemID, 0.0);
-		float gwAbstraction  = MFVarGetFloat (_MDInGrdWaterAbstractionID,  itemID, 0.0);
-		float disAbstraction = MFVarGetFloat (_MDInDischargeAbstractionID, itemID, 0.0);
-		float exAbstraction  = MFVarGetFloat (_MDInExcessAbstractionID,    itemID, 0.0);
-		float irrDemand      = MFVarGetFloat (_MDInGrossIrrDemandID,       itemID, 0.0);
-		float irrSMChange    = MFVarGetFloat (_MDInIrrSoilMoistChgID,      itemID, 0.0);
-		float irrBalance;
-		float totSMChange, in, out;
-
-		irrBalance = irrDemand - gwAbstraction - disAbstraction - exAbstraction;
-		if (fabs(irrBalance) > 0.1)     printf ("IrrBalance %f Demand %f gwAb %f disAbstr %f  exAbstr %f itemID=%i\n",  irrBalance,  irrDemand, gwAbstraction, disAbstraction, exAbstraction,itemID);
-	 	if (fabs(disAbstraction) < 0.0) printf ("IrrBalance %f Demand %f gwAb %f disAbstr %f  exAbstr %f itemID=%i\n",  irrBalance,  irrDemand, gwAbstraction, disAbstraction, exAbstraction,itemID);
-
-	 	cropETP=cropETP/irrAreaFraction;
-		totETP = cropETP * irrAreaFraction + etp * (1-irrAreaFraction);
-
-		totSMChange=irrSMChange*irrAreaFraction+(1-irrAreaFraction)*soilMChange;
-
-		in  = ppt+exAbstraction+disAbstraction;
-		out = totETP + runoffPoolChange+ totSMChange + snowPChange+runoff;
-		waterbalance=in -out;
-		if (fabs(waterbalance) > 0.01 ) {
-		//printf ("WaterBalance= %f in= %f out= %f exe= %f disAbstr=%f itmeID=%i,snowChange=%f\n", waterbalance, in, out, exAbstraction,disAbstraction,itemID,snowPChange);
+	//Non irrigated part water balance
+	in = ppt;
+	out = etp + runoffPoolChange + snowPChange + soilMChange + runoff+smallResStorageChange;
+	waterbalance = in -out;
+	if (fabs(waterbalance) > 0.001 ) {
+		if (irrAreaFraction==0)printf ("non irr Water Balance! WaterBalance= %f in= %f out= %f exe= %f disAbstr=%f itmeID=%i,snowChange=%f irrARea =%f totSMChange %f\n", waterbalance, in, out, exAbstraction,disAbstraction,itemID,snowPChange,irrAreaFraction,totSMChange);
+	//	printf ("totETP %f dRun %f totSM %f dSnow %f RO %f dsmallRes%f\n", totETP,runoffPoolChange,totSMChange, snowPChange,runoff,smallResStorageChange);
 		}
-	}
+	//=========================================================
+	if (irrAreaFraction >0){
+//		if (itemID==6 && ppt ==0)  printf ("IrrDeltaSM %f CropETP %f DeltaSM %f etp %f snow %f\n" ,  irrSMChange, cropETP,soilMChange,etp,snowPChange);
+//		if (itemID==6)printf ("runoffPooChange %f runoff %f \n", runoffPoolChange,runoff);
+	 		cropETP=cropETP/irrAreaFraction;
+	 	 
+	 		if (irrAreaFraction==1.0) etp=0;else etp=etp/(1-irrAreaFraction);
+	 		
+	 	   irrSMChange=irrSMChange/irrAreaFraction;
+	 	if (irrAreaFraction==1.0) soilMChange =0;else soilMChange=soilMChange/(1-irrAreaFraction);
+	 	}
+		totETP = cropETP * irrAreaFraction + etp * (1-irrAreaFraction);
+	//	if (itemID==6)printf ("totET= %f etp = %f cropET = %f dSMIrr %f\n", totETP,etp,cropETP,irrSMChange);
+		totSMChange=(irrSMChange*irrAreaFraction+(1-irrAreaFraction)*soilMChange);
+		runoffPoolChange=runoffPoolChange;//*(1-irrAreaFraction);
+		runoff=runoff ;
+	
+
+//		in  = ppt+exAbstraction+disAbstraction;
+//		out = totETP + runoffPoolChange+ totSMChange + snowPChange+runoff+smallResStorageChange;
+		waterbalance=in -out;
+		if (fabs(waterbalance) > .011  && disAbstraction==0) {
+//	printf ("waterBalance for itemID %i at DoY %i ===========================\n",itemID,MFDateGetDayOfYear ());		
+//	printf ("BAL = %f IN = %f ppt = %f disAbstr =%f exAbstr= %f irrArea %f\n",waterbalance,in, ppt,disAbstraction,exAbstraction,irrAreaFraction);
+//	printf ("BAL = %f OUT = %f etp = %f dR = %f dSM = %f dSnow = %f R = %f smallRes = %f irrReturnFlow %f %i \n",waterbalance, out,totETP,runoffPoolChange,totSMChange,snowPChange,runoff,smallResStorageChange,irrReturnFlow,itemID);
+	
+		}
+	
 	MFVarSetFloat (_MDOutWaterBalanceID, itemID, waterbalance);
-	MFVarSetFloat (_MDInInfiltrationID,  itemID, infiltration);
+ 
 	MFVarSetFloat(_MDOutPrecipitationID,itemID,ppt);
 	if (_MDOutTotalEvapotranpirationID != MFUnset) MFVarSetFloat (_MDOutTotalEvapotranpirationID,itemID,totETP);
 }
@@ -95,7 +137,7 @@ static void _MDWaterBalance(int itemID) {
 int MDWaterBalanceDef() {
 	const char *optStr;
 	const char *options [] = { MDNoneStr, (char *) NULL };
-
+ 
 	MFDefEntering ("WaterBalance");
 	if ((                                  MDAccumBalanceDef  ()  == CMfailed) ||
 	    ((_MDInPrecipID                  = MDPrecipitationDef ()) == CMfailed) ||
@@ -111,15 +153,21 @@ int MDWaterBalanceDef() {
 	    return (CMfailed);
 	if (((optStr = MFOptionGet (MDOptIrrigation)) != (char *) NULL) && (CMoptLookup (options,optStr,true) == CMfailed)) {
 		if (((_MDInCropEtpID                 = MFVarGetID (MDVarIrrCropETP,                    "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-	    	((_MDInIrrSoilMoistChgID         = MFVarGetID (MDVarIrrSoilMoistureChange,         "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+	    	((_MDInIrrSoilMoistChgID         = MFVarGetID (MDVarIrrSoilMoistureChange,         "mm",   MFInput,  MFState,  MFBoundary)) == CMfailed) ||
 	    	((_MDInDischargeAbstractionID    = MFVarGetID (MDVarIrrUptakeRiver,                "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-	    	((_MDInIrrReturnFlowID           = MFVarGetID (MDVarIrrReturnFlow,                 "mm",   MFInput,  MFState, MFBoundary)) == CMfailed) || 
+	    	((_MDInIrrReturnFlowID           = MFVarGetID (MDVarIrrReturnFlow,                 "mm",   MFInput,  MFFlux, MFBoundary)) == CMfailed) || 
 	    	((_MDInGrdWaterAbstractionID     = MFVarGetID (MDVarIrrUptakeGrdWater,             "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
 	    	((_MDInIrrAreaID                 = MFVarGetID (MDVarIrrAreaFraction,               "-",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    	((_MDInExcessAbstractionID       = MFVarGetID (MDVarIrrUptakeExcess,               "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-	    	((_MDOutTotalEvapotranpirationID = MFVarGetID (MDVarCombinedEvapotranspiration,    "mm",   MFOutput, MFState, MFBoundary)) == CMfailed) ||
-	    	((_MDInGrossIrrDemandID          = MFVarGetID (MDVarIrrGrossDemand,                "mm",   MFInput,  MFState, MFBoundary)) == CMfailed))
+	    	((_MDOutTotalEvapotranpirationID = MFVarGetID (MDVarCombinedEvapotranspiration,    "mm",   MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+	    	((_MDInGrossIrrDemandID          = MFVarGetID (MDVarIrrGrossDemand,                "mm",   MFInput,  MFFlux, MFBoundary)) == CMfailed))
 	    	return (CMfailed);
+		
+		if (((optStr = MFOptionGet (MDOptIrrSmallReservoirs)) != (char *) NULL) && (CMoptLookup (options,optStr,true) == CMfailed)) {
+ 
+			if ((_MDOutSmallResReleaseID= MFVarGetID (MDVarSmallResRelease,       "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) return (CMfailed);
+			if ((_MDOutSmallResStorageChangeID= MFVarGetID (MDVarSmallResStorageChange,       "mm", MFInput, MFState, MFInitial)) == CMfailed) return (CMfailed);
+		}
 	}
 	
 	if (MFModelAddFunction(_MDWaterBalance) == CMfailed) return (CMfailed);

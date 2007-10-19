@@ -42,7 +42,7 @@
 <externalSettings containerId="CMlib;" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier"/>
 <externalSettings containerId="MFlib;" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier"/>
 </storageModule>
-<storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
+
 
 <storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 <storageModule moduleId="scannerConfiguration">
@@ -210,6 +210,9 @@
 </scannerInfoProvider>
 </profile>
 </scannerConfigBuildInfo>
+</storageModule>
+<storageModule moduleId="org.eclipse.cdt.core.language.mapping">
+<project-mappings/>
 </storageModule>
 </cconfiguration>
 </storageModule>
