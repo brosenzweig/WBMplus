@@ -76,7 +76,7 @@ static void _MDRainPotETPsTaylor (int itemID) {
 int MDRainPotETPsTaylorDef () {
 	if (_MDOutPetID != MFUnset) return (_MDOutPetID);
 
-	MFDefEntering ("RainPotET Priestley - Taylor Definition");
+	MFDefEntering ("Rainfed Potential Evapotranspiration (Priestley - Taylor)");
 	if (((_MDInDayLengthID     = MDSRadDayLengthDef ()) == CMfailed) ||
 	    ((_MDInI0HDayID        = MDSRadI0HDayDef    ()) == CMfailed) ||
 	    ((_MDInCParamAlbedoID  = MDCParamAlbedoDef  ()) == CMfailed) ||
@@ -85,6 +85,6 @@ int MDRainPotETPsTaylorDef () {
 	    ((_MDInVPressID  = MFVarGetID (MDVarVaporPressure,  "kPa",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDOutPetID    = MFVarGetID (MDVarRainPotEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
 	    (MFModelAddFunction (_MDRainPotETPsTaylor) == CMfailed)) return (CMfailed);
-	MFDefLeaving ("RainPotET Priestley - Taylor Definition");
+	MFDefLeaving  ("Rainfed Potential Evapotranspiration (Priestley - Taylor)");
 	return (_MDOutPetID);
 }

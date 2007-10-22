@@ -163,7 +163,7 @@ static void _MDRainPotETPMdn (int itemID) {
 int MDRainPotETPMdnDef () {
 	if (_MDOutPetID != MFUnset) return (_MDOutPetID);
 
-	MFDefEntering ("Rain Penman - Montieth (day-night)");
+	MFDefEntering ("Rainfed Potential Evapotranspiration (Penman - Montieth [day-night])");
 	if (((_MDInDayLengthID     = MDSRadDayLengthDef ()) == CMfailed) ||
 	    ((_MDInI0HDayID        = MDSRadI0HDayDef    ()) == CMfailed) ||
 	    ((_MDInCParamAlbedoID  = MDCParamAlbedoDef  ()) == CMfailed) ||
@@ -183,6 +183,6 @@ int MDRainPotETPMdnDef () {
 	    ((_MDInWSpeedID  = MFVarGetID (MDVarWindSpeed,      "m/s",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDOutPetID    = MFVarGetID (MDVarRainPotEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
 	    (MFModelAddFunction (_MDRainPotETPMdn) == CMfailed)) return (CMfailed);
-	MFDefLeaving ("Rain Penman - Montieth (day-night)");
+	MFDefLeaving  ("Rainfed Potential Evapotranspiration (Penman - Montieth [day-night])");
 	return(_MDOutPetID);
 }

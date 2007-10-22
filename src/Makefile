@@ -27,10 +27,10 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDDischMean.o\
        $(OBJ)/MDLandCover.o\
        $(OBJ)/MDLSAreaIndex.o\
-       $(OBJ)/MDIrrHamonReferenceETP.o\
-       $(OBJ)/MDIrrFAOReferenceETP.o\
        $(OBJ)/MDIrrGrossDemand.o\
-       $(OBJ)/MDIrrigation.o\
+       $(OBJ)/MDIrrRefET.o\
+       $(OBJ)/MDIrrRefETHamon.o\
+       $(OBJ)/MDIrrRefETFAO.o\
        $(OBJ)/MDGrossRad.o\
        $(OBJ)/MDPrecipitation.o\
        $(OBJ)/MDRainInfiltration.o\
@@ -57,7 +57,10 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDRunoffVolume.o\
        $(OBJ)/MDSPackChg.o\
        $(OBJ)/MDSmallReservoirs.o\
+       $(OBJ)/MDSmallReservoirCap.o\
        $(OBJ)/MDSolarRad.o\
+       $(OBJ)/MDSoilAvailWaterCap.o\
+       $(OBJ)/MDSMoistChg.o\
        $(OBJ)/MDWaterBalance.o\
        $(OBJ)/MDWetDays.o\
        $(OBJ)/MDWind.o\

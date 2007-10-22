@@ -43,11 +43,11 @@ static void _MDRainPotETHamon (int itemID) {
 int MDRainPotETHamonDef () {
 	if (_MDOutPetID != MFUnset) return (_MDOutPetID);
 
-	MFDefEntering ("RainPotET Hamon");
+	MFDefEntering ("Rainfed Potential Evapotranspiration (Hamon)");
 	if (((_MDInDayLengthID = MDSRadDayLengthDef ()) == CMfailed) ||
 	    ((_MDInAtMeanID    = MFVarGetID (MDVarAirTemperature,    "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDOutPetID      = MFVarGetID (MDVarRainPotEvapotrans, "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
 	    (MFModelAddFunction (_MDRainPotETHamon) == CMfailed)) return (CMfailed);
-	MFDefLeaving ("RainPotET Hamon");
+	MFDefLeaving  ("Rainfed Potential Evapotranspiration (Hamon)");
 	return (_MDOutPetID);
 }

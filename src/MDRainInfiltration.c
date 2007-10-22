@@ -19,7 +19,7 @@ balazs.fekete@unh.edu
 // Input
 static int _MDInRainWaterSurplusID  = MFUnset;
 // Output
-static int _MDOutRainSurfaceROID    = MFUnset;
+static int _MDOutRainSurfRunoffID   = MFUnset;
 static int _MDOutRainInfiltrationID = MFUnset;
 static float _MDInfiltrationFrac = 0.5;
 
@@ -28,7 +28,7 @@ static void _MDRainInfiltrationSimple (int itemID) {
 	float surplus;
 
 	surplus = MFVarGetFloat(_MDInRainWaterSurplusID, itemID, 0.0);
-	MFVarSetFloat (_MDOutRainSurfaceROID,    itemID, (1.0 - _MDInfiltrationFrac) * surplus);
+	MFVarSetFloat (_MDOutRainSurfRunoffID,   itemID, (1.0 - _MDInfiltrationFrac) * surplus);
 	MFVarSetFloat (_MDOutRainInfiltrationID, itemID, _MDInfiltrationFrac         * surplus);
 }
 
@@ -36,7 +36,7 @@ enum { MDinput, MDsimple, MDvarying };
 
 int MDRainInfiltrationDef () {
 	int  optID = MFUnset;
-	const char *optStr, *optName = "Infiltration";
+	const char *optStr, *optName = MDVarRainInfiltration;
 	const char *options [] = { MDInputStr, "simple", "varying", (char *) NULL };
 	float par;
 
@@ -55,7 +55,7 @@ int MDRainInfiltrationDef () {
 			if ((_MDInRainWaterSurplusID = MDRainWaterSurplusDef ()) == CMfailed) return (CMfailed);
 			if (((optStr = MFOptionGet (MDParInfiltrationFrac))  != (char *) NULL) && (sscanf (optStr,"%f",&par) == 1))
 				_MDInfiltrationFrac = par;
-			if (((_MDOutRainSurfaceROID    = MFVarGetID (MDVarRainSurfRunoff,   "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+			if (((_MDOutRainSurfRunoffID   = MFVarGetID (MDVarRainSurfRunoff,   "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
 			    ((_MDOutRainInfiltrationID = MFVarGetID (MDVarRainInfiltration, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
 			    (MFModelAddFunction (_MDRainInfiltrationSimple) == CMfailed)) return (CMfailed);
 			break;

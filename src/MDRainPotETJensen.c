@@ -40,11 +40,11 @@ static void _MDRainPotETJensen (int itemID) {
 int MDRainPotETJensenDef () {
 	if (_MDOutPetID != MFUnset) return (_MDOutPetID);
 
-	MFDefEntering ("RainPotET Jensen");
+	MFDefEntering ("Rainfed Potential Evapotranspiration (Jensen)");
 	if (((_MDInSolRadID = MDSolarRadDef ()) == CMfailed) ||
 	    ((_MDInAtMeanID = MFVarGetID (MDVarAirTemperature,    "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDOutPetID   = MFVarGetID (MDVarRainPotEvapotrans, "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
 	    (MFModelAddFunction (_MDRainPotETJensen) == CMfailed)) return (CMfailed);
-	MFDefLeaving ("RainPotET Jensen");
+	MFDefLeaving  ("Rainfed Potential Evapotranspiration (Jensen)");
 	return (_MDOutPetID);
 }

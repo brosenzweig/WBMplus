@@ -187,7 +187,7 @@ static void _MDRainPotETSWGdn (int itemID) {
 int MDRainPotETSWGdnDef () {
 	if (_MDOutPetID != MFUnset) return (_MDOutPetID);
 
-	MFDefEntering ("RainPotET Shuttleworth - Wallace (day-night)");
+	MFDefEntering ("Rainfed Potential Evapotranspiration (Shuttleworth - Wallace [day-night])");
 	if (((_MDInDayLengthID     = MDSRadDayLengthDef ()) == CMfailed) ||
 	    ((_MDInI0HDayID        = MDSRadI0HDayDef    ()) == CMfailed) ||
 	    ((_MDInCParamAlbedoID  = MDCParamAlbedoDef  ()) == CMfailed) ||
@@ -209,6 +209,6 @@ int MDRainPotETSWGdnDef () {
 	    ((_MDInWSpeedID  = MFVarGetID (MDVarWindSpeed,      "m/s",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDOutPetID    = MFVarGetID (MDVarRainPotEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
 	    (MFModelAddFunction (_MDRainPotETSWGdn) == CMfailed)) return (CMfailed);
-	MFDefLeaving ("RainPotET Shuttleworth - Wallace (day-night)");
+	MFDefLeaving  ("Rainfed Potential Evapotranspiration (Shuttleworth - Wallace [day-night])");
 	return (_MDOutPetID);
 }

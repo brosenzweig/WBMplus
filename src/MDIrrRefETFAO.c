@@ -4,16 +4,20 @@
 #include<MF.h>
 #include<MD.h>
 
-static int _MDInDayLengthID, _MDInI0HDayID;
+// Input
+static int _MDInAtMeanID            = MFUnset;
+static int _MDInAtMaxID             = MFUnset;
+static int _MDInAtMinID             = MFUnset;
+static int _MDInSolRadID            = MFUnset;
+static int _MDInVPressID            = MFUnset;
+static int _MDInWSpeedID            = MFUnset;
+static int _MDInElevationID         = MFUnset;
+static int _MDInDayLengthID         = MFUnset;
+static int _MDInI0HDayID            = MFUnset;
+// Output
+static int _MDOutIrrRefEvapotransID = MFUnset;
 
-
-static int _MDInAtMeanID,  _MDInSolRadID, _MDInVPressID, _MDInWSpeedID;
-static int _MDFAOReferenceETPID = MFUnset;
-static int _MDInElevationID =MFUnset;
-static int _MDInAtMaxID = MFUnset;
-static int _MDInAtMinID =MFUnset;
-
-static void _MDFAOReferenceETP (int itemID) {
+static void _MDIrrRefEvapotransFAO (int itemID) {
 /* day-night Penman-Monteith PE in mm for day */
 // Input
 //	float dayLen;  // daylength in fraction of day
@@ -75,26 +79,25 @@ static void _MDFAOReferenceETP (int itemID) {
 	denom = delta + psychometricConstant*(1+0.34 * wSpeed);
 
 	FAOEtp = nom / denom;
-	MFVarSetFloat (_MDFAOReferenceETPID,itemID,FAOEtp);
+	MFVarSetFloat (_MDOutIrrRefEvapotransID,itemID,FAOEtp);
 }
 
-int MDIrrFAOReferenceETPDef () {
-	if (_MDFAOReferenceETPID != CMfailed) return (_MDFAOReferenceETPID);
+int MDIrrRefEvapotransFAODef () {
+	if (_MDOutIrrRefEvapotransID != MFUnset) return (_MDOutIrrRefEvapotransID);
 
-	MFDefEntering ("FAO Reference ETP ");
-	if (((_MDInDayLengthID      = MDSRadDayLengthDef ()) == CMfailed) ||
-		 ((_MDInI0HDayID        = MDSRadI0HDayDef    ()) == CMfailed) ||
-		 ((_MDInSolRadID        = MDSolarRadDef      ()) == CMfailed) ||
-	     ((_MDInElevationID     = MFVarGetID (MDVarMeanElevationMeters,          "m",     MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		 ((_MDInAtMeanID        = MFVarGetID (MDVarAirTemperature,               "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		 ((_MDInAtMinID         = MFVarGetID (MDVarAirTempMinimum,               "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		 ((_MDInAtMaxID         = MFVarGetID (MDVarAirTempMaximum,               "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		 ((_MDInVPressID        = MFVarGetID (MDVarVaporPressure,                "kPa",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		 ((_MDInWSpeedID        = MFVarGetID (MDVarWindSpeed,                    "m/s",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		 ((_MDFAOReferenceETPID = MFVarGetID (MDVarReferenceEvapotranspiration,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed)) return (CMfailed);
-    if (MFModelAddFunction (_MDFAOReferenceETP)== CMfailed) return (CMfailed);
+	MFDefEntering ("Irrigation Reference ETP (FAO)");
+	if (((_MDInDayLengthID          = MDSRadDayLengthDef ()) == CMfailed) ||
+		 ((_MDInI0HDayID            = MDSRadI0HDayDef    ()) == CMfailed) ||
+		 ((_MDInSolRadID            = MDSolarRadDef      ()) == CMfailed) ||
+	     ((_MDInElevationID         = MFVarGetID (MDVarMeanElevation,     "m",     MFInput,  MFState, MFBoundary)) == CMfailed) ||
+		 ((_MDInAtMeanID            = MFVarGetID (MDVarAirTemperature,    "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
+		 ((_MDInAtMinID             = MFVarGetID (MDVarAirTempMinimum,    "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
+		 ((_MDInAtMaxID             = MFVarGetID (MDVarAirTempMaximum,    "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
+		 ((_MDInVPressID            = MFVarGetID (MDVarVaporPressure,     "kPa",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+		 ((_MDInWSpeedID            = MFVarGetID (MDVarWindSpeed,         "m/s",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+		 ((_MDOutIrrRefEvapotransID = MFVarGetID (MDVarIrrRefEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed)) return (CMfailed);
+    if (MFModelAddFunction (_MDIrrRefEvapotransFAO)== CMfailed) return (CMfailed);
 
-	//printf ("RefETP ID %i\n",_MDFAOReferenceETPID);
-	MFDefLeaving ("FAO Reference ETP");
-	return(_MDFAOReferenceETPID);
+	MFDefLeaving ("Irrigation Reference ETP (FAO)");
+	return(_MDOutIrrRefEvapotransID);
 }

@@ -36,7 +36,6 @@ static int _MDInSolRadID        = MFUnset;
 static int _MDInVPressID        = MFUnset;
 static int _MDInWSpeedID        = MFUnset;
 static int _MDOutPetID          = MFUnset;
-static int _MDInRefETPIDDEBUG   =MFUnset;
 
 static void _MDRainPotETSWGday (int itemID) {
 // daily Shuttleworth-Wallace-Gurney (1985, 1990) PE in mm for day
@@ -155,8 +154,8 @@ static void _MDRainPotETSWGday (int itemID) {
 
 int MDRainPotETSWGdayDef () {
 	if (_MDOutPetID != MFUnset) return (_MDOutPetID);
-	if ((_MDInRefETPIDDEBUG = MDIrrFAOReferenceETPDef   ()) == CMfailed) return (CMfailed); 
-	MFDefEntering ("PotET Shuttleworth - Wallace (day)");
+
+	MFDefEntering ("Rainfed Potential Evapotranspiration (Shuttleworth - Wallace [day])");
 	if (((_MDInDayLengthID     = MDSRadDayLengthDef ()) == CMfailed) ||
 	    ((_MDInI0HDayID        = MDSRadI0HDayDef    ()) == CMfailed) ||
 	    ((_MDInCParamAlbedoID  = MDCParamAlbedoDef  ()) == CMfailed) ||
@@ -177,6 +176,6 @@ int MDRainPotETSWGdayDef () {
 	    ((_MDInWSpeedID  = MFVarGetID (MDVarWindSpeed,      "m/s",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDOutPetID    = MFVarGetID (MDVarRainPotEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
 	    (MFModelAddFunction (_MDRainPotETSWGday) == CMfailed)) return (CMfailed);
-	MFDefLeaving ("RainPotET Shuttleworth - Wallace (day)");
+	MFDefLeaving  ("Rainfed Potential Evapotranspiration (Shuttleworth - Wallace [day])");
 	return(_MDOutPetID);
 }

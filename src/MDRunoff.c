@@ -16,7 +16,7 @@ balazs.fekete@unh.edu
 #include <MD.h>
 
 // Input
-static int _MDInSurfaceROID  = MFUnset;
+static int _MDInSurfRunoffID  = MFUnset;
 static int _MDInBaseFlowID   = MFUnset;
 static int _MDInRunoffCorrID = MFUnset;
 // Output
@@ -29,7 +29,7 @@ static void _MDRunoff (int itemID) {
 	float runoffCorr;
 
 	baseFlow  = MFVarGetFloat (_MDInBaseFlowID,  itemID, 0.0);
-	surfaceRO = MFVarGetFloat (_MDInSurfaceROID, itemID, 0.0);
+	surfaceRO = MFVarGetFloat (_MDInSurfRunoffID, itemID, 0.0);
 	runoffCorr = _MDInRunoffCorrID == MFUnset ? 1.0 : MFVarGetFloat (_MDInRunoffCorrID, itemID, 1.0);
 	MFVarSetFloat (_MDOutRunoffID, itemID, (baseFlow + surfaceRO) * runoffCorr);
 //	if (baseFlow+surfaceRO <0)printf("Negative in Runoff base %f surface %f\n",baseFlow,surfaceRO);
@@ -53,7 +53,7 @@ int MDRunoffDef () {
 				return (CMfailed);
 		case MDcalculate:		
 			if (((_MDInBaseFlowID  = MDBaseFlowDef ()) == CMfailed) ||
-			    ((_MDInSurfaceROID = MFVarGetID (MDVarSurfaceRO,       "mm",     MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+			    ((_MDInSurfRunoffID = MFVarGetID (MDVarSurfaceRO,       "mm",     MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
 				((_MDOutRunoffID   = MFVarGetID (MDVarRunoff,          "mm",     MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
 				(MFModelAddFunction (_MDRunoff) == CMfailed)) return (CMfailed);
 			break;

@@ -19,99 +19,87 @@ dominik.wisser@unh.edu
 #include <math.h>
 
 //Input
-static int _MDInRainSurfRunoffID         = MFUnset;
-static int _MDInIrrGrossDemandID         = MFUnset;
-static int _MDInSmallResCapacityID       = MFUnset;
-static int _MDInIrrAreaID                = MFUnset;
+static int _MDInIrrAreaFracID         = MFUnset;
+static int _MDInRainSurfRunoffID      = MFUnset;
+static int _MDInIrrGrossDemandID      = MFUnset;
+static int _MDInSmallResCapacityID    = MFUnset;
 //Output
-static int _MDOutSmallResReleaseID       = MFUnset;
-static int _MDOutSmallResStorageID       = MFUnset;
-static int _MDOutSmallResStorageChangeID = MFUnset;
+static int _MDOutSmallResReleaseID    = MFUnset;
+static int _MDOutSmallResStorageID    = MFUnset;
+static int _MDOutSmallResStorageChgID = MFUnset;
+static int _MDOutSmallResUptakeID     = MFUnset;
 
 static void _MDSmallReservoirRelease (int itemID) {
-	    
-	float irrAreaFraction; 
-	float surfaceRO;             //local runoff (Surface RO + baseflow, mm)
-	float smallResStorage;       // current storage, m3
-	float smallResCapacity;      // maximum storage, m3
-	float smallResRelease;		 // current release, m3/s
-	float smallResStorageChange; // current storage change, m3
-	float grossIrrDemand ;       // current irrigation water requirement, mm 
-	float prevSmallResStorage;   // PreviousStorage
-	float remainingSurfaceRO = 0.0;
-    float smallResWaterBalance;
-    float rest = 0.0;
+// Input    
+	float irrAreaFraction;    // Irrigated area fraction
+	float surfRunoff;         // Surface runoff over non irrigated area [mm/dt]
+	float grossDemand ;       // Current irrigation water requirement [mm/dt]
+	float smallResCapacity;   // maximum storage [mm]
+// Output
+	float smallResUptake;     // current release [mm/dt]
+	float smallResRelease;    // current release [mm/dt]
+	float smallResStorage;    // current storage [mm/dt]
+	float smallResStorageChg; // current storage change [mm]
  
-	irrAreaFraction     = MFVarGetFloat (_MDInIrrAreaID,                itemID, 0.0);
-	if (irrAreaFraction > 0.0) {
-	
-		smallResCapacity    = MFVarGetFloat (_MDInSmallResCapacityID, itemID, 0.0); 
-		prevSmallResStorage = MFVarGetFloat (_MDOutSmallResStorageID,   itemID, 0.0);
-		grossIrrDemand      = MFVarGetFloat (_MDInIrrGrossDemandID,     itemID, 0.0);
-		surfaceRO           = MFVarGetFloat (_MDInRainSurfRunoffID,     itemID, 0.0);
+	if ((irrAreaFraction   = MFVarGetFloat (_MDInIrrAreaFracID,      itemID, 0.0)) > 0.0) {
+		smallResCapacity   = MFVarGetFloat (_MDInSmallResCapacityID, itemID, 0.0); 
+		smallResStorage    =
+		smallResStorageChg = MFVarGetFloat (_MDOutSmallResStorageID, itemID, 0.0);
+		surfRunoff         = MFVarGetFloat (_MDInRainSurfRunoffID,   itemID, 0.0) * (1.0 - irrAreaFraction);
+		grossDemand        = MFVarGetFloat (_MDInIrrGrossDemandID,   itemID, 0.0) * irrAreaFraction;
 
-		prevSmallResStorage = MFVarGetFloat(_MDOutSmallResStorageID, itemID, 0.0);
-		smallResRelease = grossIrrDemand;
-	
-		smallResStorage = prevSmallResStorage + surfaceRO - smallResRelease;
-
-		remainingSurfaceRO = 0.0;
-	
-		if (smallResStorage < 0.0) {
-			smallResRelease    = prevSmallResStorage + surfaceRO;	
-			smallResStorage    = 0.0;	
-			remainingSurfaceRO = 0.0;	
+		if (smallResCapacity < smallResStorage + surfRunoff) {
+			smallResUptake  = smallResCapacity - smallResStorage;
+			smallResStorage = smallResCapacity;
+			surfRunoff = surfRunoff - (smallResCapacity - smallResStorage);
 		}
-
-		if (smallResStorage > smallResCapacity) {
-			smallResStorage = smallResCapacity;	
-			rest = prevSmallResStorage + surfaceRO - smallResCapacity;	
-			if (rest> grossIrrDemand) {
-				smallResRelease = grossIrrDemand;
-			}
-			else {
-				smallResRelease = grossIrrDemand - rest;
-				remainingSurfaceRO = 0.0;
-			}
+		else {
+			smallResUptake  = surfRunoff;
+			smallResStorage = smallResStorage + surfRunoff;
+			surfRunoff = 0.0;
 		}
-
-		if (smallResRelease < 0.0) printf ("smallRes ! = %f\n",smallResRelease);
-		smallResStorageChange = smallResStorage-prevSmallResStorage;
-	
-		MFVarSetFloat(_MDOutSmallResReleaseID,itemID,smallResRelease);
-		MFVarSetFloat(_MDOutSmallResStorageID,itemID,smallResStorage);
-		MFVarSetFloat(_MDOutSmallResStorageChangeID,itemID,smallResStorageChange);
-		MFVarSetFloat(_MDInRainSurfRunoffID,itemID,remainingSurfaceRO); 
-//		if (itemID==348)printf ("AccumDemand %f maxCap = %f storage %f release %f surfaceRO %f \n",accumIrrDemand, smallResCapacity, smallResStorage,smallResRelease, surfaceRO);
-		smallResWaterBalance = surfaceRO - smallResRelease - remainingSurfaceRO - smallResStorageChange;
-//		if (itemID==16172)printf("Stor %f Cap %f surfaceRO %f release %f rest %f demand %f\n",smallResStorage,smallResCapacity,surfaceRO,smallResRelease,remainingSurfaceRO,grossIrrDemand);
-
-		if (fabs(smallResWaterBalance) > 0.001) {
-			printf ("SmallRes Water Balance Error at itemID %i\n",itemID);
-			printf("Stor %f Cap %f surfaceRO %f release %f rest %f demand %f\n",smallResStorage,smallResCapacity,surfaceRO,smallResRelease,remainingSurfaceRO,smallResStorageChange);
+		if (smallResStorage > grossDemand) {
+			smallResRelease = grossDemand;
+			smallResStorage = smallResStorage - smallResRelease;
 		}
+		else {
+			smallResRelease = smallResStorage;
+			smallResStorage = 0.0;
+		}
+		smallResStorageChg = smallResStorage - smallResStorageChg;
+
+		MFVarSetFloat (_MDOutSmallResUptakeID,     itemID, smallResUptake);
+		MFVarSetFloat (_MDOutSmallResReleaseID,    itemID, smallResRelease);
+		MFVarSetFloat (_MDOutSmallResStorageID,    itemID, smallResStorage);
+		MFVarSetFloat (_MDOutSmallResStorageChgID, itemID, smallResStorageChg);
+
 	}
 	else {
-		
+		MFVarSetFloat (_MDOutSmallResUptakeID,     itemID, 0.0);
+		MFVarSetFloat (_MDOutSmallResReleaseID,    itemID, 0.0);
+		MFVarSetFloat (_MDOutSmallResStorageID,    itemID, 0.0);
+		MFVarSetFloat (_MDOutSmallResStorageChgID, itemID, 0.0);
 	}
 }
 
-int MDSmallReservoirsDef () {
+int MDSmallReservoirReleaseDef () {
 
-	if (_MDOutSmallResReleaseID != MFUnset)	return (_MDOutSmallResReleaseID);
+	if (_MDOutSmallResReleaseID != MFUnset) return (_MDOutSmallResReleaseID);
+
 	if (((_MDInIrrGrossDemandID   = MDIrrGrossDemandDef         ()) == CMfailed) ||
 	    ((_MDInSmallResCapacityID = MDSmallReservoirCapacityDef ()) == CMfailed)) return (CMfailed);
 	if ((_MDInIrrGrossDemandID == MFUnset) || (_MDInSmallResCapacityID == MFUnset))
 		return (_MDOutSmallResReleaseID);
 
-	MFDefEntering("SmallReservoirs");
+	MFDefEntering("Small Reservoirs");
 
-    if (((_MDInRainSurfRunoffID         = MDRainSurfRunoffDef ()) == CMfailed) ||
-        ((_MDOutSmallResReleaseID       = MFVarGetID (MDVarSmallResRelease,           "mm",  MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-        ((_MDOutSmallResStorageID       = MFVarGetID (MDVarSmallResStorage,           "mm",  MFOutput, MFState, MFInitial))  == CMfailed) ||
-        ((_MDOutSmallResStorageChangeID = MFVarGetID (MDVarSmallResStorageChange,     "mm",  MFOutput, MFState, MFBoundary)) == CMfailed) ||
+    if (((_MDInRainSurfRunoffID      = MDRainSurfRunoffDef ()) == CMfailed) ||
+        ((_MDOutSmallResUptakeID     = MFVarGetID (MDVarSmallResUptake,            "mm",  MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+        ((_MDOutSmallResReleaseID    = MFVarGetID (MDVarSmallResRelease,           "mm",  MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+        ((_MDOutSmallResStorageID    = MFVarGetID (MDVarSmallResStorage,           "mm",  MFOutput, MFState, MFInitial))  == CMfailed) ||
+        ((_MDOutSmallResStorageChgID = MFVarGetID (MDVarSmallResStorageChange,     "mm",  MFOutput, MFState, MFBoundary)) == CMfailed) ||
         ((MFModelAddFunction (_MDSmallReservoirRelease) == CMfailed))) return (CMfailed);
-	MFDefLeaving("SmallReservoirs");
+	MFDefLeaving("Small Reservoirs");
 	return (_MDOutSmallResReleaseID);
 }
 

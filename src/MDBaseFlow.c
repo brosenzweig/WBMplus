@@ -80,7 +80,6 @@ static void _MDBaseFlow (int itemID) {
 		grdWater = grdWater+irrReturnFlow-irrUptakeGrdWater;
 		grdWaterChg = grdWaterChg + irrReturnFlow - irrUptakeGrdWater;
 		baseFlowBalance= irrReturnFlow -irrUptakeGrdWater+ grdWaterChg;
-	//	if (fabs(baseFlowBalance) > 0)printf ("hier %f \n",baseFlowBalance);
 		
 		MFVarSetFloat (_MDOutIrrUptakeGrdWaterID, itemID, irrUptakeGrdWater);
 		MFVarSetFloat (_MDOutIrrUptakeExternalID, itemID, IrrUptakeExt);
@@ -97,9 +96,7 @@ static void _MDBaseFlow (int itemID) {
 	else {
 		grdWaterChg = baseFlow = 0.0;
 	}
-//	if (itemID ==6)printf ("DEM in Baseflow  %f uptake %f\n",irrDemand,irrUptakeGrdWater);
- 
-// if (itemID==6)printf ("BaseFlowwaterBalcne!= %f Recharge %f,baseflow %f  irrreturnflow %f irrUptakeGW %f GWChange %f grdWater %f itemID %i\n",baseFlowBalance,_MDRecharge,baseFlow,irrReturnFlow,irrUptakeGrdWater,grdWaterChg,grdWater,itemID);
+
 	baseFlowBalance = _MDRecharge - baseFlow - grdWaterChg;
 	if (fabs(baseFlowBalance)>0.0001)printf ("BaseFlowwaterBalcne!= %f Recharge %f,baseflow %f  irrreturnflow %f irrUptakeGW %f GWChange %f itemID %i\n",baseFlowBalance,_MDRecharge,baseFlow,irrReturnFlow,irrUptakeGrdWater,grdWaterChg,itemID);
 	if ((baseFlow)<-0.001)printf ("BaseFlowNEGASTIVE= %f Recharge %f,baseflow %f  irrreturnflow %f irrUptakeGW %f GWChange %f itemID %i\n",baseFlowBalance,_MDRecharge,baseFlow,irrReturnFlow,irrUptakeGrdWater,grdWaterChg,itemID);
@@ -119,10 +116,10 @@ int MDBaseFlowDef () {
 	MFDefEntering ("Base flow");
 	if (((optStr = MFOptionGet (MDParGroundWatBETA))  != (char *) NULL) && (sscanf (optStr,"%f",&par) == 1)) _MDGroundWatBETA = par;
 
-	if ((_MDInRechargeID       = MDInfiltrationDef    ()) == CMfailed) return (CMfailed);
-	if ((_MDInIrrGrossDemandID = MDIrrGrossDemandDef  ()) != MFUnset) {
-		if (( _MDInIrrGrossDemandID == CMfailed) ||
-		    ((_MDInSmallResReleaseID    = MDSmallReservoirsDef ()) == CMfailed) ||
+	if (((_MDInRechargeID       = MDRainInfiltrationDef ()) == CMfailed) ||
+	    ((_MDInIrrGrossDemandID = MDIrrGrossDemandDef   ()) == CMfailed)) return (CMfailed);
+	if ( _MDInIrrGrossDemandID != MFUnset) {
+		if (((_MDInSmallResReleaseID    = MDSmallReservoirReleaseDef ()) == CMfailed) ||
 		    ((_MDInIrrReturnFlowID      = MFVarGetID (MDVarIrrReturnFlow,     "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
 		    ((_MDOutIrrUptakeGrdWaterID = MFVarGetID (MDVarIrrUptakeGrdWater, "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
 		    ((_MDOutIrrUptakeExternalID = MFVarGetID (MDVarIrrUptakeExternal, "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||

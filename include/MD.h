@@ -34,7 +34,8 @@ extern "C" {
 #define MDOptMuskingum                       "Muskingum"
 #define MDOptIrrReferenceET                  "IrrReferenceETP"
 #define MDOptIrrSmallReservoirs				 "SmallReservoirs"
- //MD BGCInput
+
+//MD BGCInput
 # define MDVarNonPointTNSourcesCont          "NonPointTNSourcesCont" 
 # define MDVarPointTNSources                 "PointTNSources"
 
@@ -49,7 +50,6 @@ extern "C" {
 # define MDVarBgcTNConc                      "BgcTNConc"
 
 //MD IrrigationInput
-#define MDIrrConstantKc                      "IrrConstantKc"
 #define MDVarIrrEfficiency                   "IrrigationEfficiency"
 #define MDVarIrrIntensity                    "IrrigationIntensity"
 #define MDVarIrrGrowingSeason1Start          "GrowingSeason1_Start"
@@ -57,33 +57,28 @@ extern "C" {
 #define MDVarIrrGrowingSeason3Start          "GrowingSeason3_Start"
 #define MDVarNumberGrowingSeasons            "NumGrowingSeasons"
 
-#define MDVarReservoirCapacity               "ReservoirCapacity"
-#define MDVarReservoirStorage                "ReservoirStorage" 
-#define MDVarReservoirStorageChange          "ReservoirStorageChange"
-#define MDVarReservoirRelease                "ReservoirRelease"
-	
 //MD Small Reservoirs
-#define MDVarSmallResCapacity               "SmallResCapacity"
-#define MDVarSmallResStorage                "SmallResStorage" 
-#define MDVarSmallResRelease                "SmallResRelease"
-#define MDVarSmallResStorageChange          "SmallResStorageChange"	
+#define MDVarSmallResCapacity                "SmallResCapacity"
+#define MDVarSmallResRelease                 "SmallResRelease"
+#define MDVarSmallResStorage                 "SmallResStorage" 
+#define MDVarSmallResStorageChange           "SmallResStorageChange"	
+#define MDVarSmallResUptake                  "SmallResUptake"
 	
 //MD IrrigationOutput
-#define MDVarIrrNetIrrigationWaterDemand     "IrrNetWaterDemand"
+#define MDVarIrrNetWaterDemand               "IrrNetWaterDemand"
 #define MDVarIrrCropETP                      "IrrCropEvapotranspiration"
-#define MDVarIrrGrossIrrigationWaterDemand   "IrrGrossWaterDemand"
 #define MDVarIrrAreaFraction                 "IrrigatedAreaFraction"
-#define MDVarCombinedEvapotranspiration       "CombinedEvapotranspiration"
+#define MDVarCombinedEvapotranspiration      "CombinedEvapotranspiration"
 //MD Runoff Output	
 #define MDVarWaterBalance                    "WaterBalance"
  
-#define MDVarReferenceEvapotranspiration     "ReferenceETP"
+#define MDVarIrrRefEvapotrans                "ReferenceETP"
 #define MDVarIrrPercolationWater             "IrrPercolationWater"
 
 #define MDParIrrDailyPercolationRate         "IrrDailyPercolationRate"
  
 #define MDVarIrrSoilMoisture                 "IrrSoilMoisture"
-#define MDVarIrrSoilMoistureChange           "IrrSoilMoistChange"
+#define MDVarIrrSoilMoistChange              "IrrSoilMoistChange"
 
 #define MDVarIrrGrossDemand                  "IrrGrossDemand"      // IrrGrossDemand = IrrUptakeGroundWater + IrrUptakeRiver + IrrUptakeExcess
 #define MDVarIrrReturnFlow                   "IrrReturnFlow"
@@ -94,12 +89,13 @@ extern "C" {
 
 #define MDVarCorrectedRunoff                 "CorrectedRunoff"
 
-//=================================================================
+#define	MDVarMeanElevation                   "Elevation"
 
-#define MDVarStartGrowingSeasonCalc          "StartGrowingSeasonCalc"
-#define MDVarEndGrowingSeasonCalc            "EndGrowingSeasonCalc"
-#define MDVarIsGrowingSeasonCalc             "IsGrowingSeasonCalc"
-#define	MDVarMeanElevationMeters             "Elevation"
+#define MDVarReservoirCapacity               "ReservoirCapacity"
+#define MDVarReservoirRelease                "ReservoirRelease"
+#define MDVarReservoirStorage                "ReservoirStorage" 
+#define MDVarReservoirStorageChange          "ReservoirStorageChange"
+	
 
 #define MDVarAccBalance                      "AccumBalance"
 #define MDVarAccPrecipitation                "AccumPrecipitation"
@@ -167,16 +163,17 @@ extern "C" {
 #define MDVarRiverStorageChg                 "RiverStorageChange"
 #define MDVarRiverWidth                      "RiverbedWidth"
 
-#define MDVarRootingDepth                    "RootingDepth"
 #define MDVarRunoff                          "Runoff"
 #define MDVarRunoffCorretion                 "RunoffCorrection"
 #define MDVarRunoffVolume                    "RunoffVolume"
 #define MDVarSAGEVegCover                    "SAGEVegCover"
 #define MDVarSnowPack                        "SnowPack"
 #define MDVarSnowPackChange                  "SnowPackChange"
+#define MDVarSoilAvailWaterCap               "AvailableWaterCapacity"
+#define MDVarSoilFieldCapacity               "FieldCapacity"
+#define MDVarSoilRootingDepth                "RootingDepth"
+#define MDVarSoilWiltingPoint                "WiltingPoint"
 #define MDVarRiverMeanVelocity               "RiverMeanVelocity"
-
-#define MDVarSoilPorosity                    "SoilPorosity"
 
 #define MDVarSolarRadiation                  "SolarRadiation"
 #define MDVarSRadDayLength                   "DayLength"
@@ -190,8 +187,6 @@ extern "C" {
 #define MDVarWetDays                         "WetDays"
 #define MDVarWetDaysAlpha                    "WetDaysAlpha"
 #define MDVarWetDaysBeta                     "WetDaysBeta"
-#define MDVarWiltingPoint                    "WiltingPoint"
-#define MDVarFieldCapacity                   "FieldCapacity"
 #define MDVarWindSpeed                       "WindSpeed"
 
 #define MDVarSnowFall                        "SnowFall"
@@ -237,17 +232,6 @@ extern "C" {
 #define MDMinimum(a,b) (((a) < (b)) ? (a) : (b))
 #define MDMaximum(a,b) (((a) > (b)) ? (a) : (b))
 
-//IrrigationStuff+++++++++++++++++++++++++++=
- 
-int MDParNumberOfCrops;
-//+++++++++++++++++++++++++++++++++++=
-int MDIrrigationDef();
-int MDIrrGrossDemandDef();
-int MDIrrReferenceETPDef ();
-int MDIrrFAOReferenceETPDef ();
-int MDIrrHamonReferenceETPDef ();
-int MDReservoirDef ();
-
 int MDAccumPrecipDef();
 int MDAccumEvapDef();
 int MDAccumSMoistChgDef();
@@ -278,6 +262,12 @@ int MDDischLevel3MuskingumDef ();
 int MDDischLevel3MuskingumCoeffDef ();
 int MDDischMeanDef ();
 int MDGrossRadDef ();
+int MDIrrigatedAreaFracDef();
+int MDIrrGrossDemandDef();
+int MDIrrRefEvapotransDef ();
+int MDIrrRefEvapotransFAODef ();
+int MDIrrRefEvapotransHamonDef ();
+int MDReservoirDef ();
 int MDLandCoverDef ();
 int MDLeafAreaIndexDef ();
 int MDRainInfiltrationDef ();
@@ -296,7 +286,6 @@ int MDRainSMoistChgDef ();
 int MDRainSurfRunoffDef ();
 int MDRainWaterSurplusDef ();
 
-int MDPotFAOReferenceETDef ();
 int MDRelHumidityDef ();
 int MDRiverbedShapeExponentDef ();
 int MDRiverWidthDef ();
@@ -304,12 +293,13 @@ int MDRiverWidthDef ();
 int MDRunoffDef ();
 int MDRunoffVolumeDef ();
 int MDSPackChgDef ();
-int MDSmallReservoirsDef ();
+int MDSmallReservoirReleaseDef ();
 int MDSmallReservoirCapacityDef ();
 int MDSolarRadDef ();
 int MDSRadDayLengthDef ();
 int MDSRadI0HDayDef ();
-int MDSoilPropDef ();
+int MDSoilAvailWaterCapDef ();
+int MDSoilMoistChgDef ();
 int MDStemAreaIndexDef ();
 int MDWaterBalanceDef ();
 int MDPrecipitationDef ();

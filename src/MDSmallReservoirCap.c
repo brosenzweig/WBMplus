@@ -19,15 +19,15 @@ balazs.fekete@unh.edu
 #include <math.h>
 
 //Input
-static int _MDInIrrAreaID                   = MFUnset;
-static int _MDInRainSurfaceROID             = MFUnset;
-static int _MDInGrossDemandID               = MFUnset;
+static int _MDInIrrAreaID                    = MFUnset;
+static int _MDInRainSurfRunoffID              = MFUnset;
+static int _MDInIrrGrossDemandID             = MFUnset;
 //Output
-static int _MDOutRainSurfaceROAccumulateID  = MFUnset;
-static int _MDOutIrrGrossDemandAccumulateID = MFUnset;
-static int _MDOutSmallResCapacityID         = MFUnset;
+static int _MDOutRainSurfRunoffAccumulatedID = MFUnset;
+static int _MDOutIrrGrossDemandAccumulatedID = MFUnset;
+static int _MDOutSmallResCapacityID          = MFUnset;
 
-static int _MDSmallReservoirCapacity (int itemID) {
+static void _MDSmallReservoirCapacity (int itemID) {
 // Input
 	float irrAreaFraction;      // Irrigated arrea fraction
 	float accumSurfaceRO;       // Accumulated surface runoff [mm]
@@ -38,21 +38,21 @@ static int _MDSmallReservoirCapacity (int itemID) {
  	float potResCapacity;
 
  	irrAreaFraction  = MFVarGetFloat (_MDInIrrAreaID,           itemID, 0.0);
- 	accumSurfaceRO   = MFVarGetFloat (_MDInRainSurfaceROID,     itemID, 0.0) * (1.0 - irrAreaFraction);
+ 	accumSurfaceRO   = MFVarGetFloat (_MDInRainSurfRunoffID,     itemID, 0.0) * (1.0 - irrAreaFraction);
  	accumIrrDemand   = MFVarGetFloat (_MDInIrrGrossDemandID,    itemID, 0.0) * irrAreaFraction;
 	smallResCapacity = MFVarGetFloat (_MDOutSmallResCapacityID, itemID, 0.0); 
 
  	if (MFDateGetDayOfYear () > 1) { 
- 		accumSurfaceRO   += MFVarGetFloat (_MDOutSurfaceROAccumulatedID,  itemID, 0.0);
- 		accumIrrDemand   += MFVarGetFloat (_MDOutGrossDemandAccumulateID, itemID, 0.0);
+ 		accumSurfaceRO   += MFVarGetFloat (_MDOutRainSurfRunoffAccumulatedID, itemID, 0.0);
+ 		accumIrrDemand   += MFVarGetFloat (_MDOutIrrGrossDemandAccumulatedID, itemID, 0.0);
 	}
  
  	potResCapacity   = accumSurfaceRO   < accumIrrDemand ? accumSurfaceRO   : accumIrrDemand;
  	smallResCapacity = smallResCapacity > potResCapacity ? smallResCapacity : potResCapacity;
  
- 	MFVarSetFloat (_MDOutRainSurfaceROAccumulatedID, itemID, accumSurfaceRO);
- 	MFVarSetFloat (_MDOutIrrGrossDemandAccumlatedID, itemID, accumIrrDemand);
- 	MFVarSetFloat (_MDOutSmallResCapacityID,         itemID, smallResCapacity);
+ 	MFVarSetFloat (_MDOutRainSurfRunoffAccumulatedID, itemID, accumSurfaceRO);
+ 	MFVarSetFloat (_MDOutIrrGrossDemandAccumulatedID, itemID, accumIrrDemand);
+ 	MFVarSetFloat (_MDOutSmallResCapacityID,          itemID, smallResCapacity);
 }
 
 enum { MDnone, MDinput, MDcalculate };
@@ -68,7 +68,7 @@ int MDSmallReservoirCapacityDef () {
 	if ((optID == MDnone) || (_MDOutSmallResCapacityID != MFUnset)) return (_MDOutSmallResCapacityID);
 
 	MFDefEntering("SmallReservoirCapacity");
-	if ((_MDInGrossDemandID = MDIrrGrossDemandDef  ()) != MFUnset) {
+	if ((_MDInIrrGrossDemandID = MDIrrGrossDemandDef  ()) != MFUnset) {
 		switch (optID) {
 			case MDinput:
 			    if ((_MDOutSmallResCapacityID       = MFVarGetID (MDVarSmallResCapacity,          "mm",   MFInput, MFState, MFInitial))  == CMfailed)
@@ -76,11 +76,11 @@ int MDSmallReservoirCapacityDef () {
 			    break;
 			case MDcalculate:
 				if ((_MDInIrrGrossDemandID == CMfailed) ||
-				    ((_MDInIrrAreaID                   = MFVarGetID (MDVarIrrAreaFraction,           "-",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-				    ((_MDInRainSurfaceROID             = MFVarGetID (MDVarSurfaceRO,                 "mm",  MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-				    ((_MDOutRainSurfaceROAccumulateID  = MFVarGetID ("__SurfaceROAccumulated",       "mm",  MFOutput, MFFlux,  MFInitial))  == CMfailed) ||
-				    ((_MDOutIrrGrossDemandAccumulateID = MFVarGetID ("__GrossDemandAccumulated",     "mm",  MFOutput, MFFlux,  MFInitial))  == CMfailed) ||
-				    ((_MDOutSmallResCapacityID         = MFVarGetID (MDVarSmallResCapacity,          "mm",  MFOutput, MFState, MFInitial))  == CMfailed) ||
+				    ((_MDInIrrAreaID                    = MFVarGetID (MDVarIrrAreaFraction,           "-",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+				    ((_MDInRainSurfRunoffID              = MFVarGetID (MDVarSurfaceRO,                 "mm",  MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+				    ((_MDOutRainSurfRunoffAccumulatedID = MFVarGetID ("__SurfaceROAccumulated",       "mm",  MFOutput, MFFlux,  MFInitial))  == CMfailed) ||
+				    ((_MDOutIrrGrossDemandAccumulatedID = MFVarGetID ("__GrossDemandAccumulated",     "mm",  MFOutput, MFFlux,  MFInitial))  == CMfailed) ||
+				    ((_MDOutSmallResCapacityID          = MFVarGetID (MDVarSmallResCapacity,          "mm",  MFOutput, MFState, MFInitial))  == CMfailed) ||
 				    (MFModelAddFunction (_MDSmallReservoirCapacity) == CMfailed)) return (CMfailed);
 				break;
 			default: MFOptionMessage (optName, optStr, options); return (CMfailed);

@@ -88,7 +88,7 @@ int MDAccumSMoistChgDef() {
 	if (_MDOutAccSMoistChgID != MFUnset) return (_MDOutAccSMoistChgID);
 
 	MFDefEntering ("Accumulate Soil Moisture Change");
-	if (((_MDInSMoistChgID     = MDSMoistChgDef ()) == CMfailed) ||
+	if (((_MDInSMoistChgID     = MDSoilMoistChgDef ()) == CMfailed) ||
 	    ((_MDOutAccSMoistChgID = MFVarGetID (MDVarAccSoilMoistChange, "m3/s", MFRoute, MFState, MFBoundary))  == CMfailed) ||
 	    (MFModelAddFunction(_MDAccumSMoistChg) == CMfailed)) return (CMfailed);
 

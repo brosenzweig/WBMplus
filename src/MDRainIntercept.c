@@ -62,7 +62,7 @@ static void _MDRainIntercept (int itemID) {
 
 enum { MDnone, MDinput, MDcalc };
 
-int MDInterceptDef () {
+int MDRainInterceptDef () {
 	int optID = MFUnset;
 	const char *optStr, *optName = MDVarRainInterception;
 	const char *options [] = { MDNoneStr, MDInputStr, MDCalculateStr, (char *) NULL };
