@@ -16,8 +16,8 @@ balazs.fekete@unh.edu
 #include <MD.h>
 
 static int _MDInCoverID         = MFUnset;
-
 static int _MDInSnowPackID      = MFUnset;
+
 static int _MDOutCParamAlbedoID = MFUnset; 
 
 static void _MDCParamAlbedo (int itemID) {
@@ -84,7 +84,7 @@ int MDCParamCHeightDef ()
 	{
 	int optID = MFUnset;
 	const char *optStr, *optName = MDVarCParamCHeight;
-	const char *options [] = { MDInputStr, "lookup", (char *) NULL };
+	const char *options [] = { MDInputStr, MDLookupStr, (char *) NULL };
 
 	if (_MDOutCParamCHeightID != MFUnset) return (_MDOutCParamCHeightID);
 
@@ -124,7 +124,7 @@ static void _MDCParamLWidth (int itemID) {
 int MDCParamLWidthDef () {
 	int optID = MFUnset;
 	const char *optStr, *optName = MDVarCParamLWidth;
-	const char *options [] = { MDInputStr, "lookup", (char *) NULL };
+	const char *options [] = { MDInputStr, MDLookupStr, (char *) NULL };
 
 	if (_MDOutCParamLWidthID != MFUnset) return (_MDOutCParamLWidthID);
 
@@ -151,7 +151,7 @@ static void _MDCParamRSS (int itemID) { MFVarSetFloat (_MDOutCParamRSSID,itemID,
 int MDCParamRSSDef () {
 	int optID = MFUnset;
 	const char *optStr, *optName = MDVarCParamRSS;
-	const char *options [] = { MDInputStr, "lookup", (char *) NULL };
+	const char *options [] = { MDInputStr, MDLookupStr, (char *) NULL };
 
 	if (_MDOutCParamRSSID != MFUnset) return (_MDOutCParamRSSID);
 
@@ -191,7 +191,7 @@ static void _MDCParamR5 (int itemID) {
 int MDCParamR5Def () {
 	int optID = MFUnset;
 	const char *optStr, *optName = MDVarCParamR5;
-	const char *options [] = { MDInputStr, "lookup", (char *) NULL };
+	const char *options [] = { MDInputStr, MDLookupStr, (char *) NULL };
 
 	if (_MDOutCParamR5ID != MFUnset) return (_MDOutCParamR5ID);
 
@@ -230,7 +230,7 @@ static void _MDCParamCD (int itemID) {
 int MDCParamCDDef () {
 	int optID = MFUnset;
 	const char *optStr, *optName = MDVarCParamCD;
-	const char *options [] = { MDInputStr, "lookup", (char *) NULL };
+	const char *options [] = { MDInputStr, MDLookupStr, (char *) NULL };
 
 	if (_MDOutCParamCDID != MFUnset) return (_MDOutCParamCDID);
 
@@ -270,7 +270,7 @@ static void _MDCParamCR (int itemID) {
 int MDCParamCRDef () {
 	int optID = MFUnset;
 	const char *optStr, *optName = MDVarCParamCR;
-	const char *options [] = { MDInputStr, "lookup", (char *) NULL };
+	const char *options [] = { MDInputStr, MDLookupStr, (char *) NULL };
 
 	if (_MDOutCParamCRID != MFUnset) return (_MDOutCParamCRID);
 
@@ -311,7 +311,7 @@ int MDCParamGLMaxDef ()
 	{
 	int optID = MFUnset;
 	const char *optStr, *optName = MDVarCParamGLMax;
-	const char *options [] = { MDInputStr, "lookup", (char *) NULL };
+	const char *options [] = { MDInputStr, MDLookupStr, (char *) NULL };
 
 	if (_MDOutCParamGLMaxID != MFUnset) return (_MDOutCParamGLMaxID);
 
@@ -350,7 +350,7 @@ static void _MDCParamLPMax (int itemID) {
 int MDCParamLPMaxDef () {
 	int optID = MFUnset;
 	const char *optStr, *optName = MDVarCParamLPMax;
-	const char *options [] = { MDInputStr, "lookup", (char *) NULL };
+	const char *options [] = { MDInputStr, MDLookupStr, (char *) NULL };
 
 	if (_MDOutCParamLPMaxID != MFUnset) return (_MDOutCParamLPMaxID);
 
@@ -389,7 +389,7 @@ static void _MDCParamZ0g (int itemID) {
 int MDCParamZ0gDef () {
 	int optID = MFUnset;
 	const char *optStr, *optName = MDVarCParamZ0g;
-	const char *options [] = { MDInputStr, "lookup", (char *) NULL };
+	const char *options [] = { MDInputStr, MDLookupStr, (char *) NULL };
 
 	if (_MDOutCParamZ0gID != MFUnset) return (_MDOutCParamZ0gID);
 

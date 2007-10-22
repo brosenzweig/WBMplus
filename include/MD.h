@@ -82,6 +82,7 @@ extern "C" {
 
 #define MDParIrrDailyPercolationRate         "IrrDailyPercolationRate"
  
+#define MDVarIrrSoilMoisture                 "IrrSoilMoisture"
 #define MDVarIrrSoilMoistureChange           "IrrSoilMoistChange"
 
 #define MDVarIrrGrossDemand                  "IrrGrossDemand"      // IrrGrossDemand = IrrUptakeGroundWater + IrrUptakeRiver + IrrUptakeExcess
@@ -92,50 +93,13 @@ extern "C" {
 #define MDVarIrrUptakeRiver                  "IrrUptakeRiver"       
 
 #define MDVarCorrectedRunoff                 "CorrectedRunoff"
-#define MDVarCrop_1                          "CropFraction_1"
-#define MDVarCrop_2                          "CropFraction_2"
-#define MDVarCrop_3                          "CropFraction_3"
-#define MDVarCrop_4                          "CropFraction_4"
-#define MDVarCrop_5                          "CropFraction_5"
-#define MDVarCrop_6                          "CropFraction_6"
-#define MDVarCrop_7                          "CropFraction_7"
-#define MDVarCrop_8                          "CropFraction_8"
-#define MDVarCrop_9                          "CropFraction_9"
-#define MDVarCrop_10                         "CropFraction_10"
-#define MDVarCrop_11                         "CropFraction_11"
-#define MDVarCrop_12                         "CropFraction_12"
-#define MDVarCrop_13                         "CropFraction_13"
-#define MDVarCrop_14                         "CropFraction_14"
-#define MDVarCrop_15                         "CropFraction_15"
-#define MDVarCrop_16                         "CropFraction_16"
-#define MDVarCrop_17                         "CropFraction_17"
-#define MDVarCrop_18                         "CropFraction_18"
-#define MDVarCrop_19                         "CropFraction_19"
+
 //=================================================================
 
 #define MDVarStartGrowingSeasonCalc          "StartGrowingSeasonCalc"
 #define MDVarEndGrowingSeasonCalc            "EndGrowingSeasonCalc"
 #define MDVarIsGrowingSeasonCalc             "IsGrowingSeasonCalc"
 #define	MDVarMeanElevationMeters             "Elevation"
-#define MDVarCropSMDef_1                     "CropSMDef_1"
-#define MDVarCropSMDef_2                     "CropSMDef_2"
-#define MDVarCropSMDef_3                     "CropSMDef_3"
-#define MDVarCropSMDef_4                     "CropSMDef_4"
-#define MDVarCropSMDef_5                     "CropSMDef_5"
-#define MDVarCropSMDef_6                     "CropSMDef_6"
-#define MDVarCropSMDef_7                     "CropSMDef_7"
-#define MDVarCropSMDef_8                     "CropSMDef_8"
-#define MDVarCropSMDef_9                     "CropSMDef_9"
-#define MDVarCropSMDef_10                    "CropSMDef_10"
-#define MDVarCropSMDef_11                    "CropSMDef_11"
-#define MDVarCropSMDef_12                    "CropSMDef_12"
-#define MDVarCropSMDef_13                    "CropSMDef_13"
-#define MDVarCropSMDef_14                    "CropSMDef_14"
-#define MDVarCropSMDef_15                    "CropSMDef_15"
-#define MDVarCropSMDef_16                    "CropSMDef_16"
-#define MDVarCropSMDef_17                    "CropSMDef_17"
-#define MDVarCropSMDef_18                    "CropSMDef_18"
-#define MDVarCropSMDef_19                    "CropSMDef_19"
 
 #define MDVarAccBalance                      "AccumBalance"
 #define MDVarAccPrecipitation                "AccumPrecipitation"
@@ -174,17 +138,19 @@ extern "C" {
 #define MDVarGroundWater                     "GroundWater"
 #define MDVarGroundWaterChange               "GroundWaterChange"
 #define MDVarLeafAreaIndex                   "LeafAreaIndex"
-#define MDVarInfiltration                    "Infiltration"
-#define MDVarInterception                    "Interception"
-#define MDVarIsotope                         "Isotope"
-#define MDVarIsotopeET                       "IsotopeET"
-#define MDVarIsotopeSnow                     "IsotopeSnow"
-#define MDVarIsotopeSoil                     "IsotopeSoil"
-#define MDVarIsotopeRunoff                   "IsotopeRunoff"
 #define MDVarMuskingumC0                     "MuskingumC0"
 #define MDVarMuskingumC1                     "MuskingumC1"
 #define MDVarMuskingumC2                     "MuskingumC2"
-#define MDVarPotEvapotrans                   "PET"
+
+#define MDVarRainEvapotranspiration          "RainEvapotranspiration"
+#define MDVarRainInfiltration                "RainInfiltration"
+#define MDVarRainInterception                "RainInterception"
+#define MDVarRainPotEvapotrans               "RainPET"
+#define MDVarRainSurfRunoff                  "RainSurfRunoff"
+#define MDVarRainSoilMoisture                "RainSoilMoisture"
+#define MDVarRainSoilMoistChange             "RainSoilMoistureChange"
+#define MDVarRainTranspiration               "RainTranspiration"
+#define MDVarRainWaterSurplus                "RainWaterSurplus"
 
 #define MDVarPrecipitation                   "Precipitation"
 #define MDVarPrecipFraction                  "PrecipitationFraction"
@@ -208,12 +174,9 @@ extern "C" {
 #define MDVarSAGEVegCover                    "SAGEVegCover"
 #define MDVarSnowPack                        "SnowPack"
 #define MDVarSnowPackChange                  "SnowPackChange"
-#define MDVarSoilMoisture                    "SoilMoisture"
-#define MDVarSoilMoistChange                 "SoilMoistureChange"
 #define MDVarRiverMeanVelocity               "RiverMeanVelocity"
 
 #define MDVarSoilPorosity                    "SoilPorosity"
-#define MDVarSoilTexture                     "SoilTexture"
 
 #define MDVarSolarRadiation                  "SolarRadiation"
 #define MDVarSRadDayLength                   "DayLength"
@@ -221,7 +184,6 @@ extern "C" {
 #define MDVarStemAreaIndex                   "StemAreaIndex"
 #define MDVarSunShine                        "SunShine"
 #define MDVarSurfaceRO                       "SurfaceRunoff"
-#define MDVarTranspiration                   "Transpiration"
 #define MDVarVaporPressure                   "VaporPressure"
 #define MDVarTEMVegCover                     "TEMVegCover"
 #define MDVarWBMCover                        "WBMCover"
@@ -230,23 +192,15 @@ extern "C" {
 #define MDVarWetDaysBeta                     "WetDaysBeta"
 #define MDVarWiltingPoint                    "WiltingPoint"
 #define MDVarFieldCapacity                   "FieldCapacity"
-#define MDVarWaterSurplus                    "WaterSurplus"
 #define MDVarWindSpeed                       "WindSpeed"
 
+#define MDVarSnowFall                        "SnowFall"
 #define MDVarSnowMelt                        "SnowMelt"
-#define MDVarPrecipitationOUT                "PrecipitationOut"
-#define MDVarSnowfallOUT                     "SnowfallOut"
-#define MDVarRelSoilMoisture                 "RelativeSoilMoisture"
 
 #define MDVarRelSoilMoisture                 "RelativeSoilMoisture"	
 #define MDParGrossRadTAU                     "GrossRadTAU"
 #define MDParGroundWatBETA                   "GroundWaterBETA"
 #define MDParInfiltrationFrac                "InfiltrationFraction"
-#define MDParIsotopeC0                       "IsotopeC0"
-#define MDParIsotopeC1                       "IsotopeC1"
-#define MDParIsotopeC2                       "IsotopeC2"
-#define MDParIsotopeVSMOW                    "IsotopeVSMOW"
-#define MDParIsotopeRhoRatio                 "IsotopeRhoRatio"
 
 #define MDConst_m3PerSecTOm3PerDay    86400.0
 #define MDConst_m3PerSecTOmmKm2PerDay 86400000.0
@@ -326,18 +280,22 @@ int MDDischMeanDef ();
 int MDGrossRadDef ();
 int MDLandCoverDef ();
 int MDLeafAreaIndexDef ();
-int MDInfiltrationDef ();
-int MDInterceptDef ();
-int MDPotETDef ();
-int MDPotETHamonDef ();
-int MDPotETJensenDef ();
-int MDPotETPstdDef ();
-int MDPotETPsTaylorDef ();
-int MDPotETPMdayDef ();
-int MDPotETPMdnDef ();
-int MDPotETSWGdayDef ();
-int MDPotETSWGdnDef ();
-int MDPotETTurcDef ();
+int MDRainInfiltrationDef ();
+int MDRainInterceptDef ();
+int MDRainPotETDef ();
+int MDRainPotETHamonDef ();
+int MDRainPotETJensenDef ();
+int MDRainPotETPstdDef ();
+int MDRainPotETPsTaylorDef ();
+int MDRainPotETPMdayDef ();
+int MDRainPotETPMdnDef ();
+int MDRainPotETSWGdayDef ();
+int MDRainPotETSWGdnDef ();
+int MDRainPotETTurcDef ();
+int MDRainSMoistChgDef ();
+int MDRainSurfRunoffDef ();
+int MDRainWaterSurplusDef ();
+
 int MDPotFAOReferenceETDef ();
 int MDRelHumidityDef ();
 int MDRiverbedShapeExponentDef ();
@@ -345,16 +303,15 @@ int MDRiverWidthDef ();
 //int MDRootDepthDef ();
 int MDRunoffDef ();
 int MDRunoffVolumeDef ();
-int MDSMoistChgDef ();
 int MDSPackChgDef ();
 int MDSmallReservoirsDef ();
+int MDSmallReservoirCapacityDef ();
 int MDSolarRadDef ();
 int MDSRadDayLengthDef ();
 int MDSRadI0HDayDef ();
 int MDSoilPropDef ();
 int MDStemAreaIndexDef ();
 int MDWaterBalanceDef ();
-int MDWaterSurplusDef ();
 int MDPrecipitationDef ();
 int MDWetDaysDef ();
 

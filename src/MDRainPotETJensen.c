@@ -19,7 +19,7 @@ static int _MDInAtMeanID = MFUnset;
 static int _MDInSolRadID = MFUnset;
 static int _MDOutPetID   = MFUnset;
 
-static void _MDPotETJensen (int itemID) {
+static void _MDRainPotETJensen (int itemID) {
 // Jensen-Haise (1963) PE in mm for day
 // Input
 	float airT;		// air temperatur [degree C]
@@ -37,14 +37,14 @@ static void _MDPotETJensen (int itemID) {
    MFVarSetFloat (_MDOutPetID,itemID,pet);
 }
 
-int MDPotETJensenDef () {
+int MDRainPotETJensenDef () {
 	if (_MDOutPetID != MFUnset) return (_MDOutPetID);
 
-	MFDefEntering ("PotET Jensen");
+	MFDefEntering ("RainPotET Jensen");
 	if (((_MDInSolRadID = MDSolarRadDef ()) == CMfailed) ||
-	    ((_MDInAtMeanID = MFVarGetID (MDVarAirTemperature, "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDOutPetID   = MFVarGetID (MDVarPotEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-	    (MFModelAddFunction (_MDPotETJensen) == CMfailed)) return (CMfailed);
-	MFDefLeaving ("PotET Jensen");
+	    ((_MDInAtMeanID = MFVarGetID (MDVarAirTemperature,    "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDOutPetID   = MFVarGetID (MDVarRainPotEvapotrans, "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+	    (MFModelAddFunction (_MDRainPotETJensen) == CMfailed)) return (CMfailed);
+	MFDefLeaving ("RainPotET Jensen");
 	return (_MDOutPetID);
 }

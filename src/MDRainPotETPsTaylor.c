@@ -24,7 +24,7 @@ static int _MDInSolRadID       = MFUnset;
 static int _MDInVPressID       = MFUnset;
 static int _MDOutPetID         = MFUnset;
 
-static void _MDPotETPsTaylor (int itemID) {
+static void _MDRainPotETPsTaylor (int itemID) {
 // Priestley and Taylor (1972) PE in mm for day
 // Input
 	float dayLen; // daylength in fraction of day
@@ -73,18 +73,18 @@ static void _MDPotETPsTaylor (int itemID) {
    MFVarSetFloat (_MDOutPetID,itemID,pet);
 }
 
-int MDPotETPsTaylorDef () {
+int MDRainPotETPsTaylorDef () {
 	if (_MDOutPetID != MFUnset) return (_MDOutPetID);
 
-	MFDefEntering ("PotET Priestley - Taylor Definition");
+	MFDefEntering ("RainPotET Priestley - Taylor Definition");
 	if (((_MDInDayLengthID     = MDSRadDayLengthDef ()) == CMfailed) ||
 	    ((_MDInI0HDayID        = MDSRadI0HDayDef    ()) == CMfailed) ||
 	    ((_MDInCParamAlbedoID  = MDCParamAlbedoDef  ()) == CMfailed) ||
 	    ((_MDInSolRadID        = MDSolarRadDef      ()) == CMfailed) ||
 	    ((_MDInAtMeanID  = MFVarGetID (MDVarAirTemperature, "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDInVPressID  = MFVarGetID (MDVarVaporPressure,  "kPa",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDOutPetID    = MFVarGetID (MDVarPotEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-	    (MFModelAddFunction (_MDPotETPsTaylor) == CMfailed)) return (CMfailed);
-	MFDefLeaving ("PotET Priestley - Taylor Definition");
+	    ((_MDOutPetID    = MFVarGetID (MDVarRainPotEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+	    (MFModelAddFunction (_MDRainPotETPsTaylor) == CMfailed)) return (CMfailed);
+	MFDefLeaving ("RainPotET Priestley - Taylor Definition");
 	return (_MDOutPetID);
 }

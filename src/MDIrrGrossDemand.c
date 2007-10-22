@@ -22,7 +22,7 @@ static int _MDOutIrrReturnFlowID        = MFUnset;
 enum { MDinput, MDcalculate };
 
 int MDIrrGrossDemandDef () {
-	int optID = MDinput;
+	int optID = MFUnset;
 	const char *optStr, *optName = MDOptIrrigation;
 	const char *options [] = { MDInputStr, MDCalculateStr, (char *) NULL };
 	

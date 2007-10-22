@@ -49,8 +49,6 @@ static void _MDAccumBalance (int itemID)
 	}
 }
 
-enum { MDinput, MDcalc };
-
 int MDAccumBalanceDef() {
 
 	if (_MDOutAccBalanceID != MFUnset) return (_MDOutAccBalanceID);

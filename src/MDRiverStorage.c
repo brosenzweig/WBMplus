@@ -28,15 +28,10 @@ static int _MDOutRiverWidthID          = MFUnset;
 static int _MDOutRiverDepthID          = MFUnset;
 
 static void _MDRiverDepth (int itemID) {
-	
 
 }
 
-enum { MDnone, MDCalculate };
-
 int MDRiverDepthDef() {
-	const char *optStr;
-	const char *options [] = { MDNoneStr, MDCalculateStr, (char *) NULL };
 
 	MFDefEntering ("River Storage");
 	if (((_MDInDischargeID            = MDDischargeDef ())     == CMfailed) ||

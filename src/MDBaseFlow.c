@@ -58,7 +58,7 @@ static void _MDBaseFlow (int itemID) {
 		irrDemand       = MFVarGetFloat (_MDInIrrGrossDemandID,  itemID, 0.0);
 	 	irrReturnFlow   = MFVarGetFloat (_MDInIrrReturnFlowID,   itemID, 0.0);
 		
-		if(_MDInSmallResReleaseID ! = MFUnset) smallResRelease = MFVarGetFloat(_MDInSmallResReleaseID,itemID,0.0);
+		if (_MDInSmallResReleaseID != MFUnset) smallResRelease = MFVarGetFloat(_MDInSmallResReleaseID,itemID,0.0);
 		
 		if (smallResRelease < 0) printf ("SR release %f\n",smallResRelease);
 
@@ -111,18 +111,17 @@ static void _MDBaseFlow (int itemID) {
 }
 
 int MDBaseFlowDef () {
-	const char *optStr;
-	const char *options [] = { MDNoneStr, (char *) NULL };
 	float par;
+	const char *optStr;
 
 	if (_MDOutBaseFlowID != MFUnset) return (_MDOutBaseFlowID);
 
 	MFDefEntering ("Base flow");
 	if (((optStr = MFOptionGet (MDParGroundWatBETA))  != (char *) NULL) && (sscanf (optStr,"%f",&par) == 1)) _MDGroundWatBETA = par;
 
-	if ((_MDInRechargeID = MDInfiltrationDef ()) == CMfailed) return (CMfailed);
-	if (((optStr = MFOptionGet (MDOptIrrigation)) != (char *) NULL) && (CMoptLookup (options,optStr,true) == CMfailed)) {
-		if (((_MDInIrrGrossDemandID     = MDIrrGrossDemandDef  ()) == CMfailed) ||
+	if ((_MDInRechargeID       = MDInfiltrationDef    ()) == CMfailed) return (CMfailed);
+	if ((_MDInIrrGrossDemandID = MDIrrGrossDemandDef  ()) != MFUnset) {
+		if (( _MDInIrrGrossDemandID == CMfailed) ||
 		    ((_MDInSmallResReleaseID    = MDSmallReservoirsDef ()) == CMfailed) ||
 		    ((_MDInIrrReturnFlowID      = MFVarGetID (MDVarIrrReturnFlow,     "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
 		    ((_MDOutIrrUptakeGrdWaterID = MFVarGetID (MDVarIrrUptakeGrdWater, "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||

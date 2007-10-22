@@ -19,7 +19,7 @@ static int _MDInDayLengthID = MFUnset;
 static int _MDInAtMeanID    = MFUnset;
 static int _MDOutPetID      = MFUnset;
 
-static void _MDPotETHamon (int itemID) {
+static void _MDRainPotETHamon (int itemID) {
 // Hamon (1963) PE in mm for day
 // Input
 	float dayLen=0;  // daylength in fraction of day
@@ -40,14 +40,14 @@ static void _MDPotETHamon (int itemID) {
    if (pet<0)printf("pet <! dayLen=%f\n",dayLen);
    }
 
-int MDPotETHamonDef () {
+int MDRainPotETHamonDef () {
 	if (_MDOutPetID != MFUnset) return (_MDOutPetID);
 
-	MFDefEntering ("PotET Hamon");
+	MFDefEntering ("RainPotET Hamon");
 	if (((_MDInDayLengthID = MDSRadDayLengthDef ()) == CMfailed) ||
-	    ((_MDInAtMeanID    = MFVarGetID (MDVarAirTemperature, "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDOutPetID      = MFVarGetID (MDVarPotEvapotrans,  "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-	    (MFModelAddFunction (_MDPotETHamon) == CMfailed)) return (CMfailed);
-	MFDefLeaving ("PotET Hamon");
+	    ((_MDInAtMeanID    = MFVarGetID (MDVarAirTemperature,    "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDOutPetID      = MFVarGetID (MDVarRainPotEvapotrans, "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+	    (MFModelAddFunction (_MDRainPotETHamon) == CMfailed)) return (CMfailed);
+	MFDefLeaving ("RainPotET Hamon");
 	return (_MDOutPetID);
 }

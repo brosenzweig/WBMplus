@@ -29,22 +29,25 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDLSAreaIndex.o\
        $(OBJ)/MDIrrHamonReferenceETP.o\
        $(OBJ)/MDIrrFAOReferenceETP.o\
-       $(OBJ)/MDInfiltration.o\
-       $(OBJ)/MDIntercept.o\
        $(OBJ)/MDIrrGrossDemand.o\
        $(OBJ)/MDIrrigation.o\
        $(OBJ)/MDGrossRad.o\
        $(OBJ)/MDPrecipitation.o\
-       $(OBJ)/MDPotET.o\
-       $(OBJ)/MDPotETHamon.o\
-       $(OBJ)/MDPotETJensen.o\
-       $(OBJ)/MDPotETPstd.o\
-       $(OBJ)/MDPotETPsTaylor.o\
-       $(OBJ)/MDPotETPMday.o\
-       $(OBJ)/MDPotETPMdn.o\
-       $(OBJ)/MDPotETSWGday.o\
-       $(OBJ)/MDPotETSWGdn.o\
-       $(OBJ)/MDPotETTurc.o\
+       $(OBJ)/MDRainInfiltration.o\
+       $(OBJ)/MDRainIntercept.o\
+       $(OBJ)/MDRainPotET.o\
+       $(OBJ)/MDRainPotETHamon.o\
+       $(OBJ)/MDRainPotETJensen.o\
+       $(OBJ)/MDRainPotETPstd.o\
+       $(OBJ)/MDRainPotETPsTaylor.o\
+       $(OBJ)/MDRainPotETPMday.o\
+       $(OBJ)/MDRainPotETPMdn.o\
+       $(OBJ)/MDRainPotETSWGday.o\
+       $(OBJ)/MDRainPotETSWGdn.o\
+       $(OBJ)/MDRainSMoistChg.o\
+       $(OBJ)/MDRainPotETTurc.o\
+       $(OBJ)/MDRainSurfRunoff.o\
+       $(OBJ)/MDRainWaterSurplus.o\
        $(OBJ)/MDPotETlib.o\
        $(OBJ)/MDRelHumidity.o\
        $(OBJ)/MDReservoirs.o\
@@ -52,12 +55,10 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDRiverWidth.o\
        $(OBJ)/MDRunoff.o\
        $(OBJ)/MDRunoffVolume.o\
-       $(OBJ)/MDSMoistChg.o\
        $(OBJ)/MDSPackChg.o\
        $(OBJ)/MDSmallReservoirs.o\
        $(OBJ)/MDSolarRad.o\
        $(OBJ)/MDWaterBalance.o\
-       $(OBJ)/MDWaterSurplus.o\
        $(OBJ)/MDWetDays.o\
        $(OBJ)/MDWind.o\
        $(OBJ)/MDBgc.o

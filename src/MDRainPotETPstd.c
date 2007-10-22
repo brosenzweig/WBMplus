@@ -26,7 +26,7 @@ static int _MDInVPressID       = MFUnset;
 static int _MDInWSpeedID       = MFUnset;
 static int _MDOutPetID         = MFUnset;
 
-static void _MDPotETPstd (int itemID) {
+static void _MDRainPotETPstd (int itemID) {
 // Penman (1948) PE in mm for day also given by Chidley and Pike (1970)
 // Input
  	float dayLen; // daylength in fraction of day
@@ -87,10 +87,10 @@ static void _MDPotETPstd (int itemID) {
    MFVarSetFloat (_MDOutPetID,itemID,pet);
 }
 
-int MDPotETPstdDef () {
+int MDRainPotETPstdDef () {
 	if (_MDOutPetID != MFUnset) return (_MDOutPetID);
 
-	MFDefEntering ("PotET Penman Standard");
+	MFDefEntering ("RainPotET Penman Standard");
 	if (((_MDInDayLengthID     = MDSRadDayLengthDef ()) == CMfailed) ||
 	    ((_MDInI0HDayID        = MDSRadI0HDayDef    ()) == CMfailed) ||
 	    ((_MDInCParamAlbedoID  = MDCParamAlbedoDef  ()) == CMfailed) ||
@@ -98,8 +98,8 @@ int MDPotETPstdDef () {
 	    ((_MDInAtMeanID  = MFVarGetID (MDVarAirTemperature, "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDInVPressID  = MFVarGetID (MDVarVaporPressure,  "kPa",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDInWSpeedID  = MFVarGetID (MDVarWindSpeed,      "m/s",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDOutPetID    = MFVarGetID (MDVarPotEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-	    (MFModelAddFunction (_MDPotETPstd) == CMfailed)) return (CMfailed);
-	MFDefLeaving ("PotET Penman Standard");
+	    ((_MDOutPetID    = MFVarGetID (MDVarRainPotEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+	    (MFModelAddFunction (_MDRainPotETPstd) == CMfailed)) return (CMfailed);
+	MFDefLeaving ("RainPotET Penman Standard");
 	return (_MDOutPetID);
 }

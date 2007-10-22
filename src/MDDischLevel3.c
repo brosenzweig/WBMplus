@@ -20,7 +20,7 @@ enum { MDaccumulate, MDmuskingum, MDcascade };
 static int _MDDischLevel3ID = MFUnset;
 
 int MDDischLevel3Def() {
-	int optID = MDaccumulate;
+	int optID = MFUnset;
 	const char *optStr, *optName = MDOptRouting;
 	const char *options []    = { "accumulate", "muskingum", "cascade", (char *) NULL };
 

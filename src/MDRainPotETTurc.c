@@ -19,7 +19,7 @@ static int _MDInAtMeanID = MFUnset;
 static int _MDInSolRadID = MFUnset;
 static int _MDOutPetID   = MFUnset;
 
-static void _MDPotETTurc (int itemID) {
+static void _MDRainPotETTurc (int itemID) {
 /* Turc (1961) PE in mm for day */
 // Input
 	float airT;    // air temperatur [degree C]
@@ -37,14 +37,14 @@ static void _MDPotETTurc (int itemID) {
    MFVarSetFloat (_MDOutPetID,itemID,pet);
 }
 
-int MDPotETTurcDef () {
+int MDRainPotETTurcDef () {
 	if (_MDOutPetID != MFUnset) return (_MDOutPetID);
 
-	MFDefEntering ("PotET Turc");
+	MFDefEntering ("RainPotET Turc");
 	if (((_MDInSolRadID = MDSolarRadDef ()) == CMfailed) ||
 	    ((_MDInAtMeanID = MFVarGetID (MDVarAirTemperature, "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDOutPetID   = MFVarGetID (MDVarPotEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-	    (MFModelAddFunction (_MDPotETTurc) == CMfailed)) return (CMfailed);
-	MFDefLeaving ("PotET Turc");
+	    ((_MDOutPetID   = MFVarGetID (MDVarRainPotEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+	    (MFModelAddFunction (_MDRainPotETTurc) == CMfailed)) return (CMfailed);
+	MFDefLeaving ("RainPotET Turc");
 	return (_MDOutPetID);
 }

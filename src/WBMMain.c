@@ -24,9 +24,9 @@ int main (int argc,char *argv []) {
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);
 
 	switch (optID) {
-		case MDpet:          return (MFModelRun (argc,argv,argNum,MDPotETDef));
-		case MDsurplus:      return (MFModelRun (argc,argv,argNum,MDWaterSurplusDef));
-		case MDinfiltration: return (MFModelRun (argc,argv,argNum,MDInfiltrationDef));
+		case MDpet:          return (MFModelRun (argc,argv,argNum,MDRainPotETDef));
+		case MDsurplus:      return (MFModelRun (argc,argv,argNum,MDRainWaterSurplusDef));
+		case MDinfiltration: return (MFModelRun (argc,argv,argNum,MDRainInfiltrationDef));
 		case MDrunoff:       return (MFModelRun (argc,argv,argNum,MDRunoffDef));
 		case MDdischarge:    return (MFModelRun (argc,argv,argNum,MDDischargeDef));
 		case MDbalance:      return (MFModelRun (argc,argv,argNum,MDWaterBalanceDef));

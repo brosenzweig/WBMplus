@@ -78,7 +78,7 @@ enum { MDinput, MDstandard,  MDOtto };
 int MDGrossRadDef () {
 	int optID = MFUnset;
 	const char *optStr, *optName = MDVarGrossRadiance;
-	const char *options [] = { "input", "standard", "Otto", (char *) NULL };
+	const char *options [] = { MDInputStr, "standard", "Otto", (char *) NULL };
 	float par;
 
 	if (_MDOutGrossRadID != MFUnset) return (_MDOutGrossRadID);
