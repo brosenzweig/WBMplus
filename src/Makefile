@@ -25,13 +25,14 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDDischLevel3Muskingum.o\
        $(OBJ)/MDDischLevel3MuskingumCoeff.o\
        $(OBJ)/MDDischMean.o\
+       $(OBJ)/MDEvapotransp.o\
+       $(OBJ)/MDGrossRad.o\
        $(OBJ)/MDLandCover.o\
        $(OBJ)/MDLSAreaIndex.o\
        $(OBJ)/MDIrrGrossDemand.o\
        $(OBJ)/MDIrrRefET.o\
        $(OBJ)/MDIrrRefETHamon.o\
        $(OBJ)/MDIrrRefETFAO.o\
-       $(OBJ)/MDGrossRad.o\
        $(OBJ)/MDPrecipitation.o\
        $(OBJ)/MDRainInfiltration.o\
        $(OBJ)/MDRainIntercept.o\
@@ -61,6 +62,7 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDSolarRad.o\
        $(OBJ)/MDSoilAvailWaterCap.o\
        $(OBJ)/MDSMoistChg.o\
+       $(OBJ)/MDSurfRunoff.o\
        $(OBJ)/MDWaterBalance.o\
        $(OBJ)/MDWetDays.o\
        $(OBJ)/MDWind.o\

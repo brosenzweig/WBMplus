@@ -29,7 +29,7 @@ static int _MDInDischargeID               = MFUnset;
 
 static int _MDInIrrSoilMoistChgID         = MFUnset;
 static int _MDInIrrAreaID                 = MFUnset;
-static int _MDInCropEtpID                 = MFUnset;
+static int _MDInIrrEvapotranspirationID   = MFUnset;
 static int _MDInDischargeAbstractionID    = MFUnset;
 
 static int _MDInGrdWaterAbstractionID     = MFUnset;
@@ -67,14 +67,14 @@ static void _MDWaterBalance(int itemID) {
 	float totSMChange, in, out;
 	
 	if (_MDInGrossIrrDemandID != MFUnset) { 
-		cropETP         = MFVarGetFloat (_MDInCropEtpID,              itemID, 0.0);
-		gwAbstraction   = MFVarGetFloat (_MDInGrdWaterAbstractionID,  itemID, 0.0);
-		disAbstraction  = MFVarGetFloat (_MDInDischargeAbstractionID, itemID, 0.0);
-		exAbstraction   = MFVarGetFloat (_MDInExcessAbstractionID,    itemID, 0.0);
-		irrReturnFlow   = MFVarGetFloat (_MDInIrrReturnFlowID,        itemID, 0.0);
-		irrDemand       = MFVarGetFloat (_MDInGrossIrrDemandID,       itemID, 0.0);
-		irrSMChange     = MFVarGetFloat (_MDInIrrSoilMoistChgID,      itemID, 0.0);
-		irrAreaFraction = MFVarGetFloat (_MDInIrrAreaID,		      itemID, 0.0);
+		cropETP         = MFVarGetFloat (_MDInIrrEvapotranspirationID, itemID, 0.0);
+		gwAbstraction   = MFVarGetFloat (_MDInGrdWaterAbstractionID,   itemID, 0.0);
+		disAbstraction  = MFVarGetFloat (_MDInDischargeAbstractionID,  itemID, 0.0);
+		exAbstraction   = MFVarGetFloat (_MDInExcessAbstractionID,     itemID, 0.0);
+		irrReturnFlow   = MFVarGetFloat (_MDInIrrReturnFlowID,         itemID, 0.0);
+		irrDemand       = MFVarGetFloat (_MDInGrossIrrDemandID,        itemID, 0.0);
+		irrSMChange     = MFVarGetFloat (_MDInIrrSoilMoistChgID,       itemID, 0.0);
+		irrAreaFraction = MFVarGetFloat (_MDInIrrAreaID,		       itemID, 0.0);
 		if (_MDOutSmallResStorageChangeID != MFUnset) {
 			irrSmallResRelease= MFVarGetFloat(_MDOutSmallResReleaseID,itemID,0.0);
 			smallResStorageChange= MFVarGetFloat(_MDOutSmallResStorageChangeID,itemID,0.0);
@@ -89,7 +89,8 @@ static void _MDWaterBalance(int itemID) {
 	out = etp + runoffPoolChange + snowPChange + soilMChange + runoff+smallResStorageChange;
 	waterbalance = in -out;
 	if (fabs(waterbalance) > 0.001 ) {
-		if (irrAreaFraction==0)printf ("non irr Water Balance! WaterBalance= %f in= %f out= %f exe= %f disAbstr=%f itmeID=%i,snowChange=%f irrARea =%f totSMChange %f\n", waterbalance, in, out, exAbstraction,disAbstraction,itemID,snowPChange,irrAreaFraction,totSMChange);
+		if (irrAreaFraction==0)
+			printf ("non irr Water Balance! WaterBalance= %f in= %f out= %f exe= %f disAbstr=%f itmeID=%i,snowChange=%f irrARea =%f totSMChange %f\n", waterbalance, in, out, exAbstraction,disAbstraction,itemID,snowPChange,irrAreaFraction,totSMChange);
 	//	printf ("totETP %f dRun %f totSM %f dSnow %f RO %f dsmallRes%f\n", totETP,runoffPoolChange,totSMChange, snowPChange,runoff,smallResStorageChange);
 		}
 	//=========================================================
@@ -135,20 +136,19 @@ int MDWaterBalanceDef() {
 	    ((_MDInSoilMoistChgID            = MDRainSMoistChgDef ()) == CMfailed) ||
 	    ((_MDInRunoffID                  = MDRunoffDef        ()) == CMfailed) ||
 	    ((_MDInInfiltrationID            = MDRainInfiltrationDef  ()) == CMfailed) ||
-	    ((_MDInEvaptrsID                 = MFVarGetID (MDVarEvapotranspiration,            "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDInGrdWatChgID               = MFVarGetID (MDVarGroundWaterChange,             "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDOutWaterBalanceID           = MFVarGetID (MDVarWaterBalance,                  "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed))
+	    ((_MDInEvaptrsID                 = MFVarGetID (MDVarEvapotranspiration,        "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+	    ((_MDInGrdWatChgID               = MFVarGetID (MDVarGroundWaterChange,         "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+	    ((_MDOutWaterBalanceID           = MFVarGetID (MDVarWaterBalance,              "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed))
 	    return (CMfailed);
-	if (((optStr = MFOptionGet (MDOptIrrigation)) != (char *) NULL) && (CMoptLookup (options,optStr,true) == CMfailed)) {
-		if (((_MDInCropEtpID                 = MFVarGetID (MDVarIrrCropETP,                    "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-	    	((_MDInIrrSoilMoistChgID         = MFVarGetID (MDVarIrrSoilMoistChange,            "mm",   MFInput,  MFState,  MFBoundary)) == CMfailed) ||
-	    	((_MDInDischargeAbstractionID    = MFVarGetID (MDVarIrrUptakeRiver,                "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-	    	((_MDInIrrReturnFlowID           = MFVarGetID (MDVarIrrReturnFlow,                 "mm",   MFInput,  MFFlux, MFBoundary)) == CMfailed) || 
-	    	((_MDInGrdWaterAbstractionID     = MFVarGetID (MDVarIrrUptakeGrdWater,             "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-	    	((_MDInIrrAreaID                 = MFVarGetID (MDVarIrrAreaFraction,               "-",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    	((_MDInExcessAbstractionID       = MFVarGetID (MDVarIrrUptakeExcess,               "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-	    	((_MDOutTotalEvapotranpirationID = MFVarGetID (MDVarCombinedEvapotranspiration,    "mm",   MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-	    	((_MDInGrossIrrDemandID          = MFVarGetID (MDVarIrrGrossDemand,                "mm",   MFInput,  MFFlux, MFBoundary)) == CMfailed))
+	if ((_MDInGrossIrrDemandID          = MDIrrGrossDemandDef ()) != MFUnset) {
+		if ((_MDInGrossIrrDemandID == CMfailed) ||
+		    ((_MDInIrrEvapotranspirationID   = MFVarGetID (MDVarIrrEvapotranspiration, "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+	    	((_MDInIrrSoilMoistChgID         = MFVarGetID (MDVarIrrSoilMoistChange,    "mm",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    	((_MDInDischargeAbstractionID    = MFVarGetID (MDVarIrrUptakeRiver,        "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+	    	((_MDInIrrReturnFlowID           = MFVarGetID (MDVarIrrReturnFlow,         "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) || 
+	    	((_MDInGrdWaterAbstractionID     = MFVarGetID (MDVarIrrUptakeGrdWater,     "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+	    	((_MDInIrrAreaID                 = MFVarGetID (MDVarIrrAreaFraction,       "-",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    	((_MDInExcessAbstractionID       = MFVarGetID (MDVarIrrUptakeExcess,       "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed))
 	    	return (CMfailed);
 		
 		if (((optStr = MFOptionGet (MDOptIrrSmallReservoirs)) != (char *) NULL) && (CMoptLookup (options,optStr,true) == CMfailed)) {

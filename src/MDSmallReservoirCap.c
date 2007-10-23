@@ -37,19 +37,20 @@ static void _MDSmallReservoirCapacity (int itemID) {
  // Local
  	float potResCapacity;
 
- 	irrAreaFraction  = MFVarGetFloat (_MDInIrrAreaID,           itemID, 0.0);
- 	accumSurfRunoff  = MFVarGetFloat (_MDInRainSurfRunoffID,    itemID, 0.0) * (1.0 - irrAreaFraction);
- 	accumIrrDemand   = MFVarGetFloat (_MDInIrrGrossDemandID,    itemID, 0.0);
-	smallResCapacity = MFVarGetFloat (_MDOutSmallResCapacityID, itemID, 0.0); 
+ 	if ((irrAreaFraction  = MFVarGetFloat (_MDInIrrAreaID,      itemID, 0.0)) > 0.0) {
+ 		accumSurfRunoff  = MFVarGetFloat (_MDInRainSurfRunoffID,    itemID, 0.0);
+ 		accumIrrDemand   = MFVarGetFloat (_MDInIrrGrossDemandID,    itemID, 0.0);
+ 		smallResCapacity = MFVarGetFloat (_MDOutSmallResCapacityID, itemID, 0.0); 
 
- 	if (MFDateGetDayOfYear () > 1) { 
- 		accumSurfRunoff += MFVarGetFloat (_MDOutRainSurfRunoffAccumulatedID, itemID, 0.0);
- 		accumIrrDemand  += MFVarGetFloat (_MDOutIrrGrossDemandAccumulatedID, itemID, 0.0);
-	}
- 
- 	potResCapacity   = accumSurfRunoff  < accumIrrDemand ? accumSurfRunoff  : accumIrrDemand;
- 	smallResCapacity = smallResCapacity > potResCapacity ? smallResCapacity : potResCapacity;
- 
+ 		if (MFDateGetDayOfYear () > 1) { 
+ 			accumSurfRunoff += MFVarGetFloat (_MDOutRainSurfRunoffAccumulatedID, itemID, 0.0);
+ 			accumIrrDemand  += MFVarGetFloat (_MDOutIrrGrossDemandAccumulatedID, itemID, 0.0);
+ 		}
+ 		potResCapacity   = accumSurfRunoff  < accumIrrDemand ? accumSurfRunoff  : accumIrrDemand;
+ 		smallResCapacity = smallResCapacity > potResCapacity ? smallResCapacity : potResCapacity;
+ 	}
+ 	else accumSurfRunoff = accumIrrDemand = smallResCapacity = 0.0;
+
  	MFVarSetFloat (_MDOutRainSurfRunoffAccumulatedID, itemID, accumSurfRunoff);
  	MFVarSetFloat (_MDOutIrrGrossDemandAccumulatedID, itemID, accumIrrDemand);
  	MFVarSetFloat (_MDOutSmallResCapacityID,          itemID, smallResCapacity);

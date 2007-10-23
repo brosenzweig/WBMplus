@@ -43,9 +43,11 @@ static int _MDInPotETID             = MFUnset;
 static int _MDInInterceptID         = MFUnset;
 static int _MDInSPackChgID          = MFUnset;
 static int _MDInSoilAvailWaterCapID = MFUnset;
+static int _MDInIrrAreaFracID       = MFUnset;
 // Output
 static int _MDOutEvaptrsID          = MFUnset;
 static int _MDOutSoilMoistID        = MFUnset;
+static int _MDOutSoilMoistCellID    = MFUnset;
 static int _MDOutSMoistChgID        = MFUnset;
 
 static void _MDRainSMoistChg (int itemID) {	
@@ -55,20 +57,21 @@ static void _MDRainSMoistChg (int itemID) {
 	float pet;             // Potential evapotranspiration [mm/dt]
 	float intercept;       // Interception (when the interception module is turned on) [mm/dt]
 	float sPackChg;        // Snow pack change [mm/dt]
+	float irrAreaFrac;     // Irrigated area fraction
 // Output
 	float sMoist;          // Soil moisture [mm/dt]
 	float sMoistChg;       // Soil moisture change [mm/dt]
 	float transp;          // Transpiration [mm]
 	float evapotrans;
 	
-	airT      = MFVarGetFloat (_MDInAirTMeanID,          itemID, 0.0);
-	precip    = MFVarGetFloat (_MDInPrecipID,            itemID, 0.0);
-	sPackChg  = MFVarGetFloat (_MDInSPackChgID,          itemID, 0.0);
-	pet       = MFVarGetFloat (_MDInPotETID,             itemID, 0.0);
-	_MDAWCap  = MFVarGetFloat (_MDInSoilAvailWaterCapID, itemID, 0.0);
-	sMoist    = MFVarGetFloat (_MDOutSoilMoistID,        itemID, 0.0);
-	intercept = _MDInInterceptID != MFUnset ? MFVarGetFloat (_MDInInterceptID, itemID, 0.0) : 0.0;
-
+	airT        = MFVarGetFloat (_MDInAirTMeanID,          itemID, 0.0);
+	precip      = MFVarGetFloat (_MDInPrecipID,            itemID, 0.0);
+	sPackChg    = MFVarGetFloat (_MDInSPackChgID,          itemID, 0.0);
+	pet         = MFVarGetFloat (_MDInPotETID,             itemID, 0.0);
+	_MDAWCap    = MFVarGetFloat (_MDInSoilAvailWaterCapID, itemID, 0.0);
+	sMoist      = MFVarGetFloat (_MDOutSoilMoistCellID,    itemID, 0.0);
+	intercept   = _MDInInterceptID   != MFUnset ? MFVarGetFloat (_MDInInterceptID,   itemID, 0.0) : 0.0;
+	irrAreaFrac = _MDInIrrAreaFracID != MFUnset ? MFVarGetFloat (_MDInIrrAreaFracID, itemID, 0.0) : 0.0;
 	if (sMoist < 0.0) sMoist = 0.0;
 	sMoistChg=0;
 	 
@@ -91,27 +94,32 @@ static void _MDRainSMoistChg (int itemID) {
 	else { transp = sMoistChg = 0.0; }
 
 	evapotrans = intercept + transp;
-	MFVarSetFloat (_MDOutEvaptrsID,   itemID, evapotrans);
-	MFVarSetFloat (_MDOutSoilMoistID, itemID, sMoist);
-	MFVarSetFloat (_MDOutSMoistChgID, itemID, sMoistChg);
+	MFVarSetFloat (_MDOutSoilMoistCellID, itemID, sMoist);
+	MFVarSetFloat (_MDOutEvaptrsID,       itemID, evapotrans * (1.0 - irrAreaFrac));
+	MFVarSetFloat (_MDOutSoilMoistID,     itemID, sMoist     * (1.0 - irrAreaFrac));
+	MFVarSetFloat (_MDOutSMoistChgID,     itemID, sMoistChg  * (1.0 - irrAreaFrac));
 }
 
 int MDRainSMoistChgDef () {
-
+	int ret;
 	if (_MDOutSMoistChgID != MFUnset) return (_MDOutSMoistChgID);
 
 	MFDefEntering ("Rainfed Soil Moisture");
-	
+	if (((ret = MDIrrGrossDemandDef ()) != MFUnset) &&
+	    ((ret == CMfailed) ||
+	     ((_MDInIrrAreaFracID      = MFVarGetID (MDVarIrrAreaFraction,      "%",  MFInput,  MFState, MFBoundary)) == CMfailed)))
+	     return (CMfailed);
 	if (((_MDInPrecipID            = MDPrecipitationDef     ()) == CMfailed) ||
 	    ((_MDInSPackChgID          = MDSPackChgDef          ()) == CMfailed) ||
 	    ((_MDInPotETID             = MDRainPotETDef         ()) == CMfailed) ||
 	    ((_MDInInterceptID         = MDRainInterceptDef     ()) == CMfailed) ||
 	    ((_MDInSoilAvailWaterCapID = MDSoilAvailWaterCapDef ()) == CMfailed) ||
-	    ((_MDInAirTMeanID   = MFVarGetID (MDVarAirTemperature,            "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
- 	    ((_MDOutEvaptrsID   = MFVarGetID (MDVarRainEvapotranspiration,    "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDOutSoilMoistID = MFVarGetID (MDVarRainSoilMoisture,          "mm",   MFOutput, MFState, MFInitial))  == CMfailed) ||
-        ((_MDOutSMoistChgID = MFVarGetID (MDVarRainSoilMoistChange,       "mm",   MFOutput, MFState, MFBoundary)) == CMfailed) ||
-	    (MFModelAddFunction (_MDRainSMoistChg) == CMfailed)) return (CMfailed);
+	    ((_MDInAirTMeanID          = MFVarGetID (MDVarAirTemperature,             "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+ 	    ((_MDOutEvaptrsID          = MFVarGetID (MDVarRainEvapotranspiration,     "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+	    ((_MDOutSoilMoistCellID    = MFVarGetID (MDVarRainSoilMoistureCell,       "mm",   MFOutput, MFState, MFInitial))  == CMfailed) ||
+	    ((_MDOutSoilMoistID        = MFVarGetID (MDVarRainSoilMoisture,           "mm",   MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDOutSMoistChgID        = MFVarGetID (MDVarRainSoilMoistChange,        "mm",   MFOutput, MFState, MFBoundary)) == CMfailed) ||
+ 	    (MFModelAddFunction (_MDRainSMoistChg) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Rainfed Soil Moisture");
 	return (_MDOutSMoistChgID);
 }

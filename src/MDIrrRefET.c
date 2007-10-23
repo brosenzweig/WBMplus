@@ -32,9 +32,9 @@ int MDIrrRefEvapotransDef () {
 	if (MDSPackChgDef () == CMfailed) return (CMfailed);
 
 	switch (optID) {
-		case MDinput:    _MDOutIrrRefEvapotransID = MFVarGetID (MDVarIrrRefEvapotrans, "mm", MFInput, MFFlux, false); break;
-		case MDhamon:    _MDOutIrrRefEvapotransID = MDIrrRefEvapotransFAODef   (); break;
-		case MDfao:      _MDOutIrrRefEvapotransID = MDIrrRefEvapotransHamonDef (); break;
+		case MDinput: _MDOutIrrRefEvapotransID = MFVarGetID (MDVarIrrRefEvapotrans, "mm", MFInput, MFFlux, false); break;
+		case MDhamon: _MDOutIrrRefEvapotransID = MDIrrRefEvapotransHamonDef (); break;
+		case MDfao:   _MDOutIrrRefEvapotransID = MDIrrRefEvapotransFAODef   (); break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
 	MFDefLeaving ("Irrigation Reference Evapotranspiration");

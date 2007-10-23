@@ -44,6 +44,6 @@ int MDRainSurfRunoffDef () {
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
-	MFDefLeaving  ("Rainfed Infiltration");
+	MFDefLeaving  ("Rainfed Surface Runoff");
 	return (_MDOutRainSurfRunoffID);
 }

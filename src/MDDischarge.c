@@ -34,7 +34,7 @@ static void _MDDischarge (int itemID) {
 	MFVarSetFloat (_MDOutDischargeID, itemID, discharge);
 }
 
-enum { MDhelp, MDinput, MDcalculate, MDcorrected };
+enum { MDinput, MDcalculate, MDcorrected };
 
 int MDDischargeDef() {
 	int optID = MFUnset;

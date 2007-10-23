@@ -30,8 +30,8 @@ static int _MDOutSmallResStorageChgID = MFUnset;
 static int _MDOutSmallResUptakeID     = MFUnset;
 
 static void _MDSmallReservoirRelease (int itemID) {
-// Input    
-	float irrAreaFraction;    // Irrigated area fraction
+// Input
+	float irrAreaFraction;    // Irrigated Area fraction
 	float surfRunoff;         // Surface runoff over non irrigated area [mm/dt]
 	float grossDemand ;       // Current irrigation water requirement [mm/dt]
 	float smallResCapacity;   // maximum storage [mm]
@@ -45,7 +45,7 @@ static void _MDSmallReservoirRelease (int itemID) {
 		smallResCapacity   = MFVarGetFloat (_MDInSmallResCapacityID, itemID, 0.0); 
 		smallResStorage    =
 		smallResStorageChg = MFVarGetFloat (_MDOutSmallResStorageID, itemID, 0.0);
-		surfRunoff         = MFVarGetFloat (_MDInRainSurfRunoffID,   itemID, 0.0) * (1.0 - irrAreaFraction);
+		surfRunoff         = MFVarGetFloat (_MDInRainSurfRunoffID,   itemID, 0.0);
 		grossDemand        = MFVarGetFloat (_MDInIrrGrossDemandID,   itemID, 0.0);
 
 		if (smallResCapacity < smallResStorage + surfRunoff) {
@@ -72,7 +72,6 @@ static void _MDSmallReservoirRelease (int itemID) {
 		MFVarSetFloat (_MDOutSmallResReleaseID,    itemID, smallResRelease);
 		MFVarSetFloat (_MDOutSmallResStorageID,    itemID, smallResStorage);
 		MFVarSetFloat (_MDOutSmallResStorageChgID, itemID, smallResStorageChg);
-
 	}
 	else {
 		MFVarSetFloat (_MDOutSmallResUptakeID,     itemID, 0.0);
@@ -92,9 +91,9 @@ int MDSmallReservoirReleaseDef () {
 		return (_MDOutSmallResReleaseID);
 
 	MFDefEntering("Small Reservoirs");
-
     if (((_MDInRainSurfRunoffID      = MDRainSurfRunoffDef ()) == CMfailed) ||
-        ((_MDOutSmallResUptakeID     = MFVarGetID (MDVarSmallResUptake,            "mm",  MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+		((_MDInIrrAreaFracID         = MFVarGetID (MDVarIrrAreaFraction,           "%",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDOutSmallResUptakeID     = MFVarGetID (MDVarSmallResUptake,            "mm",  MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
         ((_MDOutSmallResReleaseID    = MFVarGetID (MDVarSmallResRelease,           "mm",  MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
         ((_MDOutSmallResStorageID    = MFVarGetID (MDVarSmallResStorage,           "mm",  MFOutput, MFState, MFInitial))  == CMfailed) ||
         ((_MDOutSmallResStorageChgID = MFVarGetID (MDVarSmallResStorageChange,     "mm",  MFOutput, MFState, MFBoundary)) == CMfailed) ||

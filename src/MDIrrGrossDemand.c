@@ -38,27 +38,27 @@ typedef struct {
 static MDIrrigatedCrop *_MDirrigCropStruct = (MDIrrigatedCrop *) NULL;
 
 //Input
-static int _MDInIrrAreaFracID      = MFUnset;
-static int _MDInIrrRefEvapotransID = MFUnset;
-static int _MDInIrrIntensityID     = MFUnset;
-static int _MDInIrrEfficiencyID    = MFUnset;
-static int _MDInAirTemperatureID   = MFUnset;
-static int _MDInPrecipID           = MFUnset;
-static int _MDInSPackChgID         = MFUnset;
-static int _MDGrowingSeason1ID     = MFUnset;
-static int _MDGrowingSeason2ID     = MFUnset;
-static int _MDGrowingSeason3ID     = MFUnset;
-static int _MDInFldCapaID          = MFUnset;
-static int _MDInWltPntID           = MFUnset;
-static int _MDNumberOfIrrCrops     = MFUnset;
-static int *_MDInCropFractionIDs = (int *) NULL;
+static int _MDInIrrAreaFracID          = MFUnset;
+static int _MDInIrrRefEvapotransID     = MFUnset;
+static int _MDInIrrIntensityID         = MFUnset;
+static int _MDInIrrEfficiencyID        = MFUnset;
+static int _MDInAirTemperatureID       = MFUnset;
+static int _MDInPrecipID               = MFUnset;
+static int _MDInSPackChgID             = MFUnset;
+static int _MDGrowingSeason1ID         = MFUnset;
+static int _MDGrowingSeason2ID         = MFUnset;
+static int _MDGrowingSeason3ID         = MFUnset;
+static int _MDInFldCapaID              = MFUnset;
+static int _MDInWltPntID               = MFUnset;
+static int _MDNumberOfIrrCrops         = MFUnset;
+static int *_MDInCropFractionIDs       = (int *) NULL;
 //Output
-static int _MDOutIrrNetDemandID    = MFUnset;
-static int _MDOutTotalCropETPID    = MFUnset;
-static int _MDOutIrrGrossDemandID  = MFUnset;
-static int _MDOutIrrReturnFlowID   = MFUnset;
-static int _MDOutIrrSoilMoistID    = MFUnset;
-static int _MDOutIrrSMoistChgID    = MFUnset;
+static int _MDOutIrrNetDemandID        = MFUnset;
+static int _MDOutIrrEvapotranspID      = MFUnset;
+static int _MDOutIrrGrossDemandID      = MFUnset;
+static int _MDOutIrrReturnFlowID       = MFUnset;
+static int _MDOutIrrSoilMoistID        = MFUnset;
+static int _MDOutIrrSMoistChgID        = MFUnset;
 static int *_MDOutCropDeficitIDs = (int *) NULL;
 
 //Parameters
@@ -97,7 +97,6 @@ static void _MDIrrGrossDemand (int itemID) {
 	_MDParIrrDailyPercolation = 1.0;
 	float ReqpondingDepth = 80.0;
 	float pondingDepth;
-	// float totalCropETP=0;
 
 	irrAreaFrac = MFVarGetFloat(_MDInIrrAreaFracID, itemID, 0.0);
 	if (irrAreaFrac > 0.0) {
@@ -311,19 +310,19 @@ static void _MDIrrGrossDemand (int itemID) {
 		if (isnan(totGrossDemand))
 			CMmsgPrint(CMmsgUsrError,"GrossDEmand  nan! LAT %f LON %f irrAreaFrac %f %i\n", MFModelGetLatitude(itemID), MFModelGetLongitude(itemID), irrAreaFrac,itemID);
 
-		MFVarSetFloat(_MDOutIrrSMoistChgID,   itemID, meanSMChange        * irrAreaFrac);
-		MFVarSetFloat(_MDOutIrrNetDemandID,   itemID, totalNetIrrDemand   * irrAreaFrac);
-		MFVarSetFloat(_MDOutIrrGrossDemandID, itemID, totGrossDemand      * irrAreaFrac);
-		MFVarSetFloat(_MDOutIrrReturnFlowID,  itemID, totalIrrPercolation * irrAreaFrac);
-		MFVarSetFloat(_MDOutTotalCropETPID,   itemID, totalCropETP        * irrAreaFrac);	
+		MFVarSetFloat(_MDOutIrrSMoistChgID,       itemID, meanSMChange        * irrAreaFrac);
+		MFVarSetFloat(_MDOutIrrNetDemandID,       itemID, totalNetIrrDemand   * irrAreaFrac);
+		MFVarSetFloat(_MDOutIrrGrossDemandID,     itemID, totGrossDemand      * irrAreaFrac);
+		MFVarSetFloat(_MDOutIrrReturnFlowID,      itemID, totalIrrPercolation * irrAreaFrac);
+		MFVarSetFloat(_MDOutIrrEvapotranspID,     itemID, totalCropETP        * irrAreaFrac);	
 	}
 	else { // cell is not irrigated
-		MFVarSetFloat(_MDOutIrrSoilMoistID,   itemID, 0.0);
-		MFVarSetFloat(_MDOutIrrSMoistChgID,   itemID, 0.0);
- 		MFVarSetFloat(_MDOutIrrNetDemandID,   itemID, 0.0);
-		MFVarSetFloat(_MDOutIrrGrossDemandID, itemID, 0.0);
-		MFVarSetFloat(_MDOutIrrReturnFlowID,  itemID, 0.0);
-		MFVarSetFloat(_MDOutTotalCropETPID,   itemID, 0.0);	
+		MFVarSetFloat(_MDOutIrrSoilMoistID,       itemID, 0.0);
+		MFVarSetFloat(_MDOutIrrSMoistChgID,       itemID, 0.0);
+ 		MFVarSetFloat(_MDOutIrrNetDemandID,       itemID, 0.0);
+		MFVarSetFloat(_MDOutIrrGrossDemandID,     itemID, 0.0);
+		MFVarSetFloat(_MDOutIrrReturnFlowID,      itemID, 0.0);
+		MFVarSetFloat(_MDOutIrrEvapotranspID,     itemID, 0.0);	
 	}
 }
 
@@ -358,24 +357,24 @@ int MDIrrGrossDemandDef() {
 				CMmsgPrint(CMmsgUsrError,"Error reading crop parameter file   : %s \n", CropParameterFileName);
 				return CMfailed;
 			}
-			if (((_MDInPrecipID           = MDPrecipitationDef    ()) == CMfailed) ||	 		 
-			    ((_MDInSPackChgID         = MDSPackChgDef         ()) == CMfailed) ||
-			    ((_MDInIrrRefEvapotransID = MDIrrRefEvapotransDef ()) == CMfailed) ||
-			    ((_MDInAirTemperatureID   = MFVarGetID (MDVarAirTemperature,         "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDInWltPntID           = MFVarGetID (MDVarSoilWiltingPoint,       "mm/m", MFInput,  MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDInFldCapaID          = MFVarGetID (MDVarSoilFieldCapacity,      "mm/m", MFInput,  MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDGrowingSeason1ID     = MFVarGetID (MDVarIrrGrowingSeason1Start, "DoY",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDGrowingSeason2ID     = MFVarGetID (MDVarIrrGrowingSeason2Start, "DoY",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDGrowingSeason3ID     = MFVarGetID (MDVarIrrGrowingSeason3Start, "DoY",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDInIrrIntensityID     = MFVarGetID (MDVarIrrIntensity,           "-",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDInIrrEfficiencyID    = MFVarGetID (MDVarIrrEfficiency,          "-",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDInIrrAreaFracID      = MFVarGetID (MDVarIrrAreaFraction,        "%",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDOutIrrGrossDemandID  = MFVarGetID (MDVarIrrGrossDemand,         "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-			    ((_MDOutIrrReturnFlowID   = MFVarGetID (MDVarIrrReturnFlow,          "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-			    ((_MDOutIrrNetDemandID    = MFVarGetID (MDVarIrrNetWaterDemand,      "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-			    ((_MDOutIrrSoilMoistID    = MFVarGetID (MDVarIrrSoilMoisture,        "mm",   MFOutput, MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDOutIrrSMoistChgID    = MFVarGetID (MDVarIrrSoilMoistChange,     "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-			    ((_MDOutTotalCropETPID    = MFVarGetID (MDVarIrrCropETP,             "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed))
+			if (((_MDInPrecipID              = MDPrecipitationDef    ()) == CMfailed) ||	 		 
+			    ((_MDInSPackChgID            = MDSPackChgDef         ()) == CMfailed) ||
+			    ((_MDInIrrRefEvapotransID    = MDIrrRefEvapotransDef ()) == CMfailed) ||
+			    ((_MDInAirTemperatureID      = MFVarGetID (MDVarAirTemperature,         "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDInWltPntID              = MFVarGetID (MDVarSoilWiltingPoint,       "mm/m", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDInFldCapaID             = MFVarGetID (MDVarSoilFieldCapacity,      "mm/m", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDGrowingSeason1ID        = MFVarGetID (MDVarIrrGrowingSeason1Start, "DoY",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDGrowingSeason2ID        = MFVarGetID (MDVarIrrGrowingSeason2Start, "DoY",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDGrowingSeason3ID        = MFVarGetID (MDVarIrrGrowingSeason3Start, "DoY",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDInIrrIntensityID        = MFVarGetID (MDVarIrrIntensity,           "-",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDInIrrEfficiencyID       = MFVarGetID (MDVarIrrEfficiency,          "-",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDInIrrAreaFracID         = MFVarGetID (MDVarIrrAreaFraction,        "%",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDOutIrrGrossDemandID     = MFVarGetID (MDVarIrrGrossDemand,         "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+			    ((_MDOutIrrReturnFlowID      = MFVarGetID (MDVarIrrReturnFlow,          "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+			    ((_MDOutIrrNetDemandID       = MFVarGetID (MDVarIrrNetWaterDemand,      "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+			    ((_MDOutIrrSoilMoistID       = MFVarGetID (MDVarIrrSoilMoisture,        "mm",   MFOutput, MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDOutIrrSMoistChgID       = MFVarGetID (MDVarIrrSoilMoistChange,     "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+			    ((_MDOutIrrEvapotranspID     = MFVarGetID (MDVarIrrEvapotranspiration,  "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed))
 				return (CMfailed);
 
 			for (i = 0; i < _MDNumberOfIrrCrops; i++) {
@@ -386,7 +385,7 @@ int MDIrrGrossDemandDef() {
 				}
 			}
 			for (i=0;i<_MDNumberOfIrrCrops+1;i++) {
-				sprintf (varname, "__CropSMDef%02d", i + 1);  // Output Soil Moisture Deficit per croptype
+				sprintf (varname, "CropSMDeficiency%02d", i + 1);  // Output Soil Moisture Deficit per croptype
 				if ((_MDOutCropDeficitIDs [i] = MFVarGetID (varname, "mm", MFOutput, MFState, MFInitial))  == CMfailed) {
 					CMmsgPrint (CMmsgUsrError,"MFFAult in MDCropDeficit\n");
 					return CMfailed;

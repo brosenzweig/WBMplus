@@ -61,7 +61,7 @@ int MDAccumEvapDef() {
 	if (_MDOutAccEvapID != MFUnset) return (_MDOutAccEvapID);
 
 	MFDefEntering ("Accumulate Evapotranspiration");
-	if (((_MDInEvapID     = MFVarGetID (MDVarEvapotranspiration,    "mm",   MFInput, MFFlux,  MFBoundary)) == CMfailed) ||
+	if (((_MDInEvapID     = MDEvapotranspirationDef ()) == CMfailed) ||
 	    ((_MDOutAccEvapID = MFVarGetID (MDVarAccEvapotranspiration, "m3/s", MFRoute, MFState, MFBoundary))  == CMfailed) ||
 	    (MFModelAddFunction(_MDAccumEvap) == CMfailed)) return (CMfailed);
 

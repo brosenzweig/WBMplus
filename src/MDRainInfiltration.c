@@ -17,19 +17,23 @@ balazs.fekete@unh.edu
 #include <MD.h>
 
 // Input
-static int _MDInRainWaterSurplusID  = MFUnset;
+static int _MDInRainWaterSurplusID      = MFUnset;
 // Output
-static int _MDOutRainSurfRunoffID   = MFUnset;
-static int _MDOutRainInfiltrationID = MFUnset;
+static int _MDOutRainSurfRunoffID       = MFUnset;
+static int _MDOutRainInfiltrationID     = MFUnset;
 static float _MDInfiltrationFrac = 0.5;
 
 static void _MDRainInfiltrationSimple (int itemID) {
 
 	float surplus;
+	float surfRunoff;
+	float infiltration;
 
 	surplus = MFVarGetFloat(_MDInRainWaterSurplusID, itemID, 0.0);
-	MFVarSetFloat (_MDOutRainSurfRunoffID,   itemID, (1.0 - _MDInfiltrationFrac) * surplus);
-	MFVarSetFloat (_MDOutRainInfiltrationID, itemID, _MDInfiltrationFrac         * surplus);
+	surfRunoff   = surplus * (1.0 - _MDInfiltrationFrac);
+	infiltration = surplus *_MDInfiltrationFrac;
+	MFVarSetFloat (_MDOutRainSurfRunoffID,       itemID, surfRunoff);
+	MFVarSetFloat (_MDOutRainInfiltrationID,     itemID, infiltration);
 }
 
 enum { MDinput, MDsimple, MDvarying };
@@ -55,8 +59,8 @@ int MDRainInfiltrationDef () {
 			if ((_MDInRainWaterSurplusID = MDRainWaterSurplusDef ()) == CMfailed) return (CMfailed);
 			if (((optStr = MFOptionGet (MDParInfiltrationFrac))  != (char *) NULL) && (sscanf (optStr,"%f",&par) == 1))
 				_MDInfiltrationFrac = par;
-			if (((_MDOutRainSurfRunoffID   = MFVarGetID (MDVarRainSurfRunoff,   "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-			    ((_MDOutRainInfiltrationID = MFVarGetID (MDVarRainInfiltration, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+			if (((_MDOutRainSurfRunoffID       = MFVarGetID (MDVarRainSurfRunoff,       "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+			    ((_MDOutRainInfiltrationID     = MFVarGetID (MDVarRainInfiltration,     "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
 			    (MFModelAddFunction (_MDRainInfiltrationSimple) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);

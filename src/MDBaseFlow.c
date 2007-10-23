@@ -17,14 +17,12 @@ balazs.fekete@unh.edu
 #include <MD.h>
 
 // Input
-static int _MDInRainSurfRunoffID        = MFUnset;
 static int _MDInRechargeID              = MFUnset;
 static int _MDInIrrGrossDemandID        = MFUnset;
 static int _MDInIrrReturnFlowID         = MFUnset;
 static int _MDInIrrAreaFracID           = MFUnset;
 static int _MDInSmallResReleaseID		= MFUnset;
 // Output
-static int _MDOutSurfRunoffID           = MFUnset;
 static int _MDOutGrdWatID               = MFUnset;
 static int _MDOutGrdWatChgID            = MFUnset;
 static int _MDOutBaseFlowID             = MFUnset;
@@ -40,14 +38,12 @@ static void _MDBaseFlow (int itemID) {
 	float irrAreaFraction;   // Irrigated area fraction
 	float smallResRelease;   // Release from small reservoirs that can be used for irrigation (preferentially!), mm/dt
 // Output
-	float surfRunoff;        // Surface runoff [mm/dt]
 	float grdWater;          // Groundwater size   [mm]
 	float grdWaterChg;       // Groundwater change [mm/dt]
 	float baseFlow;          // Base flow from groundwater [mm/dt]
 	float irrUptakeGrdWater; // Irrigational water uptake from shallow groundwater [mm/dt]
 	float irrUptakeExt;      // Unmet irrigational water demand [mm/dt]
 
-	surfRunoff  = MFVarGetFloat (_MDInRainSurfRunoffID, itemID, 0.0);
  	recharge    = MFVarGetFloat (_MDInRechargeID,       itemID, 0.0);
 	grdWaterChg = grdWater = MFVarGetFloat (_MDOutGrdWatID, itemID, 0.0);
 
@@ -55,8 +51,6 @@ static void _MDBaseFlow (int itemID) {
 	    (_MDInIrrReturnFlowID  != MFUnset) &&
 	    (_MDInIrrAreaFracID    != MFUnset) &&
 		((irrAreaFraction = MFVarGetFloat (_MDInIrrAreaFracID,     itemID, 0.0)) > 0.0)) {
-		surfRunoff = surfRunoff * (1.0 - irrAreaFraction);
-		recharge   = recharge   * (1.0 - irrAreaFraction);
 	 	recharge   = recharge + MFVarGetFloat (_MDInIrrReturnFlowID,   itemID, 0.0);
 		irrDemand  = MFVarGetFloat (_MDInIrrGrossDemandID,  itemID, 0.0);
 		
@@ -86,7 +80,6 @@ static void _MDBaseFlow (int itemID) {
 	else {
 		grdWaterChg = baseFlow = 0.0;
 	}
-	MFVarSetFloat (_MDOutSurfRunoffID, itemID, surfRunoff);
 	MFVarSetFloat (_MDOutGrdWatID,     itemID, grdWater);
     MFVarSetFloat (_MDOutGrdWatChgID,  itemID, grdWaterChg);
 	MFVarSetFloat (_MDOutBaseFlowID,   itemID, baseFlow);
@@ -111,9 +104,7 @@ int MDBaseFlowDef () {
 		    ((_MDInIrrAreaFracID        = MFVarGetID (MDVarIrrAreaFraction,   "-",  MFInput,  MFState, MFBoundary)) == CMfailed))
 			return CMfailed;
 	}
-	if (((_MDInRainSurfRunoffID         = MFVarGetID (MDVarRainSurfRunoff,    "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDOutSurfRunoffID            = MFVarGetID (MDVarSurfRunoff,        "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDOutGrdWatID                = MFVarGetID (MDVarGroundWater,       "mm", MFOutput, MFState, MFInitial))  == CMfailed) ||
+	if (((_MDOutGrdWatID                = MFVarGetID (MDVarGroundWater,       "mm", MFOutput, MFState, MFInitial))  == CMfailed) ||
 	    ((_MDOutGrdWatChgID             = MFVarGetID (MDVarGroundWaterChange, "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
 	    ((_MDOutBaseFlowID              = MFVarGetID (MDVarBaseFlow,          "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
 	    (MFModelAddFunction (_MDBaseFlow) == CMfailed)) return (CMfailed);
