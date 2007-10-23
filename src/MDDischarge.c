@@ -43,7 +43,7 @@ int MDDischargeDef() {
 
 	if (_MDOutDischargeID != MFUnset) return (_MDOutDischargeID);
 
-	MFDefEntering (MDOptDischarge);
+	MFDefEntering ("Discharge");
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options,optStr,true);
 	switch (optID) {
 		case MDinput: _MDOutDischargeID = MFVarGetID (MDVarDischarge,     "m3/s",  MFInput,  MFState, MFBoundary); break;
@@ -57,6 +57,6 @@ int MDDischargeDef() {
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
-	MFDefLeaving ("Discharge");
+	MFDefLeaving  ("Discharge");
 	return (_MDOutDischargeID);
 }

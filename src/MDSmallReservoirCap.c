@@ -4,7 +4,7 @@ GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
 Copyright 1994-2007, University of New Hampshire
 
-MDSmallReservoirs.c
+MDSmallReservoirCap.c
 
 balazs.fekete@unh.edu
 
@@ -30,7 +30,7 @@ static int _MDOutSmallResCapacityID          = MFUnset;
 static void _MDSmallReservoirCapacity (int itemID) {
 // Input
 	float irrAreaFraction;      // Irrigated arrea fraction
-	float accumSurfaceRO;       // Accumulated surface runoff [mm]
+	float accumSurfRunoff;      // Accumulated surface runoff [mm]
 	float accumIrrDemand;       // Accumulated irrigational water demand [mm]
 // Output
  	float smallResCapacity;     // maximum storage, m3
@@ -38,19 +38,19 @@ static void _MDSmallReservoirCapacity (int itemID) {
  	float potResCapacity;
 
  	irrAreaFraction  = MFVarGetFloat (_MDInIrrAreaID,           itemID, 0.0);
- 	accumSurfaceRO   = MFVarGetFloat (_MDInRainSurfRunoffID,     itemID, 0.0) * (1.0 - irrAreaFraction);
- 	accumIrrDemand   = MFVarGetFloat (_MDInIrrGrossDemandID,    itemID, 0.0) * irrAreaFraction;
+ 	accumSurfRunoff  = MFVarGetFloat (_MDInRainSurfRunoffID,    itemID, 0.0) * (1.0 - irrAreaFraction);
+ 	accumIrrDemand   = MFVarGetFloat (_MDInIrrGrossDemandID,    itemID, 0.0);
 	smallResCapacity = MFVarGetFloat (_MDOutSmallResCapacityID, itemID, 0.0); 
 
  	if (MFDateGetDayOfYear () > 1) { 
- 		accumSurfaceRO   += MFVarGetFloat (_MDOutRainSurfRunoffAccumulatedID, itemID, 0.0);
- 		accumIrrDemand   += MFVarGetFloat (_MDOutIrrGrossDemandAccumulatedID, itemID, 0.0);
+ 		accumSurfRunoff += MFVarGetFloat (_MDOutRainSurfRunoffAccumulatedID, itemID, 0.0);
+ 		accumIrrDemand  += MFVarGetFloat (_MDOutIrrGrossDemandAccumulatedID, itemID, 0.0);
 	}
  
- 	potResCapacity   = accumSurfaceRO   < accumIrrDemand ? accumSurfaceRO   : accumIrrDemand;
+ 	potResCapacity   = accumSurfRunoff  < accumIrrDemand ? accumSurfRunoff  : accumIrrDemand;
  	smallResCapacity = smallResCapacity > potResCapacity ? smallResCapacity : potResCapacity;
  
- 	MFVarSetFloat (_MDOutRainSurfRunoffAccumulatedID, itemID, accumSurfaceRO);
+ 	MFVarSetFloat (_MDOutRainSurfRunoffAccumulatedID, itemID, accumSurfRunoff);
  	MFVarSetFloat (_MDOutIrrGrossDemandAccumulatedID, itemID, accumIrrDemand);
  	MFVarSetFloat (_MDOutSmallResCapacityID,          itemID, smallResCapacity);
 }
@@ -77,7 +77,7 @@ int MDSmallReservoirCapacityDef () {
 			case MDcalculate:
 				if ((_MDInIrrGrossDemandID == CMfailed) ||
 				    ((_MDInIrrAreaID                    = MFVarGetID (MDVarIrrAreaFraction,           "-",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-				    ((_MDInRainSurfRunoffID              = MFVarGetID (MDVarSurfaceRO,                 "mm",  MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+				    ((_MDInRainSurfRunoffID             = MFVarGetID (MDVarRainSurfRunoff,            "mm",  MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
 				    ((_MDOutRainSurfRunoffAccumulatedID = MFVarGetID ("__SurfaceROAccumulated",       "mm",  MFOutput, MFFlux,  MFInitial))  == CMfailed) ||
 				    ((_MDOutIrrGrossDemandAccumulatedID = MFVarGetID ("__GrossDemandAccumulated",     "mm",  MFOutput, MFFlux,  MFInitial))  == CMfailed) ||
 				    ((_MDOutSmallResCapacityID          = MFVarGetID (MDVarSmallResCapacity,          "mm",  MFOutput, MFState, MFInitial))  == CMfailed) ||

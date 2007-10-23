@@ -46,7 +46,7 @@ static void _MDSmallReservoirRelease (int itemID) {
 		smallResStorage    =
 		smallResStorageChg = MFVarGetFloat (_MDOutSmallResStorageID, itemID, 0.0);
 		surfRunoff         = MFVarGetFloat (_MDInRainSurfRunoffID,   itemID, 0.0) * (1.0 - irrAreaFraction);
-		grossDemand        = MFVarGetFloat (_MDInIrrGrossDemandID,   itemID, 0.0) * irrAreaFraction;
+		grossDemand        = MFVarGetFloat (_MDInIrrGrossDemandID,   itemID, 0.0);
 
 		if (smallResCapacity < smallResStorage + surfRunoff) {
 			smallResUptake  = smallResCapacity - smallResStorage;

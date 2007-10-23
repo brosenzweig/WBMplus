@@ -60,15 +60,20 @@ static void _MDSoilMoistChg (int itemID) {
 }
 
 int MDSoilMoistChgDef () {
+	int ret;
 	if (_MDOutSMoistChgID != MFUnset) return (_MDOutSMoistChgID);
 
 	MFDefEntering ("Soil Moisture");
+
+	if (((ret = MDIrrGrossDemandDef ()) != MFUnset) &&
+	    ((ret == CMfailed) ||
+	     ((_MDInIrrSoilMoistID     = MFVarGetID (MDVarIrrSoilMoisture,     "mm",   MFInput, MFState, MFBoundary)) == CMfailed) ||
+	     ((_MDInIrrSoilMoistChgID  = MFVarGetID (MDVarIrrSoilMoistChange,  "mm",   MFInput, MFFlux,  MFBoundary)) == CMfailed) ||
+	     ((_MDInIrrAreaFracID      = MFVarGetID (MDVarIrrAreaFraction,     "%",    MFInput, MFState, MFBoundary)) == CMfailed)))
+	     return (CMfailed);
 	if (((_MDInSoilAvailWaterCapID = MDSoilAvailWaterCapDef ()) == CMfailed) ||
 	    ((_MDInRainSoilMoistID     = MFVarGetID (MDVarRainSoilMoisture,    "mm",   MFInput, MFState, MFInitial))  == CMfailed) ||
         ((_MDInRainSoilMoistChgID  = MFVarGetID (MDVarRainSoilMoistChange, "mm",   MFInput, MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDInIrrSoilMoistID      = MFVarGetID (MDVarIrrSoilMoisture,     "mm",   MFInput, MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDInIrrSoilMoistChgID   = MFVarGetID (MDVarIrrSoilMoistChange,  "mm",   MFInput, MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDInIrrAreaFracID       = MFVarGetID (MDVarIrrAreaFraction,     "%",    MFInput, MFState, MFBoundary)) == CMfailed) ||
 	    (MFModelAddFunction (_MDSoilMoistChg) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Soil Moisture");
 	return (_MDOutSMoistChgID);

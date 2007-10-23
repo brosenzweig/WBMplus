@@ -180,7 +180,7 @@ extern "C" {
 #define MDVarSRadI0HDay                      "I0HDay"
 #define MDVarStemAreaIndex                   "StemAreaIndex"
 #define MDVarSunShine                        "SunShine"
-#define MDVarSurfaceRO                       "SurfaceRunoff"
+#define MDVarSurfRunoff                      "SurfaceRunoff"
 #define MDVarVaporPressure                   "VaporPressure"
 #define MDVarTEMVegCover                     "TEMVegCover"
 #define MDVarWBMCover                        "WBMCover"
