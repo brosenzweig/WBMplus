@@ -33,6 +33,8 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDIrrRefET.o\
        $(OBJ)/MDIrrRefETHamon.o\
        $(OBJ)/MDIrrRefETFAO.o\
+       $(OBJ)/MDIrrUptakeRiver.o\
+       $(OBJ)/MDIrrUptakeGrdWater.o\
        $(OBJ)/MDPrecipitation.o\
        $(OBJ)/MDRainInfiltration.o\
        $(OBJ)/MDRainIntercept.o\

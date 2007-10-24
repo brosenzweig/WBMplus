@@ -87,8 +87,7 @@ extern "C" {
 
 #define MDVarIrrAreaFraction                 "IrrigatedAreaFraction"
 #define MDVarIrrEfficiency                   "IrrigationEfficiency"
-#define MDVarIrrEvapotranspiration           "IrrCropEvapotranspiration"
-#define MDVarIrrEvapotranspCell              "IrrCropEvapotranspirationCell"
+#define MDVarIrrEvapotranspiration           "IrrEvapotranspiration"
 #define MDParIrrDailyPercolationRate         "IrrDailyPercolationRate"
 #define MDVarIrrGrossDemand                  "IrrGrossDemand"
 #define MDVarIrrGrowingSeason1Start          "GrowingSeason1_Start"
@@ -102,6 +101,7 @@ extern "C" {
 #define MDVarIrrReturnFlow                   "IrrReturnFlow"
 #define MDVarIrrSoilMoisture                 "IrrSoilMoisture"
 #define MDVarIrrSoilMoistChange              "IrrSoilMoistChange"
+#define MDVarIrrUptakeBalance                "IrrUptakeBalance"
 #define MDVarIrrUptakeExternal               "__IrrUptakeExternal"
 #define MDVarIrrUptakeExcess                 "IrrUptakeExcess"
 #define MDVarIrrUptakeGrdWater               "IrrUptakeGroundWater"
@@ -258,6 +258,8 @@ int MDIrrGrossDemandDef();
 int MDIrrRefEvapotransDef ();
 int MDIrrRefEvapotransFAODef ();
 int MDIrrRefEvapotransHamonDef ();
+int MDIrrUptakeRiverDef ();
+int MDIrrUptakeGrdWaterDef ();
 int MDReservoirDef ();
 int MDLandCoverDef ();
 int MDLeafAreaIndexDef ();

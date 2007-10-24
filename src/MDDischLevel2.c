@@ -4,7 +4,7 @@ GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
 Copyright 1994-2007, University of New Hampshire
 
-MDDischCalculated.c
+MDDischLevel2.c
 
 balazs.fekete@unh.edu
 
@@ -33,35 +33,36 @@ static void _MDDischLevel2 (int itemID) {
 	float discharge_mm;
 
 	discharge = MFVarGetFloat (_MDInDischLevel3ID, itemID, 0.0);
+
 	if (_MDInIrrUptakeExternalID != MFUnset) {
-		discharge_mm = discharge * 1000.0 * MFModelGet_dt () / MFModelGetArea (itemID);
 		irrUptakeExt = MFVarGetFloat (_MDInIrrUptakeExternalID, itemID, 0.0);
-		if (discharge_mm > irrUptakeExt) {
-			irrUptakeRiver  = irrUptakeExt;
-			irrUptakeExcess = 0.0;
-			discharge_mm    = discharge_mm - irrUptakeRiver;
-			
+		if (_MDOutIrrUptakeRiverID != MFUnset) {
+			discharge_mm = discharge * 1000.0 * MFModelGet_dt () / MFModelGetArea (itemID);
+			if (discharge_mm > irrUptakeExt) {
+				irrUptakeRiver  = irrUptakeExt;
+				irrUptakeExcess = 0.0;
+				discharge_mm    = discharge_mm - irrUptakeRiver;
+			}
+			else {
+				irrUptakeRiver  = discharge_mm;
+				irrUptakeExcess = irrUptakeExt - discharge_mm;
+				discharge_mm    = 0.0;
+			}
+			MFVarSetFloat (_MDOutIrrUptakeRiverID,  itemID, irrUptakeRiver);
 		}
-		else {
-			irrUptakeRiver  = discharge_mm;
-			irrUptakeExcess = irrUptakeExt - discharge_mm;
-			if (irrUptakeRiver < -0.000001)printf("riverabstr = %f Q %f irrUptakeExt %f irrUptakeExcess %f\n",irrUptakeRiver, discharge_mm,irrUptakeExt, irrUptakeExcess);
-			discharge_mm    = 0.0;
-			
-		}
-		 
-		MFVarSetFloat (_MDOutIrrUptakeRiverID,  itemID, irrUptakeRiver);
+		else irrUptakeExcess = irrUptakeExt;
 		MFVarSetFloat (_MDOutIrrUptakeExcessID, itemID, irrUptakeExcess);
 		discharge = discharge_mm * MFModelGetArea (itemID) / (1000.0 * MFModelGet_dt ());
 	}
 	MFVarSetFloat (_MDOutDischLevel2ID,  itemID, discharge);
-	
-
 }
 
+enum { MDnone, MDcalculate };
+
 int MDDischLevel2Def() {
-	const char *optStr;
-	const char *options [] = { MDNoneStr, (char *) NULL };
+	int optID = MFUnset, ret;
+	const char *optStr, *optName = "IrrUptakeRiver";
+	const char *options [] = { MDNoneStr, MDCalculateStr, (char *) NULL };
 
 	if (_MDOutDischLevel2ID != MFUnset) return (_MDOutDischLevel2ID);
 
@@ -69,12 +70,19 @@ int MDDischLevel2Def() {
 	if (((_MDInDischLevel3ID  = MDDischLevel3Def ()) == CMfailed) ||
 	    ((_MDOutDischLevel2ID = MFVarGetID ("__DischLevel2",  "m/3", MFOutput, MFState, false)) == CMfailed))
 	    return (CMfailed);
-	if (((optStr = MFOptionGet (MDOptIrrigation)) != (char *) NULL) && (CMoptLookup (options,optStr,true) == CMfailed)) {
-		if (((MDIrrGrossDemandDef ()) == CMfailed) ||
-		    ((_MDInIrrUptakeExternalID = MFVarGetID (MDVarIrrUptakeExternal, "mm",  MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-		    ((_MDOutIrrUptakeRiverID   = MFVarGetID (MDVarIrrUptakeRiver,    "mm",  MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-		    ((_MDOutIrrUptakeExcessID  = MFVarGetID (MDVarIrrUptakeExcess,   "mm",  MFOutput, MFFlux,  MFBoundary)) == CMfailed))
-			return (CMfailed);
+	if ((ret = MDIrrGrossDemandDef ()) != MFUnset) {
+		if (ret == CMfailed) return (CMfailed);
+		if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);
+		switch (optID) {
+			case MDcalculate:
+				if  ((_MDOutIrrUptakeRiverID   = MDIrrUptakeRiverDef ()) == CMfailed) return (CMfailed);
+			case MDnone:
+				if (((_MDInIrrUptakeExternalID = MFVarGetID (MDVarIrrUptakeExternal, "mm",  MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+				    ((_MDOutIrrUptakeExcessID  = MFVarGetID (MDVarIrrUptakeExcess,   "mm",  MFOutput, MFFlux,  MFBoundary)) == CMfailed))
+					return (CMfailed);
+				break;
+			default: MFOptionMessage (optName, optStr, options); return (CMfailed);
+		}
 	}
 	if (MFModelAddFunction(_MDDischLevel2) == CMfailed) return (CMfailed);
 	MFDefLeaving ("Discharge Level 2");

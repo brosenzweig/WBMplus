@@ -56,19 +56,22 @@ static void _MDBaseFlow (int itemID) {
 		
 		smallResRelease = _MDInSmallResReleaseID != MFUnset ? MFVarGetFloat(_MDInSmallResReleaseID,itemID,0.0) : 0.0;
 
-		if (irrDemand < grdWater + smallResRelease) {
-			// Irrigation demand is satisfied from small reservoir and groundwater storage 
-			irrUptakeGrdWater = irrDemand - smallResRelease;
-			irrUptakeExt = 0.0;
-			grdWater = grdWater - irrUptakeGrdWater;
+		if (_MDOutIrrUptakeGrdWaterID != MFUnset) {
+			if (irrDemand < grdWater + smallResRelease) {
+				// Irrigation demand is satisfied from small reservoir and groundwater storage 
+				irrUptakeGrdWater = irrDemand - smallResRelease;
+				irrUptakeExt = 0.0;
+				grdWater = grdWater - irrUptakeGrdWater;
+			}
+			else {
+				// Irrigation demand needs external source
+				irrUptakeGrdWater = grdWater;
+				irrUptakeExt      = irrDemand - irrUptakeGrdWater - smallResRelease;
+				grdWater = 0.0;
+			}		
+			MFVarSetFloat (_MDOutIrrUptakeGrdWaterID, itemID, irrUptakeGrdWater);
 		}
-		else {
-			// Irrigation demand needs external source
-			irrUptakeGrdWater = grdWater;
-		    irrUptakeExt      = irrDemand - irrUptakeGrdWater - smallResRelease;
-		    grdWater = 0.0;
-		}		
-		MFVarSetFloat (_MDOutIrrUptakeGrdWaterID, itemID, irrUptakeGrdWater);
+		else irrUptakeExt = irrDemand - smallResRelease;
 		MFVarSetFloat (_MDOutIrrUptakeExternalID, itemID, irrUptakeExt);
 	}
 
@@ -98,10 +101,10 @@ int MDBaseFlowDef () {
 	    ((_MDInIrrGrossDemandID = MDIrrGrossDemandDef   ()) == CMfailed)) return (CMfailed);
 	if ( _MDInIrrGrossDemandID != MFUnset) {
 		if (((_MDInSmallResReleaseID    = MDSmallReservoirReleaseDef ()) == CMfailed) ||
+		    ((_MDInIrrAreaFracID        = MFVarGetID (MDVarIrrAreaFraction,   "-",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
 		    ((_MDInIrrReturnFlowID      = MFVarGetID (MDVarIrrReturnFlow,     "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-		    ((_MDOutIrrUptakeGrdWaterID = MFVarGetID (MDVarIrrUptakeGrdWater, "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
 		    ((_MDOutIrrUptakeExternalID = MFVarGetID (MDVarIrrUptakeExternal, "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-		    ((_MDInIrrAreaFracID        = MFVarGetID (MDVarIrrAreaFraction,   "-",  MFInput,  MFState, MFBoundary)) == CMfailed))
+		    ((_MDOutIrrUptakeGrdWaterID = MDIrrUptakeGrdWaterDef     ()) == CMfailed))
 			return CMfailed;
 	}
 	if (((_MDOutGrdWatID                = MFVarGetID (MDVarGroundWater,       "mm", MFOutput, MFState, MFInitial))  == CMfailed) ||
