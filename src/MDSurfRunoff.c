@@ -24,10 +24,10 @@ static int _MDOutSurfRunoffID    = MFUnset;
 
 static void _MDSurfRunoff (int itemID) {	
 // Input
-	float surfRunoff;    // Surface runoff [mm/dt]
+	float surfRunoff; // Surface runoff [mm/dt]
 	
 	surfRunoff = MFVarGetFloat (_MDInRainSurfRunoffID,     itemID, 0.0)
-	           + (_MDInSmallResUptakeID != MFUnset ? MFVarGetFloat (_MDInSmallResUptakeID, itemID, 0.0) : 0.0);
+	           - (_MDInSmallResUptakeID != MFUnset ? MFVarGetFloat (_MDInSmallResUptakeID, itemID, 0.0) : 0.0);
 	MFVarSetFloat (_MDOutSurfRunoffID,  itemID, surfRunoff);
 }
 

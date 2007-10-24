@@ -88,7 +88,7 @@ static void _MDWaterBalance(int itemID) {
 		MFVarSetFloat (_MDOutIrrUptakeBalanceID, itemID, balance);
 	}
 
-	balance = precip + irrUptakeRiver + irrUptakeGrdWater + irrUptakeExcess
+	balance = precip + irrUptakeRiver + irrUptakeExcess
 	        - (etp + runoff + grdWaterChg + snowPackChg + soilMoistChg + smallResStorageChg);
 	MFVarSetFloat (_MDOutWaterBalanceID, itemID , balance);
 }
