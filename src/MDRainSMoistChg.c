@@ -107,7 +107,7 @@ int MDRainSMoistChgDef () {
 	MFDefEntering ("Rainfed Soil Moisture");
 	if (((ret = MDIrrGrossDemandDef ()) != MFUnset) &&
 	    ((ret == CMfailed) ||
-	     ((_MDInIrrAreaFracID      = MFVarGetID (MDVarIrrAreaFraction,      "%",  MFInput,  MFState, MFBoundary)) == CMfailed)))
+	     ((_MDInIrrAreaFracID      = MFVarGetID (MDVarIrrAreaFraction,      "-",  MFInput,  MFState, MFBoundary)) == CMfailed)))
 	     return (CMfailed);
 	if (((_MDInPrecipID            = MDPrecipitationDef     ()) == CMfailed) ||
 	    ((_MDInSPackChgID          = MDSPackChgDef          ()) == CMfailed) ||

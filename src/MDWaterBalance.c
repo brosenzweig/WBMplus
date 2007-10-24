@@ -63,13 +63,15 @@ static void _MDWaterBalance(int itemID) {
 	float smallResRelease    = 0.0;
 // Output
 	float balance;
+// Local
+	float snowMelt;
 	
 	if (_MDInIrrGrossDemandID != MFUnset) { 
 		irrAreaFrac       = MFVarGetFloat (_MDInIrrAreaFracID,            itemID, 0.0);
 		irrGrossDemand    = MFVarGetFloat (_MDInIrrGrossDemandID,         itemID, 0.0);
 		irrReturnFlow     = MFVarGetFloat (_MDInIrrReturnFlowID,          itemID, 0.0);
 		irrEvapotransp    = MFVarGetFloat (_MDInIrrEvapotranspID,         itemID, 0.0);
-		irrSoilMoistChg   = MFVarGetFloat (_MDInIrrSoilMoistChgID,        itemID, 0.0);
+		irrSoilMoistChg   = _MDInIrrSoilMoistChgID   != MFUnset ? MFVarGetFloat (_MDInIrrSoilMoistChgID,   itemID, 0.0) : 0.0;
 		irrUptakeGrdWater = _MDInIrrUptakeGrdWaterID != MFUnset ? MFVarGetFloat (_MDInIrrUptakeGrdWaterID, itemID, 0.0) : 0.0;
 		irrUptakeRiver    = _MDInIrrUptakeRiverID    != MFUnset ? MFVarGetFloat (_MDInIrrUptakeRiverID,    itemID, 0.0) : 0.0;
 		irrUptakeExcess   = MFVarGetFloat (_MDInIrrUptakeExcessID,        itemID, 0.0);
@@ -77,14 +79,17 @@ static void _MDWaterBalance(int itemID) {
 		if (_MDInSmallResReleaseID != MFUnset) {
 			smallResRelease    = MFVarGetFloat(_MDInSmallResReleaseID,    itemID, 0.0);
 			smallResStorageChg = MFVarGetFloat(_MDInSmallResStorageChgID, itemID, 0.0);
-		} 
+		}
+
+		snowMelt = (snowPackChg < 0.0 ? snowPackChg * -1.0 : 0.0) * irrAreaFrac;
+		balance = precip * irrAreaFrac + snowMelt + irrGrossDemand - irrEvapotransp - irrSoilMoistChg - irrReturnFlow;
+		MFVarSetFloat (_MDOutIrrWaterBalanceID, itemID, balance);
+
 		balance = irrGrossDemand - irrUptakeGrdWater - irrUptakeRiver - irrUptakeExcess - smallResRelease;
 		MFVarSetFloat (_MDOutIrrUptakeBalanceID, itemID, balance);
-		balance = irrGrossDemand - irrEvapotransp - irrSoilMoistChg - irrReturnFlow;
-		MFVarSetFloat (_MDOutIrrWaterBalanceID, itemID, balance);
 	}
 
-	balance = precip + irrUptakeRiver + irrUptakeExcess - etp - grdWaterChg - snowPackChg - soilMoistChg - runoff - smallResStorageChg;
+	balance = precip + irrUptakeRiver + irrUptakeExcess - (etp + runoff + grdWaterChg + snowPackChg + soilMoistChg + smallResStorageChg);
 	MFVarSetFloat (_MDOutWaterBalanceID, itemID , balance);
 }
 
@@ -107,8 +112,8 @@ int MDWaterBalanceDef() {
 		if ((_MDInIrrGrossDemandID == CMfailed) ||
 	        ((_MDInIrrUptakeRiverID      = MDIrrUptakeRiverDef    ()) == CMfailed) ||
 	        ((_MDInIrrUptakeGrdWaterID   = MDIrrUptakeGrdWaterDef ()) == CMfailed) ||
-	        ((_MDInIrrEvapotranspID      = MFVarGetID (MDVarIrrEvapotranspiration, "mm",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	        ((_MDInIrrSoilMoistChgID     = MFVarGetID (MDVarIrrSoilMoistChange,    "mm",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	        ((_MDInIrrSoilMoistChgID     = MDIrrSoilMoistChgDef   ()) == CMfailed) ||
+	        ((_MDInIrrEvapotranspID      = MFVarGetID (MDVarIrrEvapotranspiration, "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
 	        ((_MDInIrrReturnFlowID       = MFVarGetID (MDVarIrrReturnFlow,         "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) || 
 	        ((_MDInIrrAreaFracID         = MFVarGetID (MDVarIrrAreaFraction,       "-",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	        ((_MDInIrrUptakeExcessID     = MFVarGetID (MDVarIrrUptakeExcess,       "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||

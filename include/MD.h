@@ -121,10 +121,10 @@ extern "C" {
 #define MDVarRainInfiltration                "RainInfiltration"
 #define MDVarRainInterception                "RainInterception"
 #define MDVarRainPotEvapotrans               "RainPET"
-#define MDVarRainSurfRunoff                  "RainSurfRunoff"
 #define MDVarRainSoilMoisture                "RainSoilMoisture"
 #define MDVarRainSoilMoistureCell            "RainSoilMoistureCell"
 #define MDVarRainSoilMoistChange             "RainSoilMoistureChange"
+#define MDVarRainSurfRunoff                  "RainSurfRunoff"
 #define MDVarRainTranspiration               "RainTranspiration"
 #define MDVarRainWaterSurplus                "RainWaterSurplus"
 
@@ -258,6 +258,8 @@ int MDIrrGrossDemandDef();
 int MDIrrRefEvapotransDef ();
 int MDIrrRefEvapotransFAODef ();
 int MDIrrRefEvapotransHamonDef ();
+int MDIrrSoilMoistureDef ();
+int MDIrrSoilMoistChgDef ();
 int MDIrrUptakeRiverDef ();
 int MDIrrUptakeGrdWaterDef ();
 int MDReservoirDef ();

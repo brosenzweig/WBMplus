@@ -92,7 +92,7 @@ int MDSmallReservoirReleaseDef () {
 
 	MFDefEntering("Small Reservoirs");
     if (((_MDInRainSurfRunoffID      = MDRainSurfRunoffDef ()) == CMfailed) ||
-		((_MDInIrrAreaFracID         = MFVarGetID (MDVarIrrAreaFraction,           "%",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+		((_MDInIrrAreaFracID         = MFVarGetID (MDVarIrrAreaFraction,           "-",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDOutSmallResUptakeID     = MFVarGetID (MDVarSmallResUptake,            "mm",  MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
         ((_MDOutSmallResReleaseID    = MFVarGetID (MDVarSmallResRelease,           "mm",  MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
         ((_MDOutSmallResStorageID    = MFVarGetID (MDVarSmallResStorage,           "mm",  MFOutput, MFState, MFInitial))  == CMfailed) ||

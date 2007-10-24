@@ -38,10 +38,10 @@ int MDEvapotranspirationDef () {
 	MFDefEntering ("Evapotranspiration");
 	if (((ret = MDIrrGrossDemandDef ()) != MFUnset) &&
 	    ((ret == CMfailed) ||
-	     ((_MDInIrrEvapotranspID = MFVarGetID (MDVarIrrEvapotranspiration,  "mm",   MFInput,  MFState, MFBoundary)) == CMfailed)))
+	     ((_MDInIrrEvapotranspID = MFVarGetID (MDVarIrrEvapotranspiration,  "mm",   MFInput,  MFFlux, MFBoundary)) == CMfailed)))
 	     return (CMfailed);
-	if (((_MDInRainEvapotranspID = MFVarGetID (MDVarRainEvapotranspiration, "mm",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDOutEvapotranspID    = MFVarGetID (MDVarEvapotranspiration,     "mm",   MFOutput, MFState, MFInitial))  == CMfailed) ||
+	if (((_MDInRainEvapotranspID = MFVarGetID (MDVarRainEvapotranspiration, "mm",   MFInput,  MFFlux, MFBoundary)) == CMfailed) ||
+	    ((_MDOutEvapotranspID    = MFVarGetID (MDVarEvapotranspiration,     "mm",   MFOutput, MFFlux, MFBoundary))  == CMfailed) ||
         (MFModelAddFunction (_MDEvapotransp) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Evapotranspiration");
 	return (_MDOutEvapotranspID);

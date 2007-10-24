@@ -294,19 +294,19 @@ static void _MDIrrGrossDemand (int itemID) {
 		totalIrrPercolation += deepPercolation * relCropFraction;
 
 		totGrossDemand = getIrrGrossWaterDemand (totalNetIrrDemand, irrEffeciency);
-//		float loss = 0.0;
-//		loss = (totGrossDemand - totalNetIrrDemand) + (dailyPrecip - dailyEffPrecip);
-//		float OUT =totalCropETP+totalIrrPercolation+loss+meanSMChange;
-//		float IN = totGrossDemand+dailyPrecip;
+		float loss = 0.0;
+		loss = (totGrossDemand - totalNetIrrDemand) + (dailyPrecip - dailyEffPrecip);
+		float OUT =totalCropETP+totalIrrPercolation+loss+meanSMChange;
+		float IN = totGrossDemand+dailyPrecip;
 //		if (itemID==6)printf("itemID %iGrossDemn %f DailyPrecip %f meanSMChange  %f \n",itemID,totGrossDemand,dailyPrecip,meanSMChange);
 //		if (itemID==229)printf("ItemID %i ppt %f CropET %f perc %f loss %f \n",itemID,dailyPrecip,totalCropETP,totalIrrPercolation,loss);	
 //		if (fabs(IN-OUT) > 0.1) CMmsgPrint (CMmsgAppError,"WaterBalance in MDIrrigation!!! IN %f OUT %f BALANCE %f LOSS %f %i DEMAND %f %i EffPrecip %f   itemID %i \n", IN, OUT, IN-OUT, loss, itemID, totGrossDemand, itemID, dailyEffPrecip,itemID);
-//		if (fabs(IN-OUT)>0.001) printf ("WaterBalance in MDIrrigation!!! IN %f OUT %f BALANCE %f LOSS %f %i DEMAND %f NET %f  EffPrecip %f dailyPrecip %f cropped %f bare %f itemID %i \n", IN, OUT, IN-OUT, loss, itemID, totGrossDemand, totalNetIrrDemand, dailyEffPrecip,dailyPrecip,croppedArea,cropFraction[_MDNumberOfIrrCrops],itemID);
+		if (fabs(IN-OUT)>0.001) printf ("WaterBalance in MDIrrigation!!! IN %f OUT %f BALANCE %f LOSS %f %i DEMAND %f NET %f  EffPrecip %f dailyPrecip %f cropped %f bare %f itemID %i \n", IN, OUT, IN-OUT, loss, itemID, totGrossDemand, totalNetIrrDemand, dailyEffPrecip,dailyPrecip,croppedArea,cropFraction[_MDNumberOfIrrCrops],itemID);
 
 		MFVarSetFloat(_MDOutIrrSMoistChgID,       itemID, meanSMChange        * irrAreaFrac);
 		MFVarSetFloat(_MDOutIrrNetDemandID,       itemID, totalNetIrrDemand   * irrAreaFrac);
 		MFVarSetFloat(_MDOutIrrGrossDemandID,     itemID, totGrossDemand      * irrAreaFrac);
-		MFVarSetFloat(_MDOutIrrReturnFlowID,      itemID, totalIrrPercolation * irrAreaFrac);
+		MFVarSetFloat(_MDOutIrrReturnFlowID,      itemID, (totalIrrPercolation + loss) * irrAreaFrac);
 		MFVarSetFloat(_MDOutIrrEvapotranspID,     itemID, totalCropETP        * irrAreaFrac);	
 	}
 	else { // cell is not irrigated
@@ -337,8 +337,9 @@ int MDIrrGrossDemandDef() {
 
 	switch (optID) {
 		case MDinput:
-			 if(((_MDOutIrrGrossDemandID = MFVarGetID (MDVarIrrGrossDemand,    "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-		    	((_MDOutIrrReturnFlowID  = MFVarGetID (MDVarIrrReturnFlow,     "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed))
+			 if(((_MDOutIrrGrossDemandID = MFVarGetID (MDVarIrrGrossDemand,        "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+		    	((_MDOutIrrReturnFlowID  = MFVarGetID (MDVarIrrReturnFlow,         "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+				((_MDOutIrrEvapotranspID = MFVarGetID (MDVarIrrEvapotranspiration, "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed))
 				return (CMfailed);
 			break;
 		case MDcalculate:
@@ -361,7 +362,7 @@ int MDIrrGrossDemandDef() {
 			    ((_MDGrowingSeason3ID        = MFVarGetID (MDVarIrrGrowingSeason3Start, "DoY",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDInIrrIntensityID        = MFVarGetID (MDVarIrrIntensity,           "-",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDInIrrEfficiencyID       = MFVarGetID (MDVarIrrEfficiency,          "-",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDInIrrAreaFracID         = MFVarGetID (MDVarIrrAreaFraction,        "%",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDInIrrAreaFracID         = MFVarGetID (MDVarIrrAreaFraction,        "-",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDOutIrrGrossDemandID     = MFVarGetID (MDVarIrrGrossDemand,         "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
 			    ((_MDOutIrrReturnFlowID      = MFVarGetID (MDVarIrrReturnFlow,          "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
 			    ((_MDOutIrrNetDemandID       = MFVarGetID (MDVarIrrNetWaterDemand,      "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||

@@ -20,6 +20,7 @@ static int _MDInSPackChgID          = MFUnset;
 static int _MDInRainSMoistChgID     = MFUnset;
 static int _MDInRainEvapoTransID    = MFUnset;
 static int _MDInPrecipID            = MFUnset;
+static int _MDInIrrAreaFracID       = MFUnset;
 // Output
 static int _MDOutRainWaterSurplusID = MFUnset;
 
@@ -29,26 +30,31 @@ static void _MDRainWaterSurplus (int itemID) {
 	float sMoistChg;
 	float evapoTrans; 
 	float precip;
+	float irrAreaFrac;
 // Output
 	float surplus;
  
-	sPackChg   = MFVarGetFloat (_MDInSPackChgID,       itemID, 0.0);
-	sMoistChg  = MFVarGetFloat (_MDInRainSMoistChgID,  itemID, 0.0);
-	evapoTrans = MFVarGetFloat (_MDInRainEvapoTransID, itemID, 0.0);
-	precip     = MFVarGetFloat (_MDInPrecipID,         itemID, 0.0);
+	irrAreaFrac = _MDInIrrAreaFracID != MFUnset ? MFVarGetFloat (_MDInIrrAreaFracID, itemID, 0.0) : 0.0;
+	sPackChg    = MFVarGetFloat (_MDInSPackChgID,       itemID, 0.0) * (1.0 - irrAreaFrac);
+	sMoistChg   = MFVarGetFloat (_MDInRainSMoistChgID,  itemID, 0.0);
+	evapoTrans  = MFVarGetFloat (_MDInRainEvapoTransID, itemID, 0.0);
+	precip      = MFVarGetFloat (_MDInPrecipID,         itemID, 0.0) * (1.0 - irrAreaFrac);
 	
 	surplus = precip - sPackChg - evapoTrans - sMoistChg;
 
-	if (surplus < 0.0) surplus = 0.0;
- 
 	MFVarSetFloat (_MDOutRainWaterSurplusID, itemID, surplus);
 }
 
 int MDRainWaterSurplusDef () {
-	
+	int ret;
+
 	if (_MDOutRainWaterSurplusID != MFUnset) return (_MDOutRainWaterSurplusID);
 
 	MFDefEntering ("Rainfed Water Surplus");
+	if (((ret = MDIrrGrossDemandDef ()) != MFUnset) &&
+	    ((ret == CMfailed) ||
+	     ((_MDInIrrAreaFracID      = MFVarGetID (MDVarIrrAreaFraction,      "-",  MFInput,  MFState, MFBoundary)) == CMfailed)))
+	     return (CMfailed);	
 	if (((_MDInPrecipID             = MDPrecipitationDef ()) == CMfailed) ||
 		((_MDInSPackChgID           = MDSPackChgDef      ()) == CMfailed) ||
 	    ((_MDInRainSMoistChgID      = MDRainSMoistChgDef ()) == CMfailed) ||
