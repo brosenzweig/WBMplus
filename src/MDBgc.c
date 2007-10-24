@@ -165,20 +165,20 @@ int MDBgcRoutingDef () {
 	if (((_MDInDischargeID           = MDDischargeDef    ()) == CMfailed) ||
         ((_MDInRiverWidthID          = MDRiverWidthDef   ()) == CMfailed) ||
 	    ((_MDInRunoffVolumeID        = MDRunoffVolumeDef ()) == CMfailed) ||
-	    ((_MDInAirTemperatureID      = MFVarGetID (MDVarAirTemperature,         "degC",    MFInput, MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDInRiverStorageChgID     = MFVarGetID (MDVarRiverStorageChg,        "m3/s",    MFInput, MFState, MFBoundary))  == CMfailed) ||
-	    ((_MDInRiverStorageID        = MFVarGetID (MDVarRiverStorage,           "m3",      MFInput, MFState, MFInitial))   == CMfailed) ||
-	    ((_MDNonPointTNSourcesContID = MFVarGetID (MDVarNonPointTNSourcesCont,  "kg/m3",   MFInput, MFState, MFBoundary))  == CMfailed) ||
-	    ((_MDPointTNSourcesID        = MFVarGetID (MDVarPointTNSources,         "kg/day",  MFInput, MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDInAirTemperatureID      = MFVarGetID (MDVarAirTemperature,           "degC",    MFInput, MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInRiverStorageChgID     = MFVarGetID (MDVarRiverStorageChg,          "m3/s",    MFInput, MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDInRiverStorageID        = MFVarGetID (MDVarRiverStorage,             "m3",      MFInput, MFState, MFInitial))   == CMfailed) ||
+	    ((_MDNonPointTNSourcesContID = MFVarGetID (MDVarBgcNonPointTNSourcesCont, "kg/m3",   MFInput, MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDPointTNSourcesID        = MFVarGetID (MDVarBgcPointTNSources,        "kg/day",  MFInput, MFState, MFBoundary))  == CMfailed) ||
 	// Output
-	    ((_MDTNLocalLoadID           = MFVarGetID (MDVarBgcTNLocalLoad,         "kg/day",  MFOutput, MFState, MFBoundary))  == CMfailed) ||
-	    ((_MDTNStoreWaterID          = MFVarGetID (MDVarBgcTNStoreWater,        "kg",      MFOutput, MFState, MFInitial))   == CMfailed) ||
-	    ((_MDTNStoreWaterChangeID    = MFVarGetID (MDVarBgcTNStoreWaterChange,  "kg/day",  MFOutput, MFState, MFInitial))   == CMfailed) ||
-	    ((_MDTNStoreSedsID           = MFVarGetID (MDVarBgcTNStoreSeds,         "kg",      MFOutput, MFState, MFInitial))   == CMfailed) ||
-	    ((_MDTNStoreSedsChangeID     = MFVarGetID (MDVarBgcTNStoreSedsChange,   "kg/day",  MFOutput, MFState, MFInitial))   == CMfailed) ||
-	    ((_MDTNTotalUptakeID         = MFVarGetID (MDVarBgcTNTotalUptake,       "kg/day",  MFOutput, MFState, MFBoundary))  == CMfailed) ||
-	    ((_MDTNConcID                = MFVarGetID (MDVarBgcTNConc,              "kg/m3",   MFOutput, MFState, MFBoundary))  == CMfailed) ||
-	    ((_MDTNFluxID                = MFVarGetID (MDVarBgcTNFlux  ,            "kg/day",  MFRoute,  MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDTNLocalLoadID           = MFVarGetID (MDVarBgcTNLocalLoad,           "kg/day",  MFOutput, MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDTNStoreWaterID          = MFVarGetID (MDVarBgcTNStoreWater,          "kg",      MFOutput, MFState, MFInitial))   == CMfailed) ||
+	    ((_MDTNStoreWaterChangeID    = MFVarGetID (MDVarBgcTNStoreWaterChange,    "kg/day",  MFOutput, MFState, MFInitial))   == CMfailed) ||
+	    ((_MDTNStoreSedsID           = MFVarGetID (MDVarBgcTNStoreSeds,           "kg",      MFOutput, MFState, MFInitial))   == CMfailed) ||
+	    ((_MDTNStoreSedsChangeID     = MFVarGetID (MDVarBgcTNStoreSedsChange,     "kg/day",  MFOutput, MFState, MFInitial))   == CMfailed) ||
+	    ((_MDTNTotalUptakeID         = MFVarGetID (MDVarBgcTNTotalUptake,         "kg/day",  MFOutput, MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDTNConcID                = MFVarGetID (MDVarBgcTNConc,                "kg/m3",   MFOutput, MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDTNFluxID                = MFVarGetID (MDVarBgcTNFlux  ,              "kg/day",  MFRoute,  MFState, MFBoundary))  == CMfailed) ||
 	    (MFModelAddFunction (_MDBgcRouting) == CMfailed)) return (CMfailed); 
 	if (((optStr = MFOptionGet (MDOptReservoirs)) != (char *) NULL) && (CMoptLookup (options,optStr,true) == CMfailed)) {
 		if (((_MDInResCapacityID       = MFVarGetID (MDVarReservoirCapacity,      "km3",     MFInput, MFState, MFBoundary))  == CMfailed) ||
