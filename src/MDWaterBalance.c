@@ -22,7 +22,6 @@ static int _MDInPrecipID             = MFUnset;
 static int _MDInEvaptrsID            = MFUnset;
 static int _MDInSnowPackChgID        = MFUnset;
 static int _MDInSoilMoistChgID       = MFUnset;
-static int _MDInInfiltrationID       = MFUnset;
 static int _MDInGrdWatChgID          = MFUnset;
 static int _MDInRunoffID             = MFUnset;
 static int _MDInDischargeID          = MFUnset;
@@ -89,7 +88,8 @@ static void _MDWaterBalance(int itemID) {
 		MFVarSetFloat (_MDOutIrrUptakeBalanceID, itemID, balance);
 	}
 
-	balance = precip + irrUptakeRiver + irrUptakeExcess - (etp + runoff + grdWaterChg + snowPackChg + soilMoistChg + smallResStorageChg);
+	balance = precip + irrUptakeRiver + irrUptakeGrdWater + irrUptakeExcess
+	        - (etp + runoff + grdWaterChg + snowPackChg + soilMoistChg + smallResStorageChg);
 	MFVarSetFloat (_MDOutWaterBalanceID, itemID , balance);
 }
 
@@ -100,9 +100,8 @@ int MDWaterBalanceDef() {
 	    ((_MDInPrecipID                  = MDPrecipitationDef    ()) == CMfailed) ||
 	    ((_MDInDischargeID               = MDDischargeDef        ()) == CMfailed) ||
 	    ((_MDInSnowPackChgID             = MDSPackChgDef         ()) == CMfailed) ||
-	    ((_MDInSoilMoistChgID            = MDRainSMoistChgDef    ()) == CMfailed) ||
+	    ((_MDInSoilMoistChgID            = MDSoilMoistChgDef     ()) == CMfailed) ||
 	    ((_MDInRunoffID                  = MDRunoffDef           ()) == CMfailed) ||
-	    ((_MDInInfiltrationID            = MDRainInfiltrationDef ()) == CMfailed) ||
 	    ((_MDInEvaptrsID                 = MFVarGetID (MDVarEvapotranspiration,      "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
 	    ((_MDInGrdWatChgID               = MFVarGetID (MDVarGroundWaterChange,       "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
 	    ((_MDOutWaterBalanceID           = MFVarGetID (MDVarWaterBalance,            "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||

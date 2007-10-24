@@ -33,10 +33,8 @@ static float _MDGroundWatBETA = 0.016666667;
 
 static void _MDBaseFlow (int itemID) {
 // Input
-		float recharge;          // Rainfed groundwater recharge over the non-irrigated area [mm/dt]
 	float irrDemand;         // Irrigation demand [mm/dt]
 	float irrAreaFraction;   // Irrigated area fraction
-	float smallResRelease;   // Release from small reservoirs that can be used for irrigation (preferentially!), mm/dt
 // Output
 	float grdWater;          // Groundwater size   [mm]
 	float grdWaterChg;       // Groundwater change [mm/dt]
@@ -44,40 +42,39 @@ static void _MDBaseFlow (int itemID) {
 	float irrUptakeGrdWater; // Irrigational water uptake from shallow groundwater [mm/dt]
 	float irrUptakeExt;      // Unmet irrigational water demand [mm/dt]
 
- 	recharge    = MFVarGetFloat (_MDInRechargeID,       itemID, 0.0);
-	grdWaterChg = grdWater = MFVarGetFloat (_MDOutGrdWatID, itemID, 0.0);
+	grdWater = grdWaterChg = MFVarGetFloat (_MDOutGrdWatID, itemID, 0.0);
+	grdWater = grdWater    + MFVarGetFloat (_MDInRechargeID, itemID, 0.0);
 
 	if ((_MDInIrrGrossDemandID != MFUnset) &&
 	    (_MDInIrrReturnFlowID  != MFUnset) &&
 	    (_MDInIrrAreaFracID    != MFUnset) &&
-		((irrAreaFraction = MFVarGetFloat (_MDInIrrAreaFracID,     itemID, 0.0)) > 0.0)) {
-	 	recharge   = recharge + MFVarGetFloat (_MDInIrrReturnFlowID,   itemID, 0.0);
+		((irrAreaFraction   = MFVarGetFloat (_MDInIrrAreaFracID,   itemID, 0.0)) > 0.0)) {
+	 	grdWater = grdWater + MFVarGetFloat (_MDInIrrReturnFlowID, itemID, 0.0);
 		irrDemand  = MFVarGetFloat (_MDInIrrGrossDemandID,  itemID, 0.0);
-		
-		smallResRelease = _MDInSmallResReleaseID != MFUnset ? MFVarGetFloat(_MDInSmallResReleaseID,itemID,0.0) : 0.0;
 
+		if (_MDInSmallResReleaseID    != MFUnset) irrDemand = irrDemand - MFVarGetFloat(_MDInSmallResReleaseID,itemID,0.0);
 		if (_MDOutIrrUptakeGrdWaterID != MFUnset) {
-			if (irrDemand < grdWater + smallResRelease) {
-				// Irrigation demand is satisfied from small reservoir and groundwater storage 
-				irrUptakeGrdWater = irrDemand - smallResRelease;
+			if (irrDemand < grdWater) {
+				// Irrigation demand is satisfied from groundwater storage 
+				irrUptakeGrdWater = irrDemand;
 				irrUptakeExt = 0.0;
 				grdWater = grdWater - irrUptakeGrdWater;
 			}
 			else {
 				// Irrigation demand needs external source
 				irrUptakeGrdWater = grdWater;
-				irrUptakeExt      = irrDemand - irrUptakeGrdWater - smallResRelease;
+				irrUptakeExt      = irrDemand - irrUptakeGrdWater;
 				grdWater = 0.0;
 			}		
 			MFVarSetFloat (_MDOutIrrUptakeGrdWaterID, itemID, irrUptakeGrdWater);
 		}
-		else irrUptakeExt = irrDemand - smallResRelease;
+		else irrUptakeExt = irrDemand;
 		MFVarSetFloat (_MDOutIrrUptakeExternalID, itemID, irrUptakeExt);
 	}
 
-	if (grdWater + recharge > 0.0) {
-		baseFlow = (grdWater + recharge) * exp (-_MDGroundWatBETA);
-		grdWater = grdWater + recharge - baseFlow;
+	if (grdWater > 0.0) {
+		baseFlow    = grdWater * exp (-_MDGroundWatBETA);
+		grdWater    = grdWater - baseFlow;
 		grdWaterChg = grdWater - grdWaterChg;
 	}
 	else {
