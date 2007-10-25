@@ -42,7 +42,6 @@ static int _MDInIrrAreaFracID          = MFUnset;
 static int _MDInIrrRefEvapotransID     = MFUnset;
 static int _MDInIrrIntensityID         = MFUnset;
 static int _MDInIrrEfficiencyID        = MFUnset;
-static int _MDInAirTemperatureID       = MFUnset;
 static int _MDInPrecipID               = MFUnset;
 static int _MDInSPackChgID             = MFUnset;
 static int _MDGrowingSeason1ID         = MFUnset;
@@ -62,7 +61,7 @@ static int _MDOutIrrSMoistChgID        = MFUnset;
 static int *_MDOutCropDeficitIDs = (int *) NULL;
 
 //Parameters
-static float _MDParIrrDailyPercolation;
+static float _MDParIrrDailyPercolation = 1.0;
 
 static const char *CropParameterFileName;
 
@@ -94,7 +93,7 @@ static void _MDIrrGrossDemand (int itemID) {
 	float totalIrrPercolation=0;
 // Local
 	int i;
-	_MDParIrrDailyPercolation = 1.0;
+
 	float ReqpondingDepth = 80.0;
 	float pondingDepth;
 
@@ -352,10 +351,9 @@ int MDIrrGrossDemandDef() {
 				CMmsgPrint(CMmsgUsrError,"Error reading crop parameter file   : %s \n", CropParameterFileName);
 				return CMfailed;
 			}
-			if (((_MDInPrecipID              = MDPrecipitationDef    ()) == CMfailed) ||	 		 
+			if (((_MDInPrecipID              = MDPrecipitationDef    ()) == CMfailed) ||	 
 			    ((_MDInSPackChgID            = MDSPackChgDef         ()) == CMfailed) ||
 			    ((_MDInIrrRefEvapotransID    = MDIrrRefEvapotransDef ()) == CMfailed) ||
-			    ((_MDInAirTemperatureID      = MFVarGetID (MDVarAirTemperature,         "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDInWltPntID              = MFVarGetID (MDVarSoilWiltingPoint,       "mm/m", MFInput,  MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDInFldCapaID             = MFVarGetID (MDVarSoilFieldCapacity,      "mm/m", MFInput,  MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDGrowingSeason1ID        = MFVarGetID (MDVarIrrGrowingSeason1Start, "DoY",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
@@ -379,7 +377,7 @@ int MDIrrGrossDemandDef() {
 					return CMfailed;
 				}
 			}
-			for (i=0;i<_MDNumberOfIrrCrops+1;i++) {
+			for (i = 0; i < _MDNumberOfIrrCrops + 1;i++) {
 				sprintf (varname, "CropSMDeficiency%02d", i + 1);  // Output Soil Moisture Deficit per croptype
 				if ((_MDOutCropDeficitIDs [i] = MFVarGetID (varname, "mm", MFOutput, MFState, MFInitial))  == CMfailed) {
 					CMmsgPrint (CMmsgUsrError,"MFFAult in MDCropDeficit\n");
@@ -523,7 +521,8 @@ static int readCropParameters(const char *filename) {
 		while (feof(inputCropFile) == 0) {
 			_MDirrigCropStruct   = (MDIrrigatedCrop *) realloc(_MDirrigCropStruct, (i + 1) * sizeof(MDIrrigatedCrop));
 			_MDInCropFractionIDs = (int *) realloc(_MDInCropFractionIDs, (i + 1) * sizeof(int));
-			_MDOutCropDeficitIDs = (int *) realloc(_MDOutCropDeficitIDs, (i + 1) * sizeof(int));	
+			_MDOutCropDeficitIDs = (int *) realloc(_MDOutCropDeficitIDs, (i + 1) * sizeof(int));
+			_MDInCropFractionIDs [i] = _MDOutCropDeficitIDs [i] = MFUnset;
 			fscanf(inputCropFile, "%i" "%i" "%s" "%s" "%f" "%f" "%f" "%f" "%f" "%f" "%f" "%f" "%f" ,
 		       &_MDirrigCropStruct[i].ID,
 		       &_MDirrigCropStruct[i].DW_ID,
@@ -544,8 +543,6 @@ static int readCropParameters(const char *filename) {
 				
 			printCrops(&_MDirrigCropStruct[i]);
 			i += 1;
-
-			 
 		}
 	}
 	//CMmsgPrint(CMmsgDebug,"Number of crops read: %i \n", i - 1);

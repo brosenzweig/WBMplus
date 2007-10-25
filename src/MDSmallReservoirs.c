@@ -85,10 +85,10 @@ int MDSmallReservoirReleaseDef () {
 
 	if (_MDOutSmallResReleaseID != MFUnset) return (_MDOutSmallResReleaseID);
 
-	if (((_MDInIrrGrossDemandID   = MDIrrGrossDemandDef         ()) == CMfailed) ||
-	    ((_MDInSmallResCapacityID = MDSmallReservoirCapacityDef ()) == CMfailed)) return (CMfailed);
-	if ((_MDInIrrGrossDemandID == MFUnset) || (_MDInSmallResCapacityID == MFUnset))
-		return (_MDOutSmallResReleaseID);
+	if ((_MDInIrrGrossDemandID   = MDIrrGrossDemandDef         ()) == CMfailed) return (CMfailed);
+	if  (_MDInIrrGrossDemandID   == MFUnset) return (MFUnset);
+	if ((_MDInSmallResCapacityID = MDSmallReservoirCapacityDef ()) == CMfailed) return (CMfailed);
+	if  (_MDInSmallResCapacityID == MFUnset) return (MFUnset);
 
 	MFDefEntering("Small Reservoirs");
     if (((_MDInRainSurfRunoffID      = MDRainSurfRunoffDef ()) == CMfailed) ||

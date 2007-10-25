@@ -29,8 +29,6 @@ static void _MDIrrRefEvapotransHamon (int itemID) {
 // Output
 	float pet;
 
-	 
-
 	dayLen = MFVarGetFloat (_MDInDayLengthID, itemID, 12);
 	airT   = MFVarGetFloat (_MDInAtMeanID,    itemID, 0.0);
 

@@ -35,7 +35,7 @@ int MDSurfRunoffDef () {
 	int ret;
 	if (_MDOutSurfRunoffID != MFUnset) return (_MDOutSurfRunoffID);
 
-	MFDefEntering ("Soil Moisture");
+	MFDefEntering ("Surface runoff");
 
 	if (((ret = MDSmallReservoirReleaseDef ()) != MFUnset) &&
 	    ((ret == CMfailed) ||
@@ -44,6 +44,6 @@ int MDSurfRunoffDef () {
 	if (((_MDInRainSurfRunoffID  = MDRainSurfRunoffDef ()) == CMfailed) ||
 	    ((_MDOutSurfRunoffID     = MFVarGetID (MDVarSurfRunoff,     "mm",   MFOutput, MFFlux,  MFBoundary))  == CMfailed) ||
        (MFModelAddFunction (_MDSurfRunoff) == CMfailed)) return (CMfailed);
-	MFDefLeaving ("Soil Moisture");
+	MFDefLeaving ("Surface runoff");
 	return (_MDOutSurfRunoffID);
 }
