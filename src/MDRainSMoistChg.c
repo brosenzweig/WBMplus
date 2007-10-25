@@ -72,8 +72,8 @@ static void _MDRainSMoistChg (int itemID) {
 	sMoist      = MFVarGetFloat (_MDOutSoilMoistCellID,    itemID, 0.0);
 	intercept   = _MDInInterceptID   != MFUnset ? MFVarGetFloat (_MDInInterceptID,   itemID, 0.0) : 0.0;
 	irrAreaFrac = _MDInIrrAreaFracID != MFUnset ? MFVarGetFloat (_MDInIrrAreaFracID, itemID, 0.0) : 0.0;
+
 	if (sMoist < 0.0) sMoist = 0.0;
-	sMoistChg=0;
 	 
 	if (airT > 0.0) {
 		if (pet < 0.0) pet = 0.0; // Why not in the respective ETPot Function?????
@@ -87,6 +87,7 @@ static void _MDRainSMoistChg (int itemID) {
 			if (sMoist > _MDAWCap)     sMoist = _MDAWCap;
 			sMoistChg = sMoist - sMoistChg;
 		}
+		else sMoist = sMoistChg = 0.0;
 		transp = precip - intercept - sPackChg - sMoistChg;
 		transp = pet < transp ? pet : transp;
 		
