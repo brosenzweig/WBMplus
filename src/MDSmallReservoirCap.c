@@ -79,8 +79,8 @@ int MDSmallReservoirCapacityDef () {
 				if ((_MDInIrrGrossDemandID == CMfailed) ||
 				    ((_MDInIrrAreaID                    = MFVarGetID (MDVarIrrAreaFraction,           "-",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
 				    ((_MDInRainSurfRunoffID             = MFVarGetID (MDVarRainSurfRunoff,            "mm",  MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-				    ((_MDOutRainSurfRunoffAccumulatedID = MFVarGetID ("__SurfaceROAccumulated",       "mm",  MFOutput, MFFlux,  MFInitial))  == CMfailed) ||
-				    ((_MDOutIrrGrossDemandAccumulatedID = MFVarGetID ("__GrossDemandAccumulated",     "mm",  MFOutput, MFFlux,  MFInitial))  == CMfailed) ||
+				    ((_MDOutRainSurfRunoffAccumulatedID = MFVarGetID ("__SurfaceROAccumulated",       "mm",  MFOutput, MFState, MFInitial))  == CMfailed) ||
+				    ((_MDOutIrrGrossDemandAccumulatedID = MFVarGetID ("__GrossDemandAccumulated",     "mm",  MFOutput, MFState, MFInitial))  == CMfailed) ||
 				    ((_MDOutSmallResCapacityID          = MFVarGetID (MDVarSmallResCapacity,          "mm",  MFOutput, MFState, MFInitial))  == CMfailed) ||
 				    (MFModelAddFunction (_MDSmallReservoirCapacity) == CMfailed)) return (CMfailed);
 				break;
