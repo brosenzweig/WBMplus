@@ -197,6 +197,7 @@ static void _MDIrrGrossDemand (int itemID) {
 			 	daysSincePlanted = getDaysSincePlanting(curDay, seasStart,numGrowingSeasons,&_MDirrigCropStruct[i]);
 				if (daysSincePlanted > 0) {
 					prevSoilMstDepl = MFVarGetFloat(_MDOutCropDeficitIDs [i],itemID, 0.0);
+					if (daysSincePlanted==1)prevSoilMstDepl=MFVarGetFloat (_MDOutCropDeficitIDs [_MDNumberOfIrrCrops],itemID, 0.0);
 					stage = getCropStage(&_MDirrigCropStruct[i], daysSincePlanted);
 					cropCoeff =getCropKc(&_MDirrigCropStruct[i], daysSincePlanted, stage);
 					cropWR = refETP * cropCoeff;
@@ -210,7 +211,7 @@ static void _MDIrrGrossDemand (int itemID) {
 					if (_MDirrigCropStruct[i].cropIsRice==1) {
 //						if (itemID==53428)printf("rice %i \n", itemID);
 						if (daysSincePlanted ==1) {
-							prevSoilMstDepl=0;
+							//prevSoilMstDepl=0;
 //							if (itemID==6)printf("rice day one %i\n", itemID);
 						}
 						pondingDepth=prevSoilMstDepl+dailyEffPrecip-cropWR-dailyPercolation;

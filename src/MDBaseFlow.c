@@ -77,9 +77,8 @@ static void _MDBaseFlow (int itemID) {
 		grdWater    = grdWater - baseFlow;
 		grdWaterChg = grdWater - grdWaterChg;
 	}
-	else {
-		grdWaterChg = baseFlow = 0.0;
-	}
+	else grdWaterChg = baseFlow = 0.0;
+
 	MFVarSetFloat (_MDOutGrdWatID,     itemID, grdWater);
     MFVarSetFloat (_MDOutGrdWatChgID,  itemID, grdWaterChg);
 	MFVarSetFloat (_MDOutBaseFlowID,   itemID, baseFlow);
