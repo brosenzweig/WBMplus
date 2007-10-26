@@ -89,13 +89,13 @@ static void _MDBaseFlow (int itemID) {
 	}
 	else grdWaterChg = baseFlow = 0.0;
 
-	grdWaterUptake = baseflow + irrUptakeGrdWater;
+	grdWaterUptake = baseFlow + irrUptakeGrdWater;
 
-	MFVarSetFloat (_MDOutGrdWatID,     itemID, grdWater);
-    MFVarSetFloat (_MDOutGrdWatChgID,  itemID, grdWaterChg);
-    MFVarSetFloat (_MDOutGrdWatChgID,  itemID, grdWaterRecharge);
-    MFVarSetFloat (_MDOutGrdWatChgID,  itemID, grdWaterUptake);
-	MFVarSetFloat (_MDOutBaseFlowID,   itemID, baseFlow);
+	MFVarSetFloat (_MDOutGrdWatID,         itemID, grdWater);
+    MFVarSetFloat (_MDOutGrdWatChgID,      itemID, grdWaterChg);
+    MFVarSetFloat (_MDOutGrdWatRechargeID, itemID, grdWaterRecharge);
+    MFVarSetFloat (_MDOutGrdWatUptakeID,   itemID, grdWaterUptake);
+	MFVarSetFloat (_MDOutBaseFlowID,       itemID, baseFlow);
 }
 
 int MDBaseFlowDef () {
