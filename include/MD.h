@@ -83,6 +83,8 @@ extern "C" {
 #define MDVarGrossRadiance                   "GrossRadiance"
 #define MDVarGroundWater                     "GroundWater"
 #define MDVarGroundWaterChange               "GroundWaterChange"
+#define MDVarGroundWaterRecharge             "GroundWaterRecharge"
+#define MDVarGroundWaterUptake               "GroundWaterUptake"
 #define MDVarLeafAreaIndex                   "LeafAreaIndex"
 
 #define MDVarIrrAreaFraction                 "IrrigatedAreaFraction"
