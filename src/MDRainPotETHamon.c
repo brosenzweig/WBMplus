@@ -32,12 +32,9 @@ static void _MDRainPotETHamon (int itemID) {
 	dayLen = MFVarGetFloat (_MDInDayLengthID, itemID, 0.1);
 	airT   = MFVarGetFloat (_MDInAtMeanID,    itemID,  0.0);
 
-   rhoSat = 2.167 * MDPETlibVPressSat (airT) / (airT + 273.15);
-   pet = 165.1 * 2.0 * dayLen * rhoSat; // 2 * DAYLEN = daylength as fraction of 12 hours
+   rhoSat  = 2.167 * MDPETlibVPressSat (airT) / (airT + 273.15);
+   pet     = 165.1 * 2.0 * dayLen * rhoSat; // 2 * DAYLEN = daylength as fraction of 12 hours
    MFVarSetFloat (_MDOutPetID,itemID,pet);
-//printf ("pet %f airT %f\n",pet, airT);
-
-   if (pet<0)printf("pet <! dayLen=%f\n",dayLen);
    }
 
 int MDRainPotETHamonDef () {

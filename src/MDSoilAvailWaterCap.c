@@ -24,12 +24,12 @@ static int _MDOutSoilAvailWaterCapID = MFUnset;
 
 static void _MDSoilAvailWaterCap (int itemID) {
 	float fieldCapacity; // Field capacity [mm/m]
-	float wiltingPoint;  // Wilting point [mm/m]
-	float rootingDepth;  // Rooting depth [m]
+	float wiltingPoint;  // Wilting point  [mm/m]
+	float rootingDepth;  // Rooting depth  [m]
 
 	fieldCapacity = MFVarGetFloat (_MDInSoilFieldCapacityID, itemID, 0.0);
 	wiltingPoint  = MFVarGetFloat (_MDInSoilWiltingPointID,  itemID, 0.0);
-	rootingDepth  = MFVarGetFloat (_MDInSoilRootingDepthID,   itemID, 0.0);
+	rootingDepth  = MFVarGetFloat (_MDInSoilRootingDepthID,  itemID, 0.0);
 	if (fieldCapacity < wiltingPoint) fieldCapacity = wiltingPoint;
 	
 	MFVarSetFloat (_MDOutSoilAvailWaterCapID, itemID, rootingDepth * (fieldCapacity - wiltingPoint));

@@ -187,6 +187,7 @@ extern "C" {
 
 #define MDParGrossRadTAU                     "GrossRadTAU"
 #define MDParGroundWatBETA                   "GroundWaterBETA"
+#define MDParSoilMoistALPHA                  "SoilMoistureALPHA"
 #define MDParInfiltrationFrac                "InfiltrationFraction"
 
 #define MDConst_m3PerSecTOm3PerDay    86400.0

@@ -18,11 +18,13 @@ balazs.fekete@unh.edu
 
 static float _MDAWCap, _MDPet, _MDWaterIn;
 
+static float _MDSoilMoistALPHA = 5.0;
+
 static float _MDDryingFunc (float time, float sMoist) {
 	float gm, def, sMoistChg;
 
 	if (_MDAWCap > sMoist) {
-		gm = (1.0 - exp (- 5.0 * sMoist / _MDAWCap)) / (1.0 - exp (-5.0));
+		gm = (1.0 - exp (- _MDSoilMoistALPHA * sMoist / _MDAWCap)) / (1.0 - exp (- _MDSoilMoistALPHA)); 
 		def = _MDPet + _MDAWCap - sMoist;
 	}
 	else { gm = 1.0; def = _MDPet; }
@@ -32,7 +34,7 @@ static float _MDDryingFunc (float time, float sMoist) {
 	else
 		sMoistChg = 0.0;
 
-	sMoistChg -= _MDPet * gm;
+	sMoistChg = sMoistChg -  _MDPet * gm;
 	return (sMoistChg);
 }
 
@@ -103,9 +105,13 @@ static void _MDRainSMoistChg (int itemID) {
 
 int MDRainSMoistChgDef () {
 	int ret = 0;
+	float par;
+	const char *optStr;
 	if (_MDOutSMoistChgID != MFUnset) return (_MDOutSMoistChgID);
 
 	MFDefEntering ("Rainfed Soil Moisture");
+	if (((optStr = MFOptionGet (MDParSoilMoistALPHA))  != (char *) NULL) && (sscanf (optStr,"%f",&par) == 1)) _MDSoilMoistALPHA = par;
+
 	if ((ret = MDIrrGrossDemandDef ()) == CMfailed) return (CMfailed);
 	if ((ret != MFUnset)  &&
 	    ((_MDInIrrAreaFracID      = MFVarGetID (MDVarIrrAreaFraction,      "-",  MFInput,  MFState, MFBoundary)) == CMfailed))
