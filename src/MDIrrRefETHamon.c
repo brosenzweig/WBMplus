@@ -29,8 +29,8 @@ static void _MDIrrRefEvapotransHamon (int itemID) {
 // Output
 	float pet;
 
-	dayLen = MFVarGetFloat (_MDInDayLengthID, itemID, 12);
-	airT   = MFVarGetFloat (_MDInAtMeanID,    itemID, 0.0);
+	dayLen = MFVarGetFloat (_MDInDayLengthID, itemID, 12.0);
+	airT   = MFVarGetFloat (_MDInAtMeanID,    itemID,  0.0);
 
 	rhoSat = 2.167 * MDPETlibVPressSat (airT) / (airT + 273.15);
 	pet = 165.1 * 2.0 * dayLen * rhoSat; // 2 * DAYLEN = daylength as fraction of 12 hours

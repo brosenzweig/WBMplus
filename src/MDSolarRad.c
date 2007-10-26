@@ -61,22 +61,6 @@ static void _MDSRadDayLength (int itemID) {
    if (fabs ((double) lat) > M_PI_2) lat = (M_PI_2 - (double) 0.01) * (lat > 0.0 ? 1.0 : -1.0);
 
 	dayLength = _MDSRadH (lat,doy,dec) / M_PI;
-	
-	///       DayLength nach FAO 56:
-		float dr; // inv. rel. distance Earth-Sun
-		float delta; // solar inclination
-		float omega_s ;//sunset hour angle
-		float phi;
-	float dayLightHours;
-		phi = MFModelGetLatitude(itemID)*M_PI/180;
-		dr = 1 + 0.033*cos((2*M_PI/365 * doy));
-	    delta = 0.409*sin((2*M_PI/365*doy - 1.39));
-	omega_s = acos(-tan(phi)*tan(delta));
-	dayLightHours=24*omega_s/M_PI;
-	if (isnan(dayLightHours)) dayLightHours=0;
-	//////////////////////////////////////////////////////////
-	
-	
 	MFVarSetFloat (_MDOutSRadDayLengthID,itemID,dayLength);
 }
 
