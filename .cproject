@@ -12,12 +12,30 @@
 <builder buildPath="${workspace_loc:/WBMplus}" id="org.eclipse.cdt.build.core.settings.default.builder.1700154843" keepEnvironmentInBuildfile="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
 <tool id="org.eclipse.cdt.build.core.settings.holder.libs.588281365" name="holder for library settings" superClass="org.eclipse.cdt.build.core.settings.holder.libs"/>
 <tool id="org.eclipse.cdt.build.core.settings.holder.392226605" name="GNU C++" superClass="org.eclipse.cdt.build.core.settings.holder">
+<option id="org.eclipse.cdt.build.core.settings.holder.undef.incpaths.674766321" superClass="org.eclipse.cdt.build.core.settings.holder.undef.incpaths" valueType="undefIncludePath">
+<listOptionValue builtIn="false" value="/System/Library/Frameworks"/>
+<listOptionValue builtIn="false" value="/usr/lib/gcc/i686-apple-darwin8/4.0.1/include"/>
+<listOptionValue builtIn="false" value="/usr/lib/gcc/i686-apple-darwin9/4.0.1/include"/>
+<listOptionValue builtIn="false" value="/Library/Frameworks"/>
+</option>
 <inputType id="org.eclipse.cdt.build.core.settings.holder.inType.189664878" languageId="org.eclipse.cdt.core.g++" languageName="GNU C++" sourceContentType="org.eclipse.cdt.core.cxxSource,org.eclipse.cdt.core.cxxHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
 </tool>
 <tool id="org.eclipse.cdt.build.core.settings.holder.456131984" name="GNU C" superClass="org.eclipse.cdt.build.core.settings.holder">
+<option id="org.eclipse.cdt.build.core.settings.holder.undef.incpaths.2118664255" superClass="org.eclipse.cdt.build.core.settings.holder.undef.incpaths" valueType="undefIncludePath">
+<listOptionValue builtIn="false" value="/System/Library/Frameworks"/>
+<listOptionValue builtIn="false" value="/usr/lib/gcc/i686-apple-darwin8/4.0.1/include"/>
+<listOptionValue builtIn="false" value="/usr/lib/gcc/i686-apple-darwin9/4.0.1/include"/>
+<listOptionValue builtIn="false" value="/Library/Frameworks"/>
+</option>
 <inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1092160927" languageId="org.eclipse.cdt.core.gcc" languageName="GNU C" sourceContentType="org.eclipse.cdt.core.cSource,org.eclipse.cdt.core.cHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
 </tool>
 <tool id="org.eclipse.cdt.build.core.settings.holder.413967492" name="Assembly" superClass="org.eclipse.cdt.build.core.settings.holder">
+<option id="org.eclipse.cdt.build.core.settings.holder.undef.incpaths.1426508783" name="Undefined Include Paths" superClass="org.eclipse.cdt.build.core.settings.holder.undef.incpaths" valueType="undefIncludePath">
+<listOptionValue builtIn="false" value="/System/Library/Frameworks"/>
+<listOptionValue builtIn="false" value="/usr/lib/gcc/i686-apple-darwin8/4.0.1/include"/>
+<listOptionValue builtIn="false" value="/usr/lib/gcc/i686-apple-darwin9/4.0.1/include"/>
+<listOptionValue builtIn="false" value="/Library/Frameworks"/>
+</option>
 <inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1088999306" languageId="org.eclipse.cdt.core.assembly" languageName="Assembly" sourceContentType="org.eclipse.cdt.core.asmSource" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
 </tool>
 </toolChain>
