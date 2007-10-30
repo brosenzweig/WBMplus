@@ -4,7 +4,7 @@ GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
 Copyright 1994-2007, University of New Hampshire
 
-MDRainSurfRunoff.c
+MDSPackMelt.c
 
 balazs.fekete@unh.edu
 
@@ -17,14 +17,14 @@ balazs.fekete@unh.edu
 #include <MD.h>
 
 // Output
-static int _MDOutRainSurfRunoffID   = MFUnset;
+static int _MDOutSnowMeltID = MFUnset;
 
-int MDRainSurfRunoffDef () {
+int MDSPackMeltDef () {
 
-	if (_MDOutRainSurfRunoffID != MFUnset) return (_MDOutRainSurfRunoffID);
+	if (_MDOutSnowMeltID != MFUnset) return (_MDOutSnowMeltID);
 	
-	if ((MDRainInfiltrationDef () == CMfailed) ||
-	    ((_MDOutRainSurfRunoffID  = MFVarGetID (MDVarRainSurfRunoff, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed))
+	if ((MDSPackChgDef () == CMfailed) ||
+	    ((_MDOutSnowMeltID   = MFVarGetID (MDVarSnowMelt, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed))
 		return (CMfailed);
-	return (_MDOutRainSurfRunoffID);
+	return (_MDOutSnowMeltID);
 }

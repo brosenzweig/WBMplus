@@ -33,6 +33,7 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDIrrRefET.o\
        $(OBJ)/MDIrrRefETHamon.o\
        $(OBJ)/MDIrrRefETFAO.o\
+       $(OBJ)/MDIrrReturnFlow.o\
        $(OBJ)/MDIrrSoilMoisture.o\
        $(OBJ)/MDIrrSoilMoistChg.o\
        $(OBJ)/MDIrrUptakeRiver.o\
@@ -61,6 +62,7 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDRunoff.o\
        $(OBJ)/MDRunoffVolume.o\
        $(OBJ)/MDSPackChg.o\
+       $(OBJ)/MDSPackMelt.o\
        $(OBJ)/MDSmallReservoirs.o\
        $(OBJ)/MDSmallReservoirCap.o\
        $(OBJ)/MDSolarRad.o\
@@ -70,6 +72,9 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDWaterBalance.o\
        $(OBJ)/MDWetDays.o\
        $(OBJ)/MDWind.o\
+       $(OBJ)/MDWTempGrdWater.o\
+       $(OBJ)/MDWTempRiver.o\
+       $(OBJ)/MDWTempSurfRunoff.o\
        $(OBJ)/MDBgc.o
 
 all: ${TARGET}

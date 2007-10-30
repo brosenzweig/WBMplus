@@ -184,6 +184,9 @@ extern "C" {
 #define MDVarWetDaysAlpha                    "WetDaysAlpha"
 #define MDVarWetDaysBeta                     "WetDaysBeta"
 #define MDVarWindSpeed                       "WindSpeed"
+#define MDVarWTempGrdWater                   "GroudWaterTemperature"
+#define MDVarWTempRiver                      "RiverTemperature"
+#define MDVarWTempSurfRunoff                 "SurfaceROTemperature"
 
 #define MDParGrossRadTAU                     "GrossRadTAU"
 #define MDParGroundWatBETA                   "GroundWaterBETA"
@@ -261,6 +264,7 @@ int MDIrrGrossDemandDef();
 int MDIrrRefEvapotransDef ();
 int MDIrrRefEvapotransFAODef ();
 int MDIrrRefEvapotransHamonDef ();
+int MDIrrReturnFlowDef ();
 int MDIrrSoilMoistureDef ();
 int MDIrrSoilMoistChgDef ();
 int MDIrrUptakeRiverDef ();
@@ -291,6 +295,7 @@ int MDRiverWidthDef ();
 int MDRunoffDef ();
 int MDRunoffVolumeDef ();
 int MDSPackChgDef ();
+int MDSPackMeltDef ();
 int MDSmallReservoirReleaseDef ();
 int MDSmallReservoirCapacityDef ();
 int MDSolarRadDef ();
@@ -300,10 +305,13 @@ int MDSoilAvailWaterCapDef ();
 int MDSoilMoistChgDef ();
 int MDSurfRunoffDef ();
 int MDStemAreaIndexDef ();
+
 int MDWaterBalanceDef ();
 int MDPrecipitationDef ();
 int MDWetDaysDef ();
-
+int MDWTempGrdWaterDef ();
+int MDWTempRiverDef ();
+int MDWTempSurfRunoffDef ();
 //bool MDEvent (int,int,int);
 
 /* PET & Related Functions */
