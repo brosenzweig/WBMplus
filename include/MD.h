@@ -59,6 +59,30 @@ extern "C" {
 #define MDVarBgcTNConc                       "BgcTNConc"
 #define MDVarBgcNonPointTNSourcesCont        "NonPointTNSourcesCont" 
 #define MDVarBgcPointTNSources               "PointTNSources"
+# define MDVarNonPoint_NO3                     "NinputsNO3_nonpoint" 
+# define MDVarPointSources_NO3                 "NinputsNO3_point"
+# define MDVarNonPoint_NH4                     "NinputsNH4_nonpoint" 
+# define MDVarPointSources_NH4                 "NinputsNH4_point"
+# define MDVarNonPoint_DON                     "NinputsDON_nonpoint" 
+# define MDVarNonPoint_PON                     "NinputsPON_nonpoint"
+//Todo this needs to be beautified!
+# define MDVarBgcFlux_NO3                      "BgcFlux_NO3"
+# define MDVarBgcFlux_NH4                      "BgcFlux_NH4"
+# define MDVarBgcFlux_DON                      "BgcFlux_DON"
+# define MDVarBgcFlux_PON                      "BgcFlux_PON"
+	
+# define MDVarBgcStoreWater_NO3                "BgcStoreWater_NO3"         
+# define MDVarBgcLocalLoad_NO3                 "BgcLocalLoad_NO3"
+
+# define MDVarBgcStoreWater_NH4                "BgcStoreWater_NH4"         
+# define MDVarBgcLocalLoad_NH4                 "BgcLocalLoad_NH4"
+	
+# define MDVarBgcStoreWater_DON                "BgcStoreWater_DON"         
+# define MDVarBgcLocalLoad_DON                 "BgcLocalLoad_DON"
+
+# define MDVarBgcStoreWater_PON                "BgcStoreWater_PON"         
+# define MDVarBgcLocalLoad_PON                 "BgcLocalLoad_PON"
+# define MDVarBgcStoreSeds_PON                 "BgcStoreSeds_PONkgm2"	
 
 #define MDVarCParamAlbedo                    "Albedo"
 #define MDVarCParamCHeight                   "CanopyHeight"
