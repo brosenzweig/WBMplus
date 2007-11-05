@@ -83,7 +83,7 @@ static void _MDBaseFlow (int itemID) {
 	}
 
 	if (grdWater > 0.0) {
-		baseFlow    = grdWater * exp (-_MDGroundWatBETA);
+		baseFlow    = grdWater * (1.0 - exp (-_MDGroundWatBETA));
 		grdWater    = grdWater - baseFlow;
 		grdWaterChg = grdWater - grdWaterChg;
 	}
