@@ -188,10 +188,6 @@ float MDPETlibGroundResistance (float windSpeed,float height, float z0g,float z0
  
 	output=((height * exp (MDConstN) / (MDConstN * kh)) *
 		 	(exp (-MDConstN * z0g / height) - exp (-MDConstN * (z0c + dispc) / height)));
-   // output=70;
-	if (isinf(output))printf ("ras inf! height %f z0%f, dispc %f kh %f uStar %f za %f\n",height,z0c,dispc,kh,uStar,za);
-	//return ((height * exp (MDConstN) / (MDConstN * kh)) *
-		//	 	(exp (-MDConstN * z0g / height) - exp (-MDConstN * (z0c + dispc) / height)));
 	return output;
 }
 
@@ -275,10 +271,6 @@ float MDPETlibShuttleworthWallace (float rss,float aa,float asubs,float dd,float
 	ra = (delta + MDConstPSGAMMA) * raa;
 //	printf ("rs %f rc %f ra %f \n",rs,rc,ra);
 	//rs=70;
-	 if (isinf(ra)){
-//		   printf ("ra is INF!!  delta %f MDConstPSGAMMA %f  raa %f\n",delta ,MDConstPSGAMMA, raa);
-		   
-	   }
    ccs = 1.0 / (1.0 + rs * ra / (rc * (rs + ra)));
    ccc = 1.0 / (1.0 + rc * ra / (rs * (rc + ra)));
    pms = MDPETlibPenmanMontieth (aa,dd - delta * ras * (aa - asubs) / MDConstCPRHO,delta,raa + ras,rss);
