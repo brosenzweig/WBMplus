@@ -52,17 +52,17 @@ static void _MDDischRouteMuskingumCoeff (int itemID) {
 	wMean     = MFVarGetFloat (_MDInRiverbedWidthMeanID,     itemID, 0.0);
 	vMean     = MFVarGetFloat (_MDInRiverbedVelocityMeanID,  itemID, 0.0);
 	beta      = MFVarGetFloat (_MDInRiverbedShapeExponentID, itemID, 0.0);
-	if (MFMathEqualValues (vMean,     0.0)) {
+	if (CMmathEqualValues (vMean,     0.0)) {
 		MFVarSetFloat (_MDOutMuskingumC0ID, itemID, 0.0);
 		MFVarSetFloat (_MDOutMuskingumC1ID, itemID, 0.0);
 		MFVarSetFloat (_MDOutMuskingumC2ID, itemID, 0.0);
 		MFVarSetFloat (_MDOutCourantID,     itemID, 0.0);
 		return;
 	}
-	if (MFMathEqualValues (dL,        0.0) ||
-	    MFMathEqualValues (slope,     0.0) ||
-	    MFMathEqualValues (yMean,     0.0) ||
-	    MFMathEqualValues (wMean,     0.0) ||
+	if (CMmathEqualValues (dL,        0.0) ||
+	    CMmathEqualValues (slope,     0.0) ||
+	    CMmathEqualValues (yMean,     0.0) ||
+	    CMmathEqualValues (wMean,     0.0) ||
 	    (beta  < 0.0)) { 
 	    // Falling back to flow-accumulation
 		MFVarSetFloat (_MDOutMuskingumC0ID, itemID, 1.0);

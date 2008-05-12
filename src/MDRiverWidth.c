@@ -47,10 +47,10 @@ static void _MDRiverWidth (int itemID) {
 	avgWidth  = MFVarGetFloat (_MDInRiverbedWidthMeanID,      itemID, 0.0);
 	velocity  = MFVarGetFloat (_MDInRiverbedVelocityMeanID,   itemID, 0.0);
 
-	if (MFMathEqualValues (discharge, 0.0) ||
-	    MFMathEqualValues (avgDepth,  0.0) ||
-	    MFMathEqualValues (avgWidth,  0.0) ||
-	    MFMathEqualValues (velocity,  0.0)) {
+	if (CMmathEqualValues (discharge, 0.0) ||
+	    CMmathEqualValues (avgDepth,  0.0) ||
+	    CMmathEqualValues (avgWidth,  0.0) ||
+	    CMmathEqualValues (velocity,  0.0)) {
 		width = depth = 0.0;
 	}
 	else	{

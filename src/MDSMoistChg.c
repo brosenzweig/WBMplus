@@ -41,7 +41,7 @@ static void _MDSoilMoistChg (int itemID) {
 
 	MFVarSetFloat (_MDOutSoilMoistID,    itemID, sMoist);
 	MFVarSetFloat (_MDOutSoilMoistChgID, itemID, sMoistChg);
-	MFVarSetFloat (_MDOutRelSoilMoistID, itemID, MFMathEqualValues (soilAvailWaterCap, 0.0) ? 0.0 : sMoist / soilAvailWaterCap);
+	MFVarSetFloat (_MDOutRelSoilMoistID, itemID, CMmathEqualValues (soilAvailWaterCap, 0.0) ? 0.0 : sMoist / soilAvailWaterCap);
 }
 
 int MDSoilMoistChgDef () {
