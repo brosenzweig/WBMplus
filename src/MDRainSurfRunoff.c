@@ -17,14 +17,15 @@ balazs.fekete@unh.edu
 #include <MD.h>
 
 // Output
+static int _MDOutRainInfiltrationID = MFUnset;
 static int _MDOutRainSurfRunoffID   = MFUnset;
 
 int MDRainSurfRunoffDef () {
 
 	if (_MDOutRainSurfRunoffID != MFUnset) return (_MDOutRainSurfRunoffID);
 	
-	if ((MDRainInfiltrationDef () == CMfailed) ||
-	    ((_MDOutRainSurfRunoffID  = MFVarGetID (MDVarRainSurfRunoff, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed))
+	if (((_MDOutRainInfiltrationID = MDRainInfiltrationDef ()) == CMfailed) ||
+	    ((_MDOutRainSurfRunoffID   = MFVarGetID (MDVarRainSurfRunoff, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed))
 		return (CMfailed);
 	return (_MDOutRainSurfRunoffID);
 }

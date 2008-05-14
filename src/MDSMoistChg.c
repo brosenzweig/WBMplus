@@ -38,7 +38,7 @@ static void _MDSoilMoistChg (int itemID) {
 	sMoistChg = MFVarGetFloat (_MDInRainSoilMoistChgID,  itemID, 0.0)
 	          + (_MDInIrrSoilMoistChgID != MFUnset ? MFVarGetFloat (_MDInIrrSoilMoistChgID, itemID, 0.0) : 0.0);
 	soilAvailWaterCap = MFVarGetFloat (_MDInSoilAvailWaterCapID, itemID, 0.0);
-
+ //   printf("soilAvailWaterCap = %f\n", soilAvailWaterCap);
 	MFVarSetFloat (_MDOutSoilMoistID,    itemID, sMoist);
 	MFVarSetFloat (_MDOutSoilMoistChgID, itemID, sMoistChg);
 	MFVarSetFloat (_MDOutRelSoilMoistID, itemID, CMmathEqualValues (soilAvailWaterCap, 0.0) ? 0.0 : sMoist / soilAvailWaterCap);

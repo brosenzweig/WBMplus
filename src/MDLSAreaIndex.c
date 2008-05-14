@@ -32,11 +32,12 @@ static void _MDLeafAreaIndex (int itemID) {
 	cover = MFVarGetInt   (_MDInCoverID,       itemID, 7);
 	airT  = MFVarGetFloat (_MDInAtMeanID,      itemID, 0.0);
 	lpMax = MFVarGetFloat (_MDInCParamLPMaxID, itemID, 0.0);
-//	printf ("CoverType %i \n",cover);
+	
 	if (cover == 0) lai = lpMax;
 	else if (airT > 8.0) lai = lpMax;
 	else lai = 0.0;
-lai =0.5*lpMax;
+	//if (itemID==104)printf ("CoverType %i  arit%f lpMax %f\n",cover, airT, lai);
+ 
 
    MFVarSetFloat (_MDOutLeafAreaIndexID,itemID,0.001 > lai ? 0.001 : lai);
 }

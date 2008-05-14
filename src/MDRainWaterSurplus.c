@@ -41,6 +41,8 @@ static void _MDRainWaterSurplus (int itemID) {
 	precip      = MFVarGetFloat (_MDInPrecipID,         itemID, 0.0) * (1.0 - irrAreaFrac);
 	
 	surplus = precip - sPackChg - evapoTrans - sMoistChg;
+	
+	//if(itemID == 10081) printf("surplus = %f, precip = %f, sPackChg = %f, evapoTrans = %f\n", surplus, precip, sPackChg, evapoTrans);
 
 	MFVarSetFloat (_MDOutRainWaterSurplusID, itemID, surplus);
 }
@@ -53,7 +55,7 @@ int MDRainWaterSurplusDef () {
 	MFDefEntering ("Rainfed Water Surplus");
 	if ((ret = MDIrrGrossDemandDef ()) == CMfailed) return (CMfailed);
 	if ((ret != MFUnset) &&
-	    ((_MDInIrrAreaFracID      = MFVarGetID (MDVarIrrAreaFraction,      "-",  MFInput,  MFState, MFBoundary)) == CMfailed))
+			  ((_MDInIrrAreaFracID         = MDIrrigatedAreaDef    ())==  CMfailed) )
 	     return (CMfailed);	
 	if (((_MDInPrecipID             = MDPrecipitationDef ()) == CMfailed) ||
 		((_MDInSPackChgID           = MDSPackChgDef      ()) == CMfailed) ||

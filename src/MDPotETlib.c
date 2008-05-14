@@ -16,14 +16,14 @@ balazs.fekete@unh.edu
 #include <math.h>
 #include <MD.h>
 
-//float MDPETlibLeafAreaIndex (float laiFac,float lpMax) {
+float MDPETlibLeafAreaIndex (float laiFac,float lpMax) {
 ///* projected leaf area index (lai) pulled out from cover dependent PET functions 
 // * laiFac    - lai Factor (originally fl) seasonal reduction factor for maximum LAI, 0 to 1
 // * lpMax     - maximum projected leaf area index */
-//	float lai;
-//   lai = laiFac * lpMax; 
-//   return (0.001 > lai ? 0.001 : lai);
-//}
+	float lai;
+   lai = laiFac * lpMax; 
+   return (0.001 > lai ? 0.001 : lai);
+}
 
 float MDPETlibSteamAreaIndex (float lpMax,float canopyH) {
 /* Projected Stem area index (sai) pulled out from McNaugthon and Black PET function 
@@ -188,6 +188,10 @@ float MDPETlibGroundResistance (float windSpeed,float height, float z0g,float z0
  
 	output=((height * exp (MDConstN) / (MDConstN * kh)) *
 		 	(exp (-MDConstN * z0g / height) - exp (-MDConstN * (z0c + dispc) / height)));
+   // output=70;
+	if (isinf(output))printf ("ras inf! height %f z0%f, dispc %f kh %f uStar %f za %f\n",height,z0c,dispc,kh,uStar,za);
+	//return ((height * exp (MDConstN) / (MDConstN * kh)) *
+		//	 	(exp (-MDConstN * z0g / height) - exp (-MDConstN * (z0c + dispc) / height)));
 	return output;
 }
 
@@ -269,8 +273,12 @@ float MDPETlibShuttleworthWallace (float rss,float aa,float asubs,float dd,float
    rs = (delta + MDConstPSGAMMA) * ras + MDConstPSGAMMA * rss; 
    rc = (delta + MDConstPSGAMMA) * rac + MDConstPSGAMMA * rsc; 
 	ra = (delta + MDConstPSGAMMA) * raa;
-//	printf ("rs %f rc %f ra %f \n",rs,rc,ra);
+	printf ("rs %f rc %f ra %f \n",rs,rc,ra);
 	//rs=70;
+	 if (isinf(ra)){
+//		   printf ("ra is INF!!  delta %f MDConstPSGAMMA %f  raa %f\n",delta ,MDConstPSGAMMA, raa);
+		   
+	   }
    ccs = 1.0 / (1.0 + rs * ra / (rc * (rs + ra)));
    ccc = 1.0 / (1.0 + rc * ra / (rs * (rc + ra)));
    pms = MDPETlibPenmanMontieth (aa,dd - delta * ras * (aa - asubs) / MDConstCPRHO,delta,raa + ras,rss);

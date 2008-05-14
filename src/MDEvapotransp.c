@@ -24,10 +24,11 @@ static int _MDOutEvapotranspID    = MFUnset;
 
 static void _MDEvapotransp (int itemID) {	
 // Input
-	float et;    // Evapotranspiration [mm/dt]
+	float et=0;    // Evapotranspiration [mm/dt]
 	
 	et = MFVarGetFloat (_MDInRainEvapotranspID,     itemID, 0.0)
 	   + (_MDInIrrEvapotranspID != MFUnset ? MFVarGetFloat (_MDInIrrEvapotranspID, itemID, 0.0) : 0.0);
+//	if (itemID==104)printf ("ETP hier %f irrET %f\n",et,MFVarGetFloat (_MDInIrrEvapotranspID, itemID, 0.0) );
 	MFVarSetFloat (_MDOutEvapotranspID,  itemID, et);
 }
 

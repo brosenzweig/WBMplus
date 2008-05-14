@@ -56,6 +56,7 @@ static void _MDSRadDayLength (int itemID) {
 	doy = MFDateGetDayOfYear ();
 	lat = MFModelGetLatitude (itemID) / 180.0 * M_PI;
 
+	
    dec = _MDSRadDEC (doy);
 
    if (fabs ((double) lat) > M_PI_2) lat = (M_PI_2 - (double) 0.01) * (lat > 0.0 ? 1.0 : -1.0);

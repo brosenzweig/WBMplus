@@ -79,17 +79,21 @@ static void _MDWaterBalance(int itemID) {
 		}
 
 		balance = (precip - snowPackChg) * irrAreaFrac + irrGrossDemand - irrEvapotransp - irrSoilMoistChg - irrReturnFlow;
-		if (fabs(balance) > 0.01 && irrAreaFrac>0 )
+		if (fabs(balance) > 0.0001 && irrAreaFrac>0 )
 			printf("TIEM %i IrrBalance! %f precip %f Demand %f snowM %f ET %f dSM %f Return %f\n",
 		           itemID,balance,precip,irrGrossDemand,snowPackChg,irrEvapotransp,irrSoilMoistChg,irrReturnFlow);
 		MFVarSetFloat (_MDOutIrrWaterBalanceID, itemID, balance);
 
 		balance = irrGrossDemand - irrUptakeGrdWater - irrUptakeRiver - irrUptakeExcess - smallResRelease;
+		if (fabs(balance) > 0.0001 && irrAreaFrac>0 ) printf("IrrUptake Balance item %i IrrBalance! %f precip %f Demand %f snowM %f ET %f dSM %f Return %f\n",itemID,balance,precip,irrGrossDemand,snowPackChg,irrEvapotransp,irrSoilMoistChg,irrReturnFlow);
 		MFVarSetFloat (_MDOutIrrUptakeBalanceID, itemID, balance);
 	}
 
 	balance = precip + irrUptakeRiver + irrUptakeExcess
 	        - (etp + runoff + grdWaterChg + snowPackChg + soilMoistChg + smallResStorageChg);
+//	if (itemID==1)printf("p %f etp %f ro %f item %i\n",precip,etp,runoff,itemID);
+	//if(itemID==104)if (fabs(balance)>0.001 )printf ("Water Balance =%f precip %f etp %f dSpack %f dSM%f itemID %i irrArea %f Doy %i\n",balance,precip,etp,snowPackChg,soilMoistChg,itemID,irrAreaFrac,MFDateGetDayOfYear());	
+	// ("Water Balance =%f\n",balance);
 	MFVarSetFloat (_MDOutWaterBalanceID, itemID , balance);
 }
 
@@ -99,6 +103,7 @@ int MDWaterBalanceDef() {
 	if ((                                  MDAccumBalanceDef     ()  == CMfailed) ||
 	    ((_MDInPrecipID                  = MDPrecipitationDef    ()) == CMfailed) ||
 	    ((_MDInDischargeID               = MDDischargeDef        ()) == CMfailed) ||
+	 
 	    ((_MDInSnowPackChgID             = MDSPackChgDef         ()) == CMfailed) ||
 	    ((_MDInSoilMoistChgID            = MDSoilMoistChgDef     ()) == CMfailed) ||
 	    ((_MDInRunoffID                  = MDRunoffDef           ()) == CMfailed) ||
@@ -112,9 +117,9 @@ int MDWaterBalanceDef() {
 	        ((_MDInIrrUptakeRiverID      = MDIrrUptakeRiverDef    ()) == CMfailed) ||
 	        ((_MDInIrrUptakeGrdWaterID   = MDIrrUptakeGrdWaterDef ()) == CMfailed) ||
 	        ((_MDInIrrSoilMoistChgID     = MDIrrSoilMoistChgDef   ()) == CMfailed) ||
+	        ((_MDInIrrAreaFracID         = MDIrrigatedAreaDef    ())==  CMfailed) ||
 	        ((_MDInIrrEvapotranspID      = MFVarGetID (MDVarIrrEvapotranspiration, "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
 	        ((_MDInIrrReturnFlowID       = MFVarGetID (MDVarIrrReturnFlow,         "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) || 
-	        ((_MDInIrrAreaFracID         = MFVarGetID (MDVarIrrAreaFraction,       "-",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	        ((_MDInIrrUptakeExcessID     = MFVarGetID (MDVarIrrUptakeExcess,       "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
 		    ((_MDOutIrrUptakeBalanceID   = MFVarGetID (MDVarIrrUptakeBalance,      "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
 		    ((_MDOutIrrWaterBalanceID    = MFVarGetID (MDVarIrrWaterBalance,       "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed))

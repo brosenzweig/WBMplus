@@ -6,7 +6,7 @@ BIN    = ../bin
 CC     = gcc -g -Wall -I$(INC) -I../../CMlib/include -I../../MFlib/include
 LINK   = gcc
 LIBS   = -L../../CMlib/lib -L../../MFlib/lib -lMF10 -lCM10 $(UNIXLIBS)
-TARGET = $(BIN)/wbmplus.bin
+TARGET = $(BIN)/wbmplusWorking.bin
 
 INCLUDES = $(INC)/MD.h
 
@@ -33,10 +33,10 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDIrrRefET.o\
        $(OBJ)/MDIrrRefETHamon.o\
        $(OBJ)/MDIrrRefETFAO.o\
-       $(OBJ)/MDIrrReturnFlow.o\
        $(OBJ)/MDIrrSoilMoisture.o\
        $(OBJ)/MDIrrSoilMoistChg.o\
        $(OBJ)/MDIrrUptakeRiver.o\
+       $(OBJ)/MDIrrigatedArea.o\
        $(OBJ)/MDIrrUptakeGrdWater.o\
        $(OBJ)/MDPrecipitation.o\
        $(OBJ)/MDRainInfiltration.o\
@@ -62,7 +62,6 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDRunoff.o\
        $(OBJ)/MDRunoffVolume.o\
        $(OBJ)/MDSPackChg.o\
-       $(OBJ)/MDSPackMelt.o\
        $(OBJ)/MDSmallReservoirs.o\
        $(OBJ)/MDSmallReservoirCap.o\
        $(OBJ)/MDSolarRad.o\
@@ -72,9 +71,6 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDWaterBalance.o\
        $(OBJ)/MDWetDays.o\
        $(OBJ)/MDWind.o\
-       $(OBJ)/MDWTempGrdWater.o\
-       $(OBJ)/MDWTempRiver.o\
-       $(OBJ)/MDWTempSurfRunoff.o\
        $(OBJ)/MDBgc.o
 
 all: ${TARGET}
