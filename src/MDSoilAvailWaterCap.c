@@ -57,6 +57,7 @@ int MDSoilAvailWaterCapDef () {
 			    ((_MDInSoilRootingDepthID   = MFVarGetID (MDVarSoilRootingDepth,  "mm",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDOutSoilAvailWaterCapID = MFVarGetID (MDVarSoilAvailWaterCap, "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
 			    (MFModelAddFunction (_MDSoilAvailWaterCap) == CMfailed)) return (CMfailed);
+			break;
 		}
 	MFDefLeaving  ("Soil available water capacity");
 	return (_MDOutSoilAvailWaterCapID);
