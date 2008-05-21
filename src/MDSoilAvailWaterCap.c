@@ -44,25 +44,20 @@ int MDSoilAvailWaterCapDef () {
 	const char *optStr, *optName = MDOptSoilAvailableWaterCapacity;
 	const char *options [] = { MDInputStr, MDCalculateStr,  (char *) NULL };
 	
-	if (_MDOutSoilAvailWaterCapID!= MFUnset) return (_MDOutSoilAvailWaterCapID);
+	if (_MDOutSoilAvailWaterCapID != MFUnset) return (_MDOutSoilAvailWaterCapID);
 
 	MFDefEntering ("Soil available water capacity");
-	
-	
+
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);
 		switch (optID) {
-			case MDinput: _MDOutSoilAvailWaterCapID = MFVarGetID (MDVarSoilAvailWaterCap,         "mm",     MFInput,  MFState, MFBoundary); 
-			return (_MDOutSoilAvailWaterCapID);
-		//	printf("SoilAvailWaterCap = %d\n", _MDOutSoilAvailWaterCapID);
-			break;
-		//	 if(MFModelAddFunction (_MDSoilAvailWaterCapInput) == CMfailed) return CMfailed;
-			case MDcalculate:
-	if (((_MDInSoilFieldCapacityID  = MFVarGetID (MDVarSoilFieldCapacity, "mm/m", MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDInSoilWiltingPointID   = MFVarGetID (MDVarSoilWiltingPoint,  "mm/m", MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDInSoilRootingDepthID   = MFVarGetID (MDVarSoilRootingDepth,  "mm",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDOutSoilAvailWaterCapID = MFVarGetID (MDVarSoilAvailWaterCap, "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-	    (MFModelAddFunction (_MDSoilAvailWaterCap) == CMfailed)) return (CMfailed);
+		case MDinput: _MDOutSoilAvailWaterCapID = MFVarGetID (MDVarSoilAvailWaterCap,         "mm",     MFInput,  MFState, MFBoundary); break;
+		case MDcalculate:
+			if (((_MDInSoilFieldCapacityID  = MFVarGetID (MDVarSoilFieldCapacity, "mm/m", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDInSoilWiltingPointID   = MFVarGetID (MDVarSoilWiltingPoint,  "mm/m", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDInSoilRootingDepthID   = MFVarGetID (MDVarSoilRootingDepth,  "mm",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDOutSoilAvailWaterCapID = MFVarGetID (MDVarSoilAvailWaterCap, "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+			    (MFModelAddFunction (_MDSoilAvailWaterCap) == CMfailed)) return (CMfailed);
+		}
 	MFDefLeaving  ("Soil available water capacity");
 	return (_MDOutSoilAvailWaterCapID);
-		}
 }
