@@ -163,8 +163,8 @@ extern "C" {
 #define MDVarRunoffCorretion                 "RunoffCorrection"
 #define MDVarRunoffVolume                    "RunoffVolume"
 
-#define MDVarSmallReservoirStorageFraction   "SmallReservoirStorageFraction"	
 #define MDVarSAGEVegCover                    "SAGEVegCover"
+#define MDVarSmallReservoirStorageFrac       "SmallReservoirStorageFraction"	
 #define MDVarSmallResCapacity                "SmallReservoirCapacity"
 #define MDVarSmallResRelease                 "SmallReservoirRelease"
 #define MDVarSmallResStorage                 "SmallReservoirStorage" 

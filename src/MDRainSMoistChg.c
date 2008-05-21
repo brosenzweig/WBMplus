@@ -41,28 +41,26 @@ static int _MDOutEvaptrsID          = MFUnset;
 static int _MDOutSoilMoistCellID    = MFUnset;
 static int _MDOutSoilMoistID        = MFUnset;
 static int _MDOutSMoistChgID        = MFUnset;
- 
- 
 
 static void _MDRainSMoistChg (int itemID) {	
 // Input
 	float airT;            // Air temperature [degreeC]
 	float precip;          // Precipitation [mm/dt]
 	float pet;             // Potential evapotranspiration [mm/dt]
-	float intercept=0;       // Interception (when the interception module is turned on) [mm/dt]
+	float intercept=0;     // Interception (when the interception module is turned on) [mm/dt]
 	float sPackChg;        // Snow pack change [mm/dt]
-	float irrAreaFrac=0;     // Irrigated area fraction
-	float impAreaFrac=0;     // Impervious area fraction RJS 01-17-08
-	float H2OAreaFrac=0;     // water area fraction RJS 01-17-08
+	float irrAreaFrac=0;   // Irrigated area fraction
+	float impAreaFrac=0;   // Impervious area fraction RJS 01-17-08
+	float H2OAreaFrac=0;   // water area fraction RJS 01-17-08
 //	float runofftoPerv;    // runoff from impervious to pervious [mm/dt]  RJS 01-17-08
 	float def;             // water deficit [mm/dt]
 	float prevSMoist;      // soil moisture from previous time step [mm/dt]
 	float Xs=0;
 	float Xr=0;
 // Output
-	float sMoist=0;          // Soil moisture [mm/dt]
-	float sMoistChg=0;       // Soil moisture change [mm/dt]
-	float transp=0;          // Transpiration [mm]
+	float sMoist=0;        // Soil moisture [mm/dt]
+	float sMoistChg=0;     // Soil moisture change [mm/dt]
+	float transp=0;        // Transpiration [mm]
 	float evapotrans;
 	float excess=0;
 	airT         = MFVarGetFloat (_MDInAirTMeanID,          itemID, 0.0);
@@ -91,7 +89,7 @@ static void _MDRainSMoistChg (int itemID) {
 				//if (itemID==58215)printf("hier dSM=%f WaterIn %f\n",sMoistChg, _MDWaterIn);
 			}
 			if (_MDWaterIn < _MDPet) {
-				sMoistChg = (-1.0 * _MDDryingFunc(prevSMoist))*(_MDPet - _MDWaterIn);
+				sMoistChg = (-1.0 * _MDDryingFunc(prevSMoist)) * (_MDPet - _MDWaterIn);
 			//	if (itemID==58215)printf("hier dSM=%f\n",sMoistChg);
 			}
 			if (def <= _MDWaterIn) {
