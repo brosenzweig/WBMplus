@@ -65,7 +65,7 @@ static void _MDSmallReservoirRelease (int itemID) {
 		openWaterToReferenceET = 0.6; // TODO
 	    averageSmallResDepth   = 2.0; // TODO
 	
-		smallResSizeFactor = smallResCapacity / 1000 * MFModelGetArea(itemID) / (averageSmallResDepth * MFModelGetArea (itemID));
+		smallResSizeFactor = smallResCapacity / (1000 * averageSmallResDepth);
 		openWaterET = openWaterET * openWaterToReferenceET * smallResSizeFactor;
 
 		in = surfRunoff;
@@ -81,7 +81,7 @@ static void _MDSmallReservoirRelease (int itemID) {
 		smallResUptake = smallResStorage - smallResPrevStorage;
 
 		// ET Water from Reservoir
-		smallResActualET = (smallResStorage - openWaterET) > 0 ? openWaterET : smallResStorage;
+		smallResActualET = smallResStorage < openWaterET ? smallResStorage : openWaterET;
 		smallResStorage  = smallResStorage - smallResActualET;
 		
 		// Release water from reservoir

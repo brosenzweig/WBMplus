@@ -88,15 +88,13 @@ static void _MDWaterBalance(int itemID) {
 		MFVarSetFloat (_MDOutIrrWaterBalanceID, itemID, balance);
 
 		balance = irrGrossDemand - irrUptakeGrdWater - irrUptakeRiver - irrUptakeExcess - smallResRelease;
-		if (fabs (balance) > 0.0001 && irrAreaFrac>0 ) printf("IrrUptake Balance item %i IrrBalance! %f precip %f Demand %f snowM %f ET %f dSM %f Return %f\n",itemID,balance,precip,irrGrossDemand,snowPackChg,irrEvapotransp,irrSoilMoistChg,irrReturnFlow);
+		if ((fabs (balance) > 0.0001) && (irrAreaFrac > 0.0)) printf("IrrUptake Balance item %i IrrBalance! %f precip %f Demand %f snowM %f ET %f dSM %f Return %f\n",itemID,balance,precip,irrGrossDemand,snowPackChg,irrEvapotransp,irrSoilMoistChg,irrReturnFlow);
 		MFVarSetFloat (_MDOutIrrUptakeBalanceID, itemID, balance);
 	}
 
-	balance = precip + irrUptakeRiver + irrUptakeExcess
+	balance = precip + irrUptakeGrdWater + irrUptakeRiver + irrUptakeExcess +
 	        - (etp + runoff + grdWaterChg + snowPackChg + soilMoistChg + smallResStorageChg);
-//	if (itemID==1)printf("p %f etp %f ro %f item %i\n",precip,etp,runoff,itemID);
-	//if(itemID==104)if (fabs(balance)>0.001 )printf ("Water Balance =%f precip %f etp %f dSpack %f dSM%f itemID %i irrArea %f Doy %i\n",balance,precip,etp,snowPackChg,soilMoistChg,itemID,irrAreaFrac,MFDateGetDayOfYear());	
-	// ("Water Balance =%f\n",balance);
+
 	MFVarSetFloat (_MDOutWaterBalanceID, itemID , balance);
 }
 
