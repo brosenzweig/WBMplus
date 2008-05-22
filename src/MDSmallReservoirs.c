@@ -62,8 +62,8 @@ static void _MDSmallReservoirRelease (int itemID) {
 		grossDemand         = MFVarGetFloat (_MDInIrrGrossDemandID,      itemID, 0.0);
 		smallResStorageFrac = MFVarGetFloat (_MDInSmallResStorageFracID, itemID, 1.0);
 
-		openWaterToReferenceET = 0.6;
-	    averageSmallResDepth   = 2.0;
+		openWaterToReferenceET = 0.6; // TODO
+	    averageSmallResDepth   = 2.0; // TODO
 	
 		smallResSizeFactor = smallResCapacity / 1000 * MFModelGetArea(itemID) / (averageSmallResDepth * MFModelGetArea (itemID));
 		openWaterET = openWaterET * openWaterToReferenceET * smallResSizeFactor;
