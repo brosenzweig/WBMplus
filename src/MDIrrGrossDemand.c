@@ -366,11 +366,11 @@ static void _MDIrrGrossDemand (int itemID) {
   			MFVarSetFloat (_MDOutCropDeficitIDs [_MDNumberOfIrrCrops], itemID, curDepl);	
 		}
 		else {
-			cropWR=0;
-			smChange=0;
-			deepPercolation=0;
-			netIrrDemand=0;
-			curDepl=0;
+			cropWR          = 0.0;
+			smChange        = 0.0;
+			deepPercolation = 0.0;
+			netIrrDemand    = 0.0;
+			curDepl         = 0.0;
 		}
 		MFVarSetFloat (_MDOutCropETIDs [_MDNumberOfIrrCrops], itemID, cropWR);
   		MFVarSetFloat (_MDNonIrrFractionID, itemID, cropFraction [_MDNumberOfIrrCrops]);
