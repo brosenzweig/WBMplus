@@ -264,7 +264,7 @@ static void _MDIrrGrossDemand (int itemID) {
 					cropCoeff =getCropKc(&_MDirrigCropStruct[i], daysSincePlanted, stage);
 					cropWR    = refETP * cropCoeff;
 					rootDepth = getCurCropRootingDepth (&_MDirrigCropStruct[i],daysSincePlanted);
-					rootDepth = 250; // TODO
+					rootDepth = 250;
 				    cropDepletionFactor=getCorrDeplFactor(&_MDirrigCropStruct[i], cropWR);
 					if (_MDirrigCropStruct[i].cropIsRice==1) {
 //						if (itemID==104) printf ("Hier is rice\n");
