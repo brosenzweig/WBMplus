@@ -50,8 +50,8 @@ static void _MDRainSMoistChg (int itemID) {
 	float intercept   = 0.0; // Interception (when the interception module is turned on) [mm/dt]
 	float sPackChg;          // Snow pack change [mm/dt]
 	float irrAreaFrac = 0.0; // Irrigated area fraction
-	float impAreaFrac = 0.0; // Impervious area fraction RJS 01-17-08
-	float H2OAreaFrac = 0.0; // water area fraction RJS 01-17-08
+//	TODO float impAreaFrac = 0.0; // Impervious area fraction RJS 01-17-08
+//	TODO float H2OAreaFrac = 0.0; // water area fraction RJS 01-17-08
 //	float runofftoPerv;      // runoff from impervious to pervious [mm/dt]  RJS 01-17-08
 	float def;               // water deficit [mm/dt]
 	float prevSMoist;        // soil moisture from previous time step [mm/dt]
