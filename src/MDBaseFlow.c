@@ -48,7 +48,7 @@ static void _MDBaseFlow (int itemID) {
 // Local
 	float irrReturnFlow;     // Irrigational return flow [mm/dt]
                      
-	grdWaterChg   =grdWater   = MFVarGetFloat (_MDOutGrdWatID,  itemID, 0.0);
+	grdWaterChg = grdWater = MFVarGetFloat (_MDOutGrdWatID,  itemID, 0.0);
 	grdWaterRecharge = MFVarGetFloat (_MDInRechargeID, itemID, 0.0);
 	grdWater = grdWater + grdWaterRecharge;
 
@@ -83,7 +83,6 @@ static void _MDBaseFlow (int itemID) {
 	}
 
 	if (grdWater > 0.0) {
-//		baseFlow    = grdWater * exp (-_MDGroundWatBETA);
 		baseFlow    = grdWater * _MDGroundWatBETA;
 		grdWater    = grdWater - baseFlow;
 		grdWaterChg = grdWater - grdWaterChg;
@@ -97,9 +96,6 @@ static void _MDBaseFlow (int itemID) {
     MFVarSetFloat (_MDOutGrdWatRechargeID, itemID, grdWaterRecharge);
     MFVarSetFloat (_MDOutGrdWatUptakeID,   itemID, grdWaterUptake);
 	MFVarSetFloat (_MDOutBaseFlowID,       itemID, baseFlow);
-	
-	//if(itemID == 10081) printf("grdWater = %f, baseFlow = %f\n", grdWater, baseFlow);
-	
 }
 
 int MDBaseFlowDef () {
