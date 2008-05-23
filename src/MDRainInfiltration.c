@@ -67,7 +67,7 @@ int MDRainInfiltrationDef () {
 				if (((optStr = MFOptionGet (MDParInfiltrationFrac))  != (char *) NULL) &&
 				    (sscanf (optStr,"%f",&par) == 1))
 					_MDInfiltrationFrac = par;
-				else goto default; break;
+				else goto Stop;
 			}
 			if (((_MDOutRainSurfRunoffID       = MFVarGetID (MDVarRainSurfRunoff,       "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
 			    ((_MDOutRainInfiltrationID     = MFVarGetID (MDVarRainInfiltration,     "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
@@ -77,4 +77,7 @@ int MDRainInfiltrationDef () {
 	}
 	MFDefLeaving  ("Rainfed Infiltration");
 	return (_MDOutRainInfiltrationID);
+Stop:
+	MFOptionMessage (optName, optStr, options);
+	return (CMfailed);
 }
