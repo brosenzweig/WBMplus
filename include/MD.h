@@ -111,12 +111,12 @@ extern "C" {
 #define MDVarIrrSoilMoisture                 "IrrSoilMoisture"
 #define MDVarIrrSoilMoistChange              "IrrSoilMoistChange"
 #define MDVarIrrUptakeBalance                "IrrUptakeBalance"
-#define MDVarIrrUptakeExternal               "__IrrUptakeExternal"
+#define MDVarIrrUptakeExternal               "IrrUptakeExternal"
 #define MDVarIrrUptakeExcess                 "IrrUptakeExcess"
 #define MDVarIrrUptakeGrdWater               "IrrUptakeGroundWater"
 #define MDVarIrrUptakeRiver                  "IrrUptakeRiver"       
 #define MDVarIrrWaterBalance                 "IrrWaterBalance"
-#define MDNonIrrigatedFraction                "NonIrrigatedFraction"	
+#define MDNonIrrigatedFraction               "NonIrrigatedFraction"	
 #define MDVarIrrDailyRicePerolationRate      "RicePercolationRate"	
 #define MDVarIrrRicePondingDepth			 "RicePondingDepth"
 	
@@ -202,9 +202,9 @@ extern "C" {
 #define MDParSoilMoistALPHA                  "SoilMoistureALPHA"
 #define MDParInfiltrationFrac                "InfiltrationFraction"
 
-#define MDParInfiltrationFracSpatial           "InfiltrationFractionSpatial"
-#define MDParSnowMeltThreshold           "SnowMeltThreshold"	
-#define	MDParFallThreshold				"SnowFallThreshold"
+#define MDParInfiltrationFracSpatial         "InfiltrationFractionSpatial"
+#define MDParSnowMeltThreshold               "SnowMeltThreshold"	
+#define	MDParFallThreshold				     "SnowFallThreshold"
 	
 #define MDConst_m3PerSecTOm3PerDay    86400.0
 #define MDConst_m3PerSecTOmmKm2PerDay 86400000.0

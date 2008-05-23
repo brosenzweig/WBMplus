@@ -82,18 +82,12 @@ static void _MDWaterBalance(int itemID) {
 		}
 
 		balance = (precip - snowPackChg) * irrAreaFrac + irrGrossDemand - irrEvapotransp - irrSoilMoistChg - irrReturnFlow;
-		if (fabs (balance) > 0.0001 && (irrAreaFrac > 0.0 ))
-			printf ("TIEM %i IrrBalance! %f precip %f Demand %f snowM %f ET %f dSM %f Return %f\n",
-		           itemID,balance,precip,irrGrossDemand,snowPackChg,irrEvapotransp,irrSoilMoistChg,irrReturnFlow);
 		MFVarSetFloat (_MDOutIrrWaterBalanceID, itemID, balance);
 
-		balance = irrGrossDemand - irrUptakeGrdWater - irrUptakeRiver - irrUptakeExcess - smallResRelease;
-		if ((fabs (balance) > 0.0001) && (irrAreaFrac > 0.0)) printf("IrrUptake Balance item %i IrrBalance! %f precip %f Demand %f snowM %f ET %f dSM %f Return %f\n",itemID,balance,precip,irrGrossDemand,snowPackChg,irrEvapotransp,irrSoilMoistChg,irrReturnFlow);
+		balance = irrGrossDemand - (irrUptakeGrdWater + irrUptakeRiver + irrUptakeExcess + smallResRelease);
 		MFVarSetFloat (_MDOutIrrUptakeBalanceID, itemID, balance);
 	}
-
-	balance = precip + irrUptakeRiver + irrUptakeExcess
-	        - (etp + runoff + grdWaterChg + snowPackChg + soilMoistChg + smallResStorageChg);
+	balance = precip + irrUptakeRiver + irrUptakeExcess - (etp + runoff + grdWaterChg + snowPackChg + soilMoistChg + smallResStorageChg);
 
 	MFVarSetFloat (_MDOutWaterBalanceID, itemID , balance);
 }
