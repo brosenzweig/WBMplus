@@ -22,22 +22,22 @@ static int _MDInRainWaterSurplusID      = MFUnset;
 static int _MDOutRainSurfRunoffID       = MFUnset;
 static int _MDOutRainInfiltrationID     = MFUnset;
 static float _MDInfiltrationFrac = 0.5;
-static int _MDInfiltrationFractionID=MFUnset;
+static int  _MDInfiltrationFractionID   = MFUnset;
+
 static void _MDRainInfiltrationSimple (int itemID) {
 
 	float surplus;
 	float surfRunoff;
 	float infiltration;
-	if (_MDInfiltrationFractionID!=MFUnset)	_MDInfiltrationFrac=MFVarGetFloat(_MDInfiltrationFractionID,itemID,0.0);
+
+	if (_MDInfiltrationFractionID != MFUnset)
+		_MDInfiltrationFrac = MFVarGetFloat(_MDInfiltrationFractionID,itemID,0.0);
+
 	surplus = MFVarGetFloat(_MDInRainWaterSurplusID, itemID, 0.0);
 	surfRunoff   = surplus * (1.0 - _MDInfiltrationFrac);
 	infiltration = surplus *_MDInfiltrationFrac;
 	MFVarSetFloat (_MDOutRainSurfRunoffID,       itemID, surfRunoff);
 	MFVarSetFloat (_MDOutRainInfiltrationID,     itemID, infiltration);
-	
-	//if(itemID == 10081) printf("infiltration fraction = %f, surfRunoff = %f, infiltration = %f\n", _MDInfiltrationFrac, surfRunoff, infiltration);
-	
-	
 }
 
 enum { MDinput, MDsimple, MDvarying,MDSpatially};
@@ -60,12 +60,15 @@ int MDRainInfiltrationDef () {
 			break;
 		case MDSpatially:
 			_MDInfiltrationFractionID = MFVarGetID (MDParInfiltrationFracSpatial, "mm", MFInput, MFState, MFBoundary);
-					
 		case MDsimple:
-		case MDvarying:	
+		case MDvarying:
 			if ((_MDInRainWaterSurplusID = MDRainWaterSurplusDef ()) == CMfailed) return (CMfailed);
-			if (((optStr = MFOptionGet (MDParInfiltrationFrac))  != (char *) NULL) && (sscanf (optStr,"%f",&par) == 1))
-				_MDInfiltrationFrac = par;
+			if (_MDInfiltrationFractionID != MFUnset) {
+				if (((optStr = MFOptionGet (MDParInfiltrationFrac))  != (char *) NULL) &&
+				    (sscanf (optStr,"%f",&par) == 1))
+					_MDInfiltrationFrac = par;
+				else goto default; break;
+			}
 			if (((_MDOutRainSurfRunoffID       = MFVarGetID (MDVarRainSurfRunoff,       "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
 			    ((_MDOutRainInfiltrationID     = MFVarGetID (MDVarRainInfiltration,     "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
 			    (MFModelAddFunction (_MDRainInfiltrationSimple) == CMfailed)) return (CMfailed);
