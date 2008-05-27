@@ -58,7 +58,7 @@ static void _MDSPackChg (int itemID) {
 		sPackChg = 2.63 + 2.55 * airT + 0.0912 * airT * precip;
 		sPackChg = - (sPack < sPackChg ? sPack : sPackChg);
 		MFVarSetFloat (_MDOutSnowFallID, itemID, 0.0);
-		MFVarSetFloat (_MDOutSnowMeltID, itemID, fabs(sPackChg));
+		MFVarSetFloat (_MDOutSnowMeltID, itemID, fabs (sPackChg));
 		MFVarSetFloat (_MDOutSPackChgID, itemID, sPackChg);
 		MFVarSetFloat (_MDOutSnowPackID, itemID, sPack + sPackChg);
 	}

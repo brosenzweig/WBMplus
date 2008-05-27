@@ -103,30 +103,30 @@ static void _MDRainSMoistChg (int itemID) {
 	
 		if (fabs(sPackChg) <  def) Xs = 0.0;
 		if (fabs(sPackChg) >= def) Xs = fabs (sPackChg) - def;
+
+		sMoist = prevSMoist + sMoistChg;
+
+		if (sMoist >=_MDAWCap) {
+			sMoist = _MDAWCap;
+			sMoistChg = def-_MDPet ;
+		}
+
+	//	transp = precip - intercept - sPackChg - sMoistChg;
+		if (_MDWaterIn < _MDPet)transp=_MDWaterIn - sMoistChg;
+		if (_MDWaterIn >= _MDPet)transp = _MDPet;
+		if (_MDAWCap <=0)transp=0; 
+
+		excess     = Xs + Xr; // TODO Explain Xs and Xr
+		evapotrans = transp;
+		excess = precip - sPackChg - evapotrans - sMoistChg;	
+		if (sMoist < 0.0) printf ("Alram %f \n",sMoist);
+
+		balance = _MDWaterIn - evapotrans-sMoistChg-excess;
+		if((fabs (balance) > 0.001) && (_MDAWCap > 0.0)) printf ("balance = %f sMoist = %f, precip=%f sMoistChg = %f, prevSMoist = %f, transp = %f, _MDWaterIn = %f, _MDPet = %f, excess = %f, def = %f itemID = %i AWC %f\n", balance,sMoist,precip, sMoistChg, prevSMoist, transp, _MDWaterIn, _MDPet, excess, def,itemID,_MDAWCap );
+
 	} //temp
 	else { transp =  0.0; sMoistChg=0;}
 	//sMoistChg=0;
-
-	sMoist = prevSMoist + sMoistChg;
-
-	if (sMoist >=_MDAWCap) {
-		sMoist = _MDAWCap;
-		sMoistChg = def-_MDPet ;
-	}
-
-	//	transp = precip - intercept - sPackChg - sMoistChg;
-	if (_MDWaterIn < _MDPet)transp=_MDWaterIn - sMoistChg;
-	if (_MDWaterIn >= _MDPet)transp = _MDPet;
-	if (_MDAWCap <=0)transp=0; 
-
-	excess     = Xs + Xr; // TODO Explain Xs and Xr
-	evapotrans = transp;
-	excess = precip - sPackChg - evapotrans - sMoistChg;	
-
-	if (sMoist < 0.0) printf ("Alram %f \n",sMoist);
-
-	balance = _MDWaterIn - evapotrans-sMoistChg-excess;
-	if((fabs (balance) > 0.001) && (_MDAWCap > 0.0)) printf ("balance = %f sMoist = %f, precip=%f sMoistChg = %f, prevSMoist = %f, transp = %f, _MDWaterIn = %f, _MDPet = %f, excess = %f, def = %f itemID = %i AWC %f\n", balance,sMoist,precip, sMoistChg, prevSMoist, transp, _MDWaterIn, _MDPet, excess, def,itemID,_MDAWCap );
 
 	MFVarSetFloat (_MDOutSoilMoistCellID, itemID, sMoist);
 	MFVarSetFloat (_MDOutEvaptrsID,       itemID, evapotrans * (1.0 - irrAreaFrac )); //RJS 01-17-08 "- impAreaFrac - H2OAreaFrac"

@@ -42,7 +42,7 @@ static void _MDRainWaterSurplus (int itemID) {
 	
 	surplus = precip - sPackChg - evapoTrans - sMoistChg;
 	
-	//if(itemID == 10081) printf("surplus = %f, precip = %f, sPackChg = %f, evapoTrans = %f\n", surplus, precip, sPackChg, evapoTrans);
+	//if (itemID == 10081) printf("surplus = %f, precip = %f, sPackChg = %f, evapoTrans = %f\n", surplus, precip, sPackChg, evapoTrans);
 
 	MFVarSetFloat (_MDOutRainWaterSurplusID, itemID, surplus);
 }
