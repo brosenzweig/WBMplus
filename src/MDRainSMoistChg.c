@@ -125,12 +125,12 @@ static void _MDRainSMoistChg (int itemID) {
 		if((fabs (balance) > 0.001) && (_MDAWCap > 0.0)) printf ("balance = %f sMoist = %f, precip=%f sMoistChg = %f, prevSMoist = %f, transp = %f, _MDWaterIn = %f, _MDPet = %f, excess = %f, def = %f itemID = %i AWC %f\n", balance,sMoist,precip, sMoistChg, prevSMoist, transp, _MDWaterIn, _MDPet, excess, def,itemID,_MDAWCap );
 
 	} //temp
-	else { transp =  0.0; sMoistChg=0;}
+	else { evapotrans = transp = sMoistChg = 0.0;}
 	//sMoistChg=0;
 
 	MFVarSetFloat (_MDOutSoilMoistCellID, itemID, sMoist);
-	MFVarSetFloat (_MDOutEvaptrsID,       itemID, evapotrans * (1.0 - irrAreaFrac )); //RJS 01-17-08 "- impAreaFrac - H2OAreaFrac"
-	MFVarSetFloat (_MDOutSoilMoistID,     itemID, sMoist     * (1.0 - irrAreaFrac )); //RJS 01-17-08 "- impAreaFrac - H2OAreaFrac"
+	MFVarSetFloat (_MDOutEvaptrsID,       itemID, evapotrans * (1.0 - irrAreaFrac)); //RJS 01-17-08 "- impAreaFrac - H2OAreaFrac"
+	MFVarSetFloat (_MDOutSoilMoistID,     itemID, sMoist     * (1.0 - irrAreaFrac)); //RJS 01-17-08 "- impAreaFrac - H2OAreaFrac"
 	MFVarSetFloat (_MDOutSMoistChgID,     itemID, sMoistChg  * (1.0 - irrAreaFrac)); //RJS 01-17-08 "- impAreaFrac - H2OAreaFrac"
 }
 
