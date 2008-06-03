@@ -74,7 +74,7 @@ static void _MDRainSMoistChg (int itemID) {
 	intercept    = _MDInInterceptID   != MFUnset ? MFVarGetFloat (_MDInInterceptID,   itemID, 0.0) : 0.0;
 	irrAreaFrac  = _MDInIrrAreaFracID != MFUnset ? MFVarGetFloat (_MDInIrrAreaFracID, itemID, 0.0) : 0.0;
 	_MDWaterIn   = precip - intercept - sPackChg ;  //RJS 01-29-08
-	_MDWaterIn   = precip -sPackChg ;  //RJS 01-29-08
+	_MDWaterIn   = precip -sPackChg ;  //TODO RJS 01-29-08
 	
 	if (prevSMoist < 0.0) prevSMoist = 0.0;
 	 	 
