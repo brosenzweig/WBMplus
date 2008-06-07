@@ -85,7 +85,8 @@ static void _MDRainSMoistChg (int itemID) {
 		}
 		if (sMoistChg > awCap - sMoist) sMoistChg = awCap - sMoist;
 		if (sMoistChg < 0.0)            sMoistChg = 0.0;
-		sMoist = sMoist + sMoistChg;
+//		sMoist = sMoist + sMoistChg;
+		sMoistChg = 0.0;
 	}
 	else  sMoistChg = 0.0;		
 		
