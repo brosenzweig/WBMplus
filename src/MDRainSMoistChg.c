@@ -16,12 +16,12 @@ balazs.fekete@unh.edu
 #include <MF.h>
 #include <MD.h>
 
-static float _MDAWCap;
 static float _MDSoilMoistALPHA = 5.0;
 
-static float _MDDryingFunc (float sMoist) {
+static float _MDDryingFunc (float awCap, float sMoist) {
 	float gm;
-	gm = (1.0 - exp (- _MDSoilMoistALPHA * sMoist / _MDAWCap)) / (1.0 - exp (- _MDSoilMoistALPHA)); 
+
+	gm = (1.0 - exp (- _MDSoilMoistALPHA * sMoist / awCap)) / (1.0 - exp (- _MDSoilMoistALPHA)); 
 	return (gm);
 }
 
@@ -62,12 +62,13 @@ static void _MDRainSMoistChg (int itemID) {
 	float balance;
 // Local
 	float waterIn;
+	float awCap;
 
 	airT         = MFVarGetFloat (_MDInAirTMeanID,          itemID, 0.0);
 	precip       = MFVarGetFloat (_MDInPrecipID,            itemID, 0.0);
  	sPackChg     = MFVarGetFloat (_MDInSPackChgID,          itemID, 0.0);
 	pet          = MFVarGetFloat (_MDInPotETID,             itemID, 0.0);
-	_MDAWCap     = MFVarGetFloat (_MDInSoilAvailWaterCapID, itemID, 0.0);
+	awCap        = MFVarGetFloat (_MDInSoilAvailWaterCapID, itemID, 0.0);
 	sMoist       = MFVarGetFloat (_MDOutSoilMoistCellID,    itemID, 0.0);
 	intercept    = _MDInInterceptID   != MFUnset ? MFVarGetFloat (_MDInInterceptID,   itemID, 0.0) : 0.0;
 	irrAreaFrac  = _MDInIrrAreaFracID != MFUnset ? MFVarGetFloat (_MDInIrrAreaFracID, itemID, 0.0) : 0.0;
@@ -75,15 +76,15 @@ static void _MDRainSMoistChg (int itemID) {
 
 	pet = pet > intercept ? pet - intercept : 0.0;
 
-	if ((airT > 0.0) && (_MDAWCap > 0.0)) {
+	if ((airT > 0.0) && (awCap > 0.0)) {
 		if (waterIn >= pet) {
-			sMoistChg = waterIn - pet > _MDAWCap - sMoist ? waterIn - pet : _MDAWCap - sMoist;
+			sMoistChg = waterIn - pet > awCap - sMoist ? waterIn - pet : awCap - sMoist;
 		}
 		else {
-			sMoistChg = (-1.0 * _MDDryingFunc (sMoist)) * (pet - waterIn);
+			sMoistChg = (-1.0 * _MDDryingFunc (awCap, sMoist)) * (pet - waterIn);
 		}
-		if (sMoistChg > _MDAWCap - sMoist) sMoistChg = _MDAWCap - sMoist;
-		if (sMoistChg < 0.0) sMoistChg = 0.0;
+		if (sMoistChg > awCap - sMoist) sMoistChg = awCap - sMoist;
+		if (sMoistChg < 0.0)            sMoistChg = 0.0;
 		sMoist = sMoist + sMoistChg;
 	}
 	else  sMoistChg = 0.0;		
@@ -94,7 +95,7 @@ static void _MDRainSMoistChg (int itemID) {
 	excess = precip - sPackChg - intercept - evapotrans - sMoistChg;
 
 	balance = waterIn - intercept - evapotrans - sMoistChg - excess;
-	if ((fabs (balance) > 0.001) && (_MDAWCap > 0.0)) printf ("balance = %f sMoist = %f, precip=%f sMoistChg = %f, transp = %f, waterIn = %f, pet = %f, excess = %f, def = %f itemID = %i AWC %f\n", balance, sMoist, precip, sMoistChg, transp, waterIn, pet, excess, def,itemID, _MDAWCap);
+	if ((fabs (balance) > 0.001) && (awCap > 0.0)) printf ("balance = %f sMoist = %f, precip=%f sMoistChg = %f, transp = %f, waterIn = %f, pet = %f, excess = %f, def = %f itemID = %i AWC %f\n", balance, sMoist, precip, sMoistChg, transp, waterIn, pet, excess, def,itemID, awCap);
 
 	MFVarSetFloat (_MDOutSoilMoistCellID, itemID, sMoist);
 	MFVarSetFloat (_MDOutEvaptrsID,       itemID, evapotrans * (1.0 - irrAreaFrac)); //RJS 01-17-08 "- impAreaFrac - H2OAreaFrac"
