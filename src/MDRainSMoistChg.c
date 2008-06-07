@@ -53,9 +53,8 @@ static void _MDRainSMoistChg (int itemID) {
 //	TODO float H2OAreaFrac = 0.0; // water area fraction RJS 01-17-08
 //	float runofftoPerv;      // runoff from impervious to pervious [mm/dt]  RJS 01-17-08
 	float def;               // water deficit [mm/dt]
-	float prevSMoist;        // soil moisture from previous time step [mm/dt]
-// Output
 	float sMoist      = 0.0; // Soil moisture [mm/dt]
+// Output
 	float sMoistChg   = 0.0; // Soil moisture change [mm/dt]
 	float transp      = 0.0; // Transpiration [mm]
 	float excess      = 0.0;
@@ -78,12 +77,12 @@ static void _MDRainSMoistChg (int itemID) {
 
 	if ((airT > 0.0) && (_MDAWCap > 0.0)) {
 		if (waterIn >= pet) {
-			sMoistChg = waterIn - pet > _MDAWCap - prevSMoist ? waterIn - pet : _MDAWCap - prevSMoist;
+			sMoistChg = waterIn - pet > _MDAWCap - sMoist ? waterIn - pet : _MDAWCap - sMoist;
 		}
 		else {
 			sMoistChg = (-1.0 * _MDDryingFunc (sMoist)) * (pet - waterIn);
 		}
-		if (sMoistChg > _MDAWCap - prevSMoist) sMoistChg = _MDAWCap - prevSMoist;
+		if (sMoistChg > _MDAWCap - sMoist) sMoistChg = _MDAWCap - sMoist;
 		if (sMoistChg < 0.0) sMoistChg = 0.0;
 		sMoist = sMoist + sMoistChg;
 	}
@@ -95,7 +94,7 @@ static void _MDRainSMoistChg (int itemID) {
 	excess = precip - sPackChg - intercept - evapotrans - sMoistChg;
 
 	balance = waterIn - intercept - evapotrans - sMoistChg - excess;
-	if ((fabs (balance) > 0.001) && (_MDAWCap > 0.0)) printf ("balance = %f sMoist = %f, precip=%f sMoistChg = %f, prevSMoist = %f, transp = %f, waterIn = %f, pet = %f, excess = %f, def = %f itemID = %i AWC %f\n", balance, sMoist, precip, sMoistChg, prevSMoist, transp, waterIn, pet, excess, def,itemID, _MDAWCap);
+	if ((fabs (balance) > 0.001) && (_MDAWCap > 0.0)) printf ("balance = %f sMoist = %f, precip=%f sMoistChg = %f, transp = %f, waterIn = %f, pet = %f, excess = %f, def = %f itemID = %i AWC %f\n", balance, sMoist, precip, sMoistChg, transp, waterIn, pet, excess, def,itemID, _MDAWCap);
 
 	MFVarSetFloat (_MDOutSoilMoistCellID, itemID, sMoist);
 	MFVarSetFloat (_MDOutEvaptrsID,       itemID, evapotrans * (1.0 - irrAreaFrac)); //RJS 01-17-08 "- impAreaFrac - H2OAreaFrac"
