@@ -46,20 +46,16 @@ static void _MDRainSMoistChg (int itemID) {
 	float airT;              // Air temperature [degreeC]
 	float precip;            // Precipitation [mm/dt]
 	float pet;               // Potential evapotranspiration [mm/dt]
-	float intercept   = 0.0; // Interception (when the interception module is turned on) [mm/dt]
+	float intercept;         // Interception (when the interception module is turned on) [mm/dt]
 	float sPackChg;          // Snow pack change [mm/dt]
 	float irrAreaFrac = 0.0; // Irrigated area fraction
 //	TODO float impAreaFrac = 0.0; // Impervious area fraction RJS 01-17-08
 //	TODO float H2OAreaFrac = 0.0; // water area fraction RJS 01-17-08
 //	float runofftoPerv;      // runoff from impervious to pervious [mm/dt]  RJS 01-17-08
-	float def;               // water deficit [mm/dt]
 	float sMoist      = 0.0; // Soil moisture [mm/dt]
 // Output
 	float sMoistChg   = 0.0; // Soil moisture change [mm/dt]
-	float transp      = 0.0; // Transpiration [mm]
-	float excess      = 0.0;
 	float evapotrans;
-	float balance;
 // Local
 	float waterIn;
 	float awCap;
@@ -81,7 +77,7 @@ static void _MDRainSMoistChg (int itemID) {
 			sMoistChg = waterIn - pet > awCap - sMoist ? waterIn - pet : awCap - sMoist;
 		}
 		else {
-			sMoistChg = (-1.0 * _MDDryingFunc (awCap, sMoist)) * (pet - waterIn);
+			sMoistChg = (waterIn - pet) * _MDDryingFunc (awCap, sMoist);
 		}
 		if (sMoistChg > awCap - sMoist) sMoistChg = awCap - sMoist;
 		if (sMoistChg < 0.0)            sMoistChg = 0.0;
