@@ -18,11 +18,18 @@ balazs.fekete@unh.edu
 
 static float _MDSoilMoistALPHA = 5.0;
 
-static float _MDDryingFunc (float awCap, float sMoist) {
+static float _MDDryingFunc (float time, float relSoilMoist) {
 	float gm;
 
-	gm = (1.0 - exp (- _MDSoilMoistALPHA * sMoist / awCap)) / (1.0 - exp (- _MDSoilMoistALPHA)); 
+	gm = (1.0 - exp (- _MDSoilMoistALPHA * relSoilMoist)) / (1.0 - exp (- _MDSoilMoistALPHA)); 
 	return (gm);
+}
+
+static float _MDSoilMoistureChg (float awCap, float sMoist) {
+	float sMoistPrev = sMoist;
+
+	sMoist = MFRungeKutta ((float) 0.0,1.0, sMoist / awCap,_MDDryingFunc) * awCap;
+	return (sMoist - sMoistPrev);
 }
 
 // Input
@@ -59,6 +66,8 @@ static void _MDRainSMoistChg (int itemID) {
 // Local
 	float waterIn;
 	float awCap;
+	float gm;
+	float def;
 
 	airT         = MFVarGetFloat (_MDInAirTMeanID,          itemID, 0.0);
 	precip       = MFVarGetFloat (_MDInPrecipID,            itemID, 0.0);
@@ -77,7 +86,11 @@ static void _MDRainSMoistChg (int itemID) {
 			sMoistChg = waterIn - pet < awCap - sMoist ? waterIn - pet : awCap - sMoist;
 		}
 		else {
-			sMoistChg = (waterIn - pet) * _MDDryingFunc (awCap, sMoist);
+			gm = _MDDryingFunc (0.0, sMoist / awCap);
+//			sMoistChg = (waterIn - pet) * gm
+			def = pet + awCap - sMoist;
+			sMoistChg  = waterIn * (gm + ((1.0 - gm) *  exp (-pet / waterIn)) - exp (-def / waterIn));
+//			sMoistChg = (waterIn - pet) * _MDSoilMoistureChg (awCap, sMoist);
 		}
 		if (sMoist + sMoistChg > awCap) sMoistChg = awCap - sMoist;
 		if (sMoist + sMoistChg <   0.0) sMoistChg =       - sMoist;
