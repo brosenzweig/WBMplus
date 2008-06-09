@@ -79,8 +79,8 @@ static void _MDRainSMoistChg (int itemID) {
 		else {
 			sMoistChg = (waterIn - pet) * _MDDryingFunc (awCap, sMoist);
 		}
-		if (sMoistChg > awCap - sMoist) sMoistChg = awCap - sMoist;
-		if (sMoist + sMoistChg < 0.0)   sMoistChg = - sMoist;
+		if (sMoist + sMoistChg > awCap) sMoistChg = awCap - sMoist;
+		if (sMoist + sMoistChg <   0.0) sMoistChg =       - sMoist;
 		sMoist = sMoist + sMoistChg;
 	}
 	else  sMoistChg = 0.0;		

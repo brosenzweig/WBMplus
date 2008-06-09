@@ -55,8 +55,8 @@ int MDRainWaterSurplusDef () {
 	MFDefEntering ("Rainfed Water Surplus");
 	if ((ret = MDIrrGrossDemandDef ()) == CMfailed) return (CMfailed);
 	if ((ret != MFUnset) &&
-			  ((_MDInIrrAreaFracID         = MDIrrigatedAreaDef    ())==  CMfailed) )
-	     return (CMfailed);	
+			  ((_MDInIrrAreaFracID  = MDIrrigatedAreaDef ())==  CMfailed)) return (CMfailed);
+
 	if (((_MDInPrecipID             = MDPrecipitationDef ()) == CMfailed) ||
 		((_MDInSPackChgID           = MDSPackChgDef      ()) == CMfailed) ||
 	    ((_MDInRainSMoistChgID      = MDRainSMoistChgDef ()) == CMfailed) ||
