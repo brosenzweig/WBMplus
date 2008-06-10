@@ -62,22 +62,27 @@ static void _MDRainSMoistChg (int itemID) {
 	intercept    = _MDInInterceptID   != MFUnset ? MFVarGetFloat (_MDInInterceptID,   itemID, 0.0) : 0.0;
 	irrAreaFrac  = _MDInIrrAreaFracID != MFUnset ? MFVarGetFloat (_MDInIrrAreaFracID, itemID, 0.0) : 0.0;
 
-	if ((airT > 0.0) && (awCap > 0.0)) {
+	if (airT > 0.0) {
 		waterIn = precip - intercept - sPackChg;
 		pet = pet > intercept ? pet - intercept : 0.0;
 
-		if (waterIn > pet) {
-			sMoistChg = waterIn - pet < awCap - sMoist ? waterIn - pet : awCap - sMoist;
+		if (awCap > 0.0)) {
+			if (waterIn > pet) {
+				sMoistChg = waterIn - pet < awCap - sMoist ? waterIn - pet : awCap - sMoist;
+			}
+			else {
+				gm = (1.0 - exp (- _MDSoilMoistALPHA * sMoist / awCap)) / (1.0 - exp (- _MDSoilMoistALPHA));
+				sMoistChg = (waterIn - pet) * gm;
+			}
+			if (sMoist + sMoistChg > awCap) sMoistChg = awCap - sMoist;
+			if (sMoist + sMoistChg <   0.0) sMoistChg =       - sMoist;
+			sMoist = sMoist + sMoistChg;
+
 		}
-		else {
-			gm = (1.0 - exp (- _MDSoilMoistALPHA * sMoist / awCap)) / (1.0 - exp (- _MDSoilMoistALPHA));
-			sMoistChg = (waterIn - pet) * gm;
-		}
-		if (sMoist + sMoistChg > awCap) sMoistChg = awCap - sMoist;
-		if (sMoist + sMoistChg <   0.0) sMoistChg =       - sMoist;
-		sMoist = sMoist + sMoistChg;
+		else sMoist = sMoistChg = 0.0;
+
 		evapotrans = pet + intercept < precip - sPackChg - sMoistChg ?
-		             pet + intercept : precip - sPackChg - sMoistChg;
+		             pet + intercept : precip - sPackChg - sMoistChg;	
 	}
 	else  { sMoistChg = 0.0; evapotrans = 0.0; }
 
