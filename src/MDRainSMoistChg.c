@@ -66,7 +66,7 @@ static void _MDRainSMoistChg (int itemID) {
 		waterIn = precip - intercept - sPackChg;
 		pet = pet > intercept ? pet - intercept : 0.0;
 
-		if (awCap > 0.0)) {
+		if (awCap > 0.0) {
 			if (waterIn > pet) {
 				sMoistChg = waterIn - pet < awCap - sMoist ? waterIn - pet : awCap - sMoist;
 			}
