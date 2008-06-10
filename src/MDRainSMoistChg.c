@@ -18,20 +18,6 @@ balazs.fekete@unh.edu
 
 static float _MDSoilMoistALPHA = 5.0;
 
-static float _MDDryingFunc (float time, float relSoilMoist) {
-	float gm;
-
-	gm = (1.0 - exp (- _MDSoilMoistALPHA * relSoilMoist)) / (1.0 - exp (- _MDSoilMoistALPHA)); 
-	return (gm);
-}
-
-static float _MDSoilMoistureChg (float awCap, float sMoist) {
-	float sMoistPrev = sMoist;
-
-	sMoist = MFRungeKutta ((float) 0.0,1.0, sMoist / awCap,_MDDryingFunc) * awCap;
-	return (sMoist - sMoistPrev);
-}
-
 // Input
 static int _MDInAirTMeanID          = MFUnset;
 static int _MDInPrecipID            = MFUnset;
@@ -40,7 +26,6 @@ static int _MDInInterceptID         = MFUnset;
 static int _MDInSPackChgID          = MFUnset;
 static int _MDInSoilAvailWaterCapID = MFUnset;
 static int _MDInIrrAreaFracID       = MFUnset;
- 
 
 // Output
 static int _MDOutEvaptrsID          = MFUnset;
@@ -67,7 +52,6 @@ static void _MDRainSMoistChg (int itemID) {
 	float waterIn;
 	float awCap;
 	float gm;
-	float def;
 
 	airT         = MFVarGetFloat (_MDInAirTMeanID,          itemID, 0.0);
 	precip       = MFVarGetFloat (_MDInPrecipID,            itemID, 0.0);
@@ -77,29 +61,25 @@ static void _MDRainSMoistChg (int itemID) {
 	sMoist       = MFVarGetFloat (_MDOutSoilMoistCellID,    itemID, 0.0);
 	intercept    = _MDInInterceptID   != MFUnset ? MFVarGetFloat (_MDInInterceptID,   itemID, 0.0) : 0.0;
 	irrAreaFrac  = _MDInIrrAreaFracID != MFUnset ? MFVarGetFloat (_MDInIrrAreaFracID, itemID, 0.0) : 0.0;
-	waterIn      = precip - intercept - sPackChg;
-
-	pet = pet > intercept ? pet - intercept : 0.0;
 
 	if ((airT > 0.0) && (awCap > 0.0)) {
-		if (waterIn >= pet) {
+		waterIn = precip - intercept - sPackChg;
+		pet = pet > intercept ? pet - intercept : 0.0;
+
+		if (waterIn > pet) {
 			sMoistChg = waterIn - pet < awCap - sMoist ? waterIn - pet : awCap - sMoist;
 		}
 		else {
-			gm = _MDDryingFunc (0.0, sMoist / awCap);
-//			sMoistChg = (waterIn - pet) * gm
-			def = pet + awCap - sMoist;
-			sMoistChg  = waterIn * (gm + ((1.0 - gm) *  exp (-pet / waterIn)) - exp (-def / waterIn));
-//			sMoistChg = (waterIn - pet) * _MDSoilMoistureChg (awCap, sMoist);
+			gm = (1.0 - exp (- _MDSoilMoistALPHA * sMoist / awCap)) / (1.0 - exp (- _MDSoilMoistALPHA));
+			sMoistChg = (waterIn - pet) * gm;
 		}
 		if (sMoist + sMoistChg > awCap) sMoistChg = awCap - sMoist;
 		if (sMoist + sMoistChg <   0.0) sMoistChg =       - sMoist;
 		sMoist = sMoist + sMoistChg;
+		evapotrans = pet + intercept < precip - sPackChg - sMoistChg ?
+		             pet + intercept : precip - sPackChg - sMoistChg;
 	}
-	else  sMoistChg = 0.0;		
-		
-	evapotrans = pet + intercept < precip - sPackChg - sMoistChg ?
-	             pet + intercept : precip - sPackChg - sMoistChg;
+	else  { sMoistChg = 0.0; evapotrans = 0.0; }
 
 	MFVarSetFloat (_MDOutSoilMoistCellID, itemID, sMoist);
 	MFVarSetFloat (_MDOutEvaptrsID,       itemID, evapotrans * (1.0 - irrAreaFrac)); //RJS 01-17-08 "- impAreaFrac - H2OAreaFrac"
