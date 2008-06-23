@@ -79,7 +79,6 @@ static int   getDaysSincePlanting(int, int [],int,const MDIrrigatedCrop *);
 static int   getCropStage(const MDIrrigatedCrop *, int);
 static float getCropKc(const MDIrrigatedCrop *, int, int);
 static float getCurCropRootingDepth(MDIrrigatedCrop *, int);
-static float getEffectivePrecipitation(float);
 static float getCorrDeplFactor(const MDIrrigatedCrop *, float);
 static int   readCropParameters(const char *);
 static void  printCrops(const MDIrrigatedCrop *);
