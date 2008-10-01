@@ -39,9 +39,9 @@ static void _MDSPackChg (int itemID) {
 	if (MFVarTestMissingVal (_MDInAtMeanID,itemID) || MFVarTestMissingVal (_MDInPrecipID, itemID)) {
 		MFVarSetFloat (_MDOutSnowFallID, itemID, 0.0);
 		MFVarSetFloat (_MDOutSnowMeltID, itemID, 0.0);
-		MFVarSetFloat (_MDOutSnowPackID, itemID, sPack);	
+		MFVarSetFloat (_MDOutSnowPackID, itemID, sPack);
 		MFVarSetFloat (_MDOutSPackChgID, itemID, 0.0);
-		return; 
+		return;
 	}
 
 //printf ("SnowMeltThreshold= %f SnoFall %f\n",_MDSnowMeltThreshold, _MDFallThreshold);
@@ -65,7 +65,7 @@ static void _MDSPackChg (int itemID) {
 	else { /* No change when air temperature is in [-1.0,1.0] range */
 		MFVarSetFloat (_MDOutSnowFallID, itemID, 0.0);
 		MFVarSetFloat (_MDOutSnowMeltID, itemID, 0.0);
-		MFVarSetFloat (_MDOutSnowPackID, itemID, sPack);	
+		MFVarSetFloat (_MDOutSnowPackID, itemID, sPack);
 		MFVarSetFloat (_MDOutSPackChgID, itemID, 0.0);
 	}
 }
@@ -78,12 +78,10 @@ int MDSPackChgDef () {
 	float par;
 	if (((optStr = MFOptionGet (MDParSnowMeltThreshold))  != (char *) NULL) && (sscanf (optStr,"%f",&par) == 1))
 		_MDSnowMeltThreshold = par;
-	
+
 	if (((optStr = MFOptionGet (MDParFallThreshold))  != (char *) NULL) && (sscanf (optStr,"%f",&par) == 1))
 		_MDFallThreshold= par;
 
-	
-	
 	if (((_MDInPrecipID    = MDPrecipitationDef ()) == CMfailed) ||
 	    ((_MDInAtMeanID    = MFVarGetID (MDVarAirTemperature, "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDOutSnowFallID = MFVarGetID (MDVarSnowFall,       "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
@@ -91,7 +89,7 @@ int MDSPackChgDef () {
 	    ((_MDOutSnowPackID = MFVarGetID (MDVarSnowPack,       "mm",   MFOutput, MFState, MFInitial))  == CMfailed) ||
 	    ((_MDOutSPackChgID = MFVarGetID (MDVarSnowPackChange, "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
 
-	    	
+
 	    (MFModelAddFunction (_MDSPackChg) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Snow Pack Change");
 	return (_MDOutSPackChgID);
