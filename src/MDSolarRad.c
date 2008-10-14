@@ -33,10 +33,10 @@ static float _MDSRadDEC (int doy) {
 
 static float _MDSRadH (float lat,int doy,float dec) {
 	float arg, h;
-	
+
    arg = -tan(dec) * tan(lat);
-	if (arg > 1.0) h = 0.0;         /* sun stays below horizon */ 
-	else if (arg <  -1.0) h = M_PI; /* sun stays above horizon */
+	if      (arg >  1.0) h = 0.0;  /* sun stays below horizon */
+	else if (arg < -1.0) h = M_PI; /* sun stays above horizon */
 	else h = acos(arg);
 	return (h);
 }
@@ -56,7 +56,7 @@ static void _MDSRadDayLength (int itemID) {
 	doy = MFDateGetDayOfYear ();
 	lat = MFModelGetLatitude (itemID) / 180.0 * M_PI;
 
-	
+
    dec = _MDSRadDEC (doy);
 
    if (fabs ((double) lat) > M_PI_2) lat = (M_PI_2 - (double) 0.01) * (lat > 0.0 ? 1.0 : -1.0);
@@ -125,7 +125,7 @@ static void _MDSolarRadiationCloud (int itemID) {
 	cloud    = MFVarGetFloat (_MDInputID,    itemID, 0.0) ;
 	if (fabs(cloud) > 100.0) printf ("cloud cover item %i  %f VarID %i \n",itemID, cloud, _MDInputID);
 	cloud = cloud / 100.0;
-		 
+
 	solarRad = solarRad * (0.803 - (0.340 * cloud) - (0.458 * (float) pow ((double) cloud,(double) 2.0)));
     MFVarSetFloat (_MDOutSolarRadID,  itemID, solarRad);
 }
