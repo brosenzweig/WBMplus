@@ -31,16 +31,9 @@
 </tool>
 <tool id="org.eclipse.cdt.build.core.settings.holder.456131984" name="GNU C" superClass="org.eclipse.cdt.build.core.settings.holder">
 <option id="org.eclipse.cdt.build.core.settings.holder.undef.incpaths.2118664255" name="Undefined Include Paths" superClass="org.eclipse.cdt.build.core.settings.holder.undef.incpaths" valueType="undefIncludePath">
-<listOptionValue builtIn="false" value="/System/Library/Frameworks"/>
 <listOptionValue builtIn="false" value="/usr/local/include"/>
-<listOptionValue builtIn="false" value="/usr/lib/gcc/i686-apple-darwin8/4.0.1/include"/>
-<listOptionValue builtIn="false" value="/usr/lib/gcc/i686-apple-darwin9/4.0.1/include"/>
-<listOptionValue builtIn="false" value="/Library/Frameworks"/>
 </option>
-<option id="org.eclipse.cdt.build.core.settings.holder.incpaths.405475644" name="Include Paths" superClass="org.eclipse.cdt.build.core.settings.holder.incpaths" valueType="includePath">
-<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CMlib/include}&quot;"/>
-<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MFlib/include}&quot;"/>
-</option>
+<option id="org.eclipse.cdt.build.core.settings.holder.incpaths.405475644" name="Include Paths" superClass="org.eclipse.cdt.build.core.settings.holder.incpaths" valueType="includePath"/>
 <inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1092160927" languageId="org.eclipse.cdt.core.gcc" languageName="GNU C" sourceContentType="org.eclipse.cdt.core.cSource,org.eclipse.cdt.core.cHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
 </tool>
 <tool id="org.eclipse.cdt.build.core.settings.holder.413967492" name="Assembly" superClass="org.eclipse.cdt.build.core.settings.holder">
@@ -80,8 +73,8 @@
 </extensions>
 </storageModule>
 <storageModule moduleId="org.eclipse.cdt.core.externalSettings">
-<externalSettings containerId="MFlib;" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier"/>
 <externalSettings containerId="CMlib;" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier"/>
+<externalSettings containerId="MFlib;" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier"/>
 </storageModule>
 
 
