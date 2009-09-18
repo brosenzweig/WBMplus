@@ -26,8 +26,7 @@ static int _MDInInterceptID         = MFUnset;
 static int _MDInSPackChgID          = MFUnset;
 static int _MDInSoilAvailWaterCapID = MFUnset;
 static int _MDInIrrAreaFracID       = MFUnset;
-static int _MDInSoilOrganicContentID =MFUnset;
-static int _MDInRelativeIceContent   =MFUnset;
+static int _MDInRelativeIceContent  = MFUnset;
 // Output
 static int _MDOutEvaptrsID          = MFUnset;
 static int _MDOutSoilMoistCellID    = MFUnset;

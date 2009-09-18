@@ -19,9 +19,8 @@ dominik.wisser@unh.edu
 static int _MDWetlandAreaFracID = MFUnset;
  
 static void _MDWetlandAreaFraction (int itemID) {
-float wetlandAreaFrac;	
-  
-//MFVarSetFloat(_MDWetlandAreaFracID,     itemID, peatllandAreaFrac);	
+// TODO Not Implememnted!
+//MFVarSetFloat(_MDWetlandAreaFracID,     itemID, peatllandAreaFrac);
 }
 enum { MDnone, MDinput, MDcalculate };
 
@@ -32,8 +31,6 @@ int MDWetlandAreaDef (){
 	const char *options [] = { MDNoneStr, MDInputStr, MDCalculateStr, (char *) NULL };
     if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);
 	if ((optID == MDnone) || (_MDWetlandAreaFracID != MFUnset)) return (_MDWetlandAreaFracID);
-	
-	
 
 	MFDefEntering ("WetlandArea");
 //	printf ("Wetland Area optID  =%i  \n",optID);

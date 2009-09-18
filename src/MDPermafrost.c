@@ -391,7 +391,6 @@ static void _MDPermafrostDepth (int itemID) {
 	                  if (i > 0 && soilTemp[i] > 0 && soilTemp[i-1] < 0){
 	                   thawingDepth = activeLayerInterpol(compNodeDepth[i-1], compNodeDepth[i],soilTemp[i-1],soilTemp[i]);
 	               }
-	                  int layerIndex = getSoilLayerNumber(compNodeDepth[i]);
 	                  Ice[i]=0;
 	                 // if (soilTemp[i] < 0+FIT) {Ice[layerIndex]=Wvol[layerIndex]-Wunf[layerIndex];}
 	                
@@ -457,7 +456,7 @@ static void _MDPermafrostDepth (int itemID) {
 	  
 	    //The following is from Hendrickx et. al, Global Prediction of thermal soil regimes, Proceding of SPIE, Vol 6953 2008
 	    float psi_sand; float psi_silt; float psi_clay; float psi_org;
-	    float rho_sand; float rho_silt; float rho_clay; float rho_org;
+	    float rho_sand; float rho_silt; float rho_clay;
 	    float rho_q; float rho_s; float rho_m;
 	    float sumAllFractions = fracSand + fracSilt + fracClay + fracOrganic;
 	    float A; float B; float C; float D;
@@ -513,7 +512,6 @@ static void _MDPermafrostDepth (int itemID) {
 	 
 	    	float cs = 0.73e3;
 	    	float co = 1.9e3;
-	    	float cw = 4.18e3;
 	    	float psi_sand; float psi_silt; float psi_clay; float psi_org;
 	    	float psi_m;
 	    	float sumAllFractions;
@@ -551,7 +549,7 @@ static void _MDPermafrostDepth (int itemID) {
 	               if (CAP >= 1.0e7) printf ("Temp %f 333Col = %e org %f CAP %e psi_m %f SM %f\n", temper ,Cvol, fracOrganic, CAP, psi_m, soilmoisture);
 	              	    
 	            }
-	     if (CAP >= 1.0e7) printf ("Col = %e org %f CAP %e psi_m %f \n", Cvol, fracOrganic, CAP, psi_m, psi_org, soilmoisture);
+	     if (CAP >= 1.0e7) printf ("Col = %e org %f CAP %e psi_m %f psi_org %f soilmoisture %f \n", Cvol, fracOrganic, CAP, psi_m, psi_org, soilmoisture);
 	       
 	            return CAP;
 	       }

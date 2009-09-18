@@ -51,9 +51,7 @@ static void _MDBaseFlow (int itemID) {
 	grdWaterChg = grdWater = MFVarGetFloat (_MDOutGrdWatID,  itemID, 0.0);
 	grdWaterRecharge = MFVarGetFloat (_MDInRechargeID, itemID, 0.0);
 	grdWater = grdWater + grdWaterRecharge;
-float in ;
-float out;
-	
+
 	if ((_MDInIrrGrossDemandID != MFUnset) &&
 	    (_MDInIrrReturnFlowID  != MFUnset) &&
 	    (_MDInIrrAreaFracID    != MFUnset) &&

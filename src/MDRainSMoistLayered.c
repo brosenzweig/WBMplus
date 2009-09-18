@@ -26,7 +26,6 @@ static float *VGalpha (float [], float [],float[],int);
 static float *SaturatedSoilMoist (float [], float [], float [], float [], int ); 
 static float *WiltingPoint(float [], float [], float[],float[],int);
 static float *FieldCapacity(float[],float[],float[],float[],int);
-static float VGHydrConductivity (float[] , float[] , float[] , float[] , float[] , float[] , float[],float [], int, int );
 	 
 float *ResidSoilMoisture(float[] , float[] ,int, float[]);
 static float UnsaturatedConductivity (float , float , float, float, float );
@@ -87,10 +86,7 @@ static void _MDRainSMoistChg (int itemID) {
 	float irrAreaFrac = 0.0; // Irrigated area fraction
 	float meanSmoist      = 0.0; // Averaged over all layers Soil moisture [mm/dt]
 	float meanSmoistChange   = 0.0; // Soil moisture change averaged over all layers [mm/dt]
-	float groundWaterPool =0;
-	float soilParticleDensity = 2685; //kg/m3
 	float waterTableDepthParameter =1.0;
-    float iceMelt;
 	int i;
 	float isInitial = MFVarGetFloat(_MDInIsInitialID,itemID,0.0);
 	float rootDepth;			//in mm to be consistent with old WBMplus data!
@@ -145,7 +141,6 @@ static void _MDRainSMoistChg (int itemID) {
 		float *maxSoilMoist;
 		float baseflow=0;
 		float dt_inflow =0;
-		float fz = 1.0;
 		float surfaceRO=0;
 		float waterTableDepth;
 		float activeLayerDepth;
@@ -591,111 +586,6 @@ int MDRainSMoistChgLayeredSoilDef () {
 	return (_MDOutSMoistChgID);
 }
  
- 
-//float MatricPotential (float soilMoisture, float resSoilMoisture, float maxSoilMoisture,float alpha,float m, float n){
-//	
-//	float effSat;
-//	float matricPotential;
-//	effSat = soilMoisture- resSoilMoisture/(maxSoilMoisture-resSoilMoisture);
-//	if (effSat > 1) ddeffSat =1;
-//	matricPotential = pow(effSat,-m);
-//	matricPotential = (matricPotential -1)/alpha;
-//	matricPotential = pow(matricPotential,(1/n));
-//	return matricPotential;
-//}
-
-float VGHydrConductivity (float soilMoist[], float maxSoilMoist[], float residSoilMoist[], float alpha[], float m[], float n[], float KSat[], float soilDepth[],int curSoilLayer, int numSoilLayers){
-
-	// effective saturation
-	//matrix potential
-	float effSat;
-	float matricPotential;
-	float k=0;
-	float upperK = 0;
-	float tempSoilMoist;
-	if (soilMoist[curSoilLayer] < residSoilMoist[curSoilLayer]) soilMoist[curSoilLayer] = residSoilMoist[curSoilLayer]*1.001;
-	effSat = (soilMoist[curSoilLayer]- residSoilMoist[curSoilLayer])/(maxSoilMoist[curSoilLayer]-residSoilMoist[curSoilLayer]);
-	
-	//if (effSat ==1) return cSucksMin(KSat[curSoilLayer], KSat[curSoilLayer-1] );
-	 //printf("sM %f res %f max %f effSat %f\n",soilMoist[curSoilLayer],  residSoilMoist[curSoilLayer],maxSoilMoist[curSoilLayer], effSat );
-	//van Genuchten Classical 
-	 
-	 
-	 matricPotential = pow(effSat,-m[curSoilLayer]);
-	
-	 matricPotential = (matricPotential -1)/alpha[curSoilLayer];
-	 matricPotential = pow(matricPotential,(1/n[curSoilLayer]));
-	 tempSoilMoist = pow(1+ alpha[curSoilLayer]*matricPotential,n[curSoilLayer]);
-	 tempSoilMoist= pow((1 / tempSoilMoist),m[curSoilLayer]);
-	 tempSoilMoist = tempSoilMoist *(maxSoilMoist[curSoilLayer]- residSoilMoist[curSoilLayer]);
-	// printf ("SM %f Matrix %f n%f alpha %f m%f effSat %f SM %f\n", soilMoist[curSoilLayer],matricPotential,n[curSoilLayer], alpha[curSoilLayer],m[curSoilLayer],effSat, tempSoilMoist);
-	
-	 
-	 effSat= (tempSoilMoist- residSoilMoist[curSoilLayer])/(maxSoilMoist[curSoilLayer]-residSoilMoist[curSoilLayer]);
-	if (effSat==0) return 0.0;
-	if (effSat > 1) effSat =1;
-	float t1 = pow(1-alpha[curSoilLayer],n[curSoilLayer]-1);
-	float t2 = 1+pow(alpha[curSoilLayer],n[curSoilLayer]);
-	float t3= pow(t2,-m[curSoilLayer]);
-	float t4=pow( t2*t1,2);
-	float z = pow(1+pow((alpha[curSoilLayer]*matricPotential),n[curSoilLayer]),m[curSoilLayer]/2); 
-	 
-	 k = KSat[curSoilLayer]* t4/z;
-	// k = k/soilDepth[curSoilLayer] ; //TODO This screws up the water balance
-	 //Alternative matric potential from SMDR 2.0 
-	 
-	 float aalpha = 13;
-	float a1 = exp(aalpha * (1 -effSat));
-	
-	float dS=0;
-	if (soilDepth[curSoilLayer] > 0) dS= maxSoilMoist[curSoilLayer]/soilDepth[curSoilLayer]- residSoilMoist[curSoilLayer]/soilDepth[curSoilLayer];
-	float a2=0;
-	if(soilDepth[curSoilLayer] > 0)a2 = aalpha * KSat[curSoilLayer]/ (soilDepth[curSoilLayer]* dS);
-	float a3 = a1 +a2;
-// 	matricPotential = 1 - (1/aalpha)* log(a3);
-	float vertFlow = k;//soilMoist[curSoilLayer]-(dS * matricPotential);
-	//vertFlow = soilMoist[curSoilLayer]*0.001;
-	float junk1 = soilDepth[curSoilLayer]* dS * matricPotential;
-	float FRAC = vertFlow / soilMoist[curSoilLayer];
-//	printf ("a1 = %f a2 = %f a3 =%f dS=%f matrxi%f Term %f vertFlow %f KS %f SM %f FRAC %f\n",a1,a2,a3,dS,matricPotential,junk1, vertFlow, KSat[curSoilLayer], soilMoist[curSoilLayer],FRAC);
-	
-	float minKSat = KSat[curSoilLayer];
-if (curSoilLayer >0){minKSat = MDMinimum(KSat[curSoilLayer], KSat[curSoilLayer-1] );}
-//k = cSucksMin(minKSat,vertFlow);
-//	if (curSoilLayer >= 1){	// average for current and upper layer
-//		effSat = (soilMoist[curSoilLayer-1]- residSoilMoist[curSoilLayer-1])/(maxSoilMoist[curSoilLayer-1]-residSoilMoist[curSoilLayer-1]);
-//			
-//			if (effSat > 1.0) effSat =1;
-//			
-//			float t1 = pow(effSat,(1.0/m[curSoilLayer-1]));
-//			float t2 = 1- t1;
-//			
-//			float t3 = pow(t2,(m[curSoilLayer-1]));
-//			float t4 = 1- t3;
-//			float t5 = pow(t4,2);
-//			upperK =  (pow(effSat,0.5) * t5) * KSat[curSoilLayer-1];
-//	//		k = (k * soilDepth[curSoilLayer] + upperK * soilDepth[curSoilLayer-1])/(soilDepth[curSoilLayer-1] + soilDepth[curSoilLayer]);
-//		}
-	
-	
-	
- if (k > soilMoist[curSoilLayer]) k = soilMoist[curSoilLayer];
-	k = soilMoist[curSoilLayer]*0.01;
- // Average for current and upper layer 
- 
- 
- 
- 
-//if (curSoilLayer ==2)	printf ("KSat=\t%f\t k = \t%f\t effSat\t%f\t maxSM\t%f\t resid\t%f\t SM\t%f Matrix = %f alpha = %f\n",KSat[curSoilLayer],k, effSat, maxSoilMoist[curSoilLayer], residSoilMoist[curSoilLayer], soilMoist[curSoilLayer], matricPotential, alpha[curSoilLayer]);
-	// K = f (soilMoist) * Ksat;
-	
-if (k<0) k=0;
-if (curSoilLayer == numSoilLayers) k = 0;
-if (soilDepth[curSoilLayer] ==0.0) k =0;
-return k;
-}
-
-
 float *ResidSoilMoisture (float pctCarbon [], float pctClay[], int numSoilLayers, float soilDepth[]){
 	int i;
 	float *rs;
@@ -711,10 +601,6 @@ float *ResidSoilMoisture (float pctCarbon [], float pctClay[], int numSoilLayers
 	
 }
  
-
-
-
-
 float *ActETP (float soilMoist[],float fieldCap[], float wiltPnt[], float potETP,  int numSoilLayers, float rootDepth,float accumSoilDepth[],float activeLayerDepthInMeters)
 {
 int i;
@@ -758,13 +644,6 @@ for (i=0;i<numSoilLayers-1;i++){
 //	et[i]=0;
 //	printf ("ET from Layer %i = %f RD = %f Depth %f potETp %f  \n", i,et[i], rootDepth, accumSoilDepth[i-1], potETP);
 }
-		
-		
-		
-
-
-
-
 
 //if (accum > (potETP) *1.0001) printf ("PET = %f Greater AET %f \n", potETP, accum);
 et[numSoilLayers -1]=0; // no et from lowest layer - baseflow
@@ -773,14 +652,11 @@ if (accum > potETP*1.001)printf ("Actual ET= %f greater than potential %f! \n", 
 return et;//et[soilLayerNum];
 
 }
+
 // c sucks soo much 
 float MatrixPotential(float VanGa, float soilMoisture, float VanGm, float VanGn,float resSoilMoisture,float maxSoilMoisture ){
  
 	float matPot;
- 
- 
-	// 
-			 
 	//		 if (soilMoisture > resSoilMoisture){
 			 
 			float effSat = (soilMoisture- resSoilMoisture)/(maxSoilMoisture-resSoilMoisture);
@@ -820,6 +696,7 @@ float *VGn(float pctSand[], float pctClay[],int numSoilLayers){
 	//float lnn =
 	return n;
 }
+
 float *VGm(float VG_n[],int numSoilLayers){
 	float *m;
 	int i;
@@ -846,6 +723,7 @@ float *VGalpha(float pctSand[], float pctClay[],float bulkD[],int numSoilLayers)
 	 }
 	return a;
 }
+
 float *SaturatedSoilMoist (float Sand[], float Clay[], float OrganicMatter[], float soilDepth[], int numSoilLayers){
 	int i;
 		float *sat;
@@ -859,7 +737,6 @@ float *SaturatedSoilMoist (float Sand[], float Clay[], float OrganicMatter[], fl
 		phi_33 =phi_33t + (1.283*phi_33t*phi_33t -0.374 * phi_33t-0.015);
 
 		phi_s33t = 0.278 * Sand[i] + 0.034 * Clay[i]  + 0.022 * OrganicMatter[i] -0.018 *(Sand[i]* OrganicMatter[i]) -0.027 *(Clay[i] * OrganicMatter[i]) -0.584* (Sand[i] * Clay[i] ) +0.078;
-
 
 		phi_s33= phi_s33t +0.6360 * phi_s33t -0.107;
 		
@@ -893,6 +770,7 @@ float *WiltingPoint (float Sand[], float Clay[], float OrganicMatter[], float so
 	}
 	return wp; 
 }
+
 float *FieldCapacity (float Sand[], float Clay[], float OrganicMatter[],float soilDepth[], int numSoilLayers){
 	//should not be applied beyon organicMatter > 8% 
 	// equations from Saxton and Rawls (2006); Soil water characteristics 
@@ -910,15 +788,11 @@ float *FieldCapacity (float Sand[], float Clay[], float OrganicMatter[],float so
 	return fc;
 }
  
-
 float UnsaturatedConductivity (float sand, float clay, float organicMatter,float soilMoisture, float maxSoilMoisture){
 // Saxton and Rawls 2006
-	int i;
 		float KSat;// KSat in mm/h
 		float KS;// KSat in mm/h
 				
-			
-
 float phi_sat;
 float phi_33;
 float phi_33t;
@@ -929,14 +803,10 @@ float phi_s33t;
 float lamda;
 float B;
 
-
- 
 phi_33t= -0.251* sand +0.195* clay +0.011* organicMatter +0.006 *(sand * organicMatter) -0.027*(clay * organicMatter) +0.452*(sand*clay)+0.299;
 phi_33 =phi_33t + (1.283*phi_33t*phi_33t -0.374 * phi_33t-0.015);
 
 phi_s33t = 0.278 * sand + 0.034 * clay  + 0.022 * organicMatter -0.018 *(sand* organicMatter) -0.027 *(clay * organicMatter) -0.584* (sand * clay ) +0.078;
-
-
 phi_s33= phi_s33t +0.6360 * phi_s33t -0.107;
 
  
@@ -956,11 +826,7 @@ return KS;
 
 float SaturatedConductivity (float sand, float clay, float organicMatter,float soilMoisture, float maxSoilMoisture){
 // Saxton and Rawls 2006
-	int i;
-		float KSat;// KSat in mm/h
-
-
-
+float KSat;// KSat in mm/h
 float phi_sat;
 float phi_33;
 float phi_33t;
@@ -971,8 +837,6 @@ float phi_s33t;
 float lamda;
 float B;
 
-
- 
 phi_33t= -0.251* sand +0.195* clay +0.011* organicMatter +0.006 *(sand * organicMatter) -0.027*(clay * organicMatter) +0.452*(sand*clay)+0.299;
 phi_33 =phi_33t + (1.283*phi_33t*phi_33t -0.374 * phi_33t-0.015);
 
@@ -989,10 +853,9 @@ B = (log(1500)-log(33))/(log(phi_33)-log(phi_1500));
 lamda = 1/B;
 phi_sat = phi_33 + phi_s33 -0.097 * sand+0.043;
 KSat = (1930*pow((phi_sat - phi_33),(3-lamda)))*24 / _MDTimeSteps; // in mm/timeStep
-float expo = 3 + (2 /lamda);
+
 if (soilMoisture > maxSoilMoisture )soilMoisture =maxSoilMoisture;
 
 //printf ("KS = %f KSat %f expo %f, soilMoist %f maxSoilMoist %f \n", KS, KSat, expo, soilMoisture, maxSoilMoisture);
 return KSat;
 }
-

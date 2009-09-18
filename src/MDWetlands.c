@@ -39,7 +39,6 @@ static int _MDOutWetlandRunoffID			=			MFUnset;
 static int _MDOutWetlandSurfRunoffUptakeID	=			MFUnset;
 static int _MDInRainSurfRunoffID			=		MFUnset;
 static int _MDOutWetlandStorageID = MFUnset;
-static int _MDWetlandRunoffID = MFUnset;
 static int _MDOutWetlandLevelWaterDepthID = MFUnset;
 static void _MDWetlandRunoff (int itemID) {
 	
@@ -53,9 +52,6 @@ static void _MDWetlandRunoff (int itemID) {
 	float catchmentFactor;
 	float wetlandStorageChange;
 	float wetlandPrevWaterLevelDepth;
-	float saturatedZoneDepth;
-	float unsaturatedZoneDepth;
-	float waterTablePosition;
 	wetlandAreaFraction = MFVarGetFloat(_MDInWetlandAreaFracID, itemID,0.0);
 	wetlandAreaFraction=1.0;
 	if (wetlandAreaFraction>0){
@@ -80,7 +76,7 @@ static void _MDWetlandRunoff (int itemID) {
 	float balance;
 	float remainingSurfaceRO;
 	float snowpackChg;
-	float peatSurfaceHeight;
+
 	snowpackChg = MFVarGetFloat (_MDInSPackChgID, itemID, 0.0);
 	snowMelt=0;
 	if (snowpackChg >  0.0) precipitation = 0.0; //Snow Accumulation, no liquid precipitation

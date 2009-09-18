@@ -80,7 +80,6 @@ static int   getDaysSincePlanting(int, int [],int,const MDIrrigatedCrop *);
 static int   getCropStage(const MDIrrigatedCrop *, int);
 static float getCropKc(const MDIrrigatedCrop *, int, int);
 static float getCurCropRootingDepth(MDIrrigatedCrop *, int);
-static float getEffectivePrecipitation(float);
 static float getCorrDeplFactor(const MDIrrigatedCrop *, float);
 static int   readCropParameters(const char *);
 static void  printCrops(const MDIrrigatedCrop *);
@@ -425,7 +424,6 @@ enum { MDnone, MDinput, MDcalculate };
 
 int MDIrrGrossDemandDef () {
 	int optID = MFUnset;
-	int optIDExcess = MFUnset;
 	const char *optStr, *optName = MDOptIrrigation;
 	const char *options [] = { MDNoneStr, MDInputStr, MDCalculateStr, (char *) NULL };
 	const char *mapOptions   [] = { "FAO", "IWMI", (char *) NULL };
@@ -558,20 +556,6 @@ static float getCorrDeplFactor(const MDIrrigatedCrop * pIrrCrop, float dailyETP)
     if (cropdeplFactor <= 0.1) cropdeplFactor = 0.1;
 	if (cropdeplFactor >= 0.8) cropdeplFactor = 0.8;
 	return cropdeplFactor;
-}
-
-static float getEffectivePrecipitation(float dailyPrecip) {
-	float effPrecip=0;
-	 
-	if (dailyPrecip == 0) return 0.0;
-	if (dailyPrecip <= 0.2) return 0.0;
-		
-	
-	if (dailyPrecip < 8.3)
-		return (dailyPrecip * (4.17 - 0.2 * dailyPrecip) / 4.17);
-	else
-		effPrecip = dailyPrecip * .1 + 4.17;
-	return effPrecip;
 }
 
 static float getCurCropRootingDepth(MDIrrigatedCrop * pIrrCrop, int dayssinceplanted) {

@@ -41,12 +41,9 @@ static void _MDReservoir (int itemID) {
 	float prevResStorage; // Reservoir storage from the previous time step [km3]
 	float dt;             // Time step length [s]
 	float beta;			  // Residence time [a]
-// Parameters
-	float drySeasonPct = .6;
-	float wetSeasonPct = 0.16;
 	
-	// wet   { -0.19 B + 0.88  Q_t } & {Q_t  > Q_m }  \\
-	// dry   {0.47 B + 1.12  Q_t } & {Q_t  \le Q_m }  \\
+	// wet   { -0.19 B + 0.88  Q_t } & {Q_t  > Q_m }
+	// dry   {0.47 B + 1.12  Q_t } & {Q_t  \le Q_m }
 	
 
 	discharge     = MFVarGetFloat (_MDInDischargeID, itemID, 0.0);

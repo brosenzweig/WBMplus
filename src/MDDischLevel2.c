@@ -66,7 +66,6 @@ enum { MDnone, MDcalculate };
 
 int MDDischLevel2Def() {
 	int optID = MFUnset, ret;
-	int optIDExcess;
 	const char *optStr, *optName = "IrrUptakeRiver";
 	const char *options [] = { MDNoneStr, MDCalculateStr, (char *) NULL };
 
