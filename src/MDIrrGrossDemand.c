@@ -71,6 +71,7 @@ static int  _MDIrrigatedAreaMap;
 //static int _MDParIrrIntensity;
 static bool _MDIntensityDistributed      = true;
 //Parameters
+ 
 
 static const char *CropParameterFileName;
 
@@ -79,6 +80,7 @@ static int   getDaysSincePlanting(int, int [],int,const MDIrrigatedCrop *);
 static int   getCropStage(const MDIrrigatedCrop *, int);
 static float getCropKc(const MDIrrigatedCrop *, int, int);
 static float getCurCropRootingDepth(MDIrrigatedCrop *, int);
+static float getEffectivePrecipitation(float);
 static float getCorrDeplFactor(const MDIrrigatedCrop *, float);
 static int   readCropParameters(const char *);
 static void  printCrops(const MDIrrigatedCrop *);
@@ -391,7 +393,7 @@ static void _MDIrrGrossDemand (int itemID) {
 		OUT = CropETPlusEPloss + returnFlow + meanSMChange;
 		IN  = totGrossDemand + dailyPrecip;
 
-//		if (itemID == 1)   printf ("IrrSMChange in GrossDemand %f\n",meanSMChange        * irrAreaFrac);
+//		if (itemID == 1)   printf ("IrrSMChange in GrossDemand %f Doy %i \n",meanSMChange        * irrAreaFrac, MFDateGetDayOfYear());
 //		if (itemID == 104) printf ("itemID %iGrossDemn %f DailyPrecip %f meanSMChange  %f \n",itemID,totGrossDemand,dailyPrecip,meanSMChange);
 //		if (itemID == 104) printf ("ItemID %i ppt %f CropET %f perc %f loss %f \n",itemID,dailyPrecip,totalCropETP,totalIrrPercolation,loss);	
 //		if (fabs (IN - OUT) > 0.1) CMmsgPrint (CMmsgAppError,"WaterBalance in MDIrrigation!!! IN %f OUT %f BALANCE %f LOSS %f %i DEMAND %f %i EffPrecip %f   itemID %i \n", IN, OUT, IN-OUT, loss, itemID, totGrossDemand, itemID, dailyEffPrecip,itemID);
@@ -423,10 +425,12 @@ enum { MDnone, MDinput, MDcalculate };
 
 int MDIrrGrossDemandDef () {
 	int optID = MFUnset;
+	int optIDExcess = MFUnset;
 	const char *optStr, *optName = MDOptIrrigation;
 	const char *options [] = { MDNoneStr, MDInputStr, MDCalculateStr, (char *) NULL };
 	const char *mapOptions   [] = { "FAO", "IWMI", (char *) NULL };
 	const char *distrOptions [] = { "FirstSeason","Distributed", (char *) NULL }; 
+	 
 	int i;
 
 	char varname [20];
@@ -440,6 +444,7 @@ int MDIrrGrossDemandDef () {
 
 	if ((optID == MDnone) ||(_MDOutIrrGrossDemandID != MFUnset)) return (_MDOutIrrGrossDemandID);
    
+	
 	MFDefEntering ("Irrigation Gross Demand");
 
 	switch (optID) {
@@ -449,7 +454,17 @@ int MDIrrGrossDemandDef () {
 				((_MDOutIrrEvapotranspID = MFVarGetID (MDVarIrrEvapotranspiration, "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed))
 				return (CMfailed);
 			break;
-		case MDcalculate:			
+		case MDcalculate:		
+//			if (((optStr = MFOptionGet (MDOptIrrExcessWater)) == (char *) NULL) || ((optIDExcess = CMoptLookup (options, optStr, true)) == CMfailed)) {
+//				CMmsgPrint(CMmsgUsrError,"Excess Water Demand Option not specifed! Options = 'None', 'Calculated' or 'Input' (not yet implemented!)\n");
+//				return (CMfailed);
+//			}
+//			
+//			if (optIDExcess == 0 ){
+//				_MDExcessWaterLimited = true; //Limit irr water to gw, small res and river water only!
+//		    if ((_MDOutIrrNetDemandID       = MFVarGetID (MDVarAvailableIrrigationWater,      "mm",   MFInput, MFFlux,  MFBoundary)) == CMfailed)return CMfailed;
+//			}
+			
 			if (((optStr = MFOptionGet (MDOptIrrIntensity)) == (char *) NULL) || ((irrDistribuedID = CMoptLookup (distrOptions, optStr, true)) == CMfailed)) {
 				CMmsgPrint(CMmsgUsrError,"Irrigation Distribution not specifed! Options = 'Distributed' or 'FirstSeason'\n");
 //				printf ("Option for rice = %i\n",_MDIntensityIsDistributed);
@@ -461,7 +476,7 @@ int MDIrrGrossDemandDef () {
 				return (CMfailed);
 			}
 			_MDIrrigatedAreaMap=mapOptionID;
-
+	
 			if (_MDIrrigatedAreaMap == 1) { //read irrArea for both seasons from IWMI data; Irr Intensity not needed!
 				_MDIntensityDistributed = true; //Distributed ; 					
 			}
@@ -543,6 +558,20 @@ static float getCorrDeplFactor(const MDIrrigatedCrop * pIrrCrop, float dailyETP)
     if (cropdeplFactor <= 0.1) cropdeplFactor = 0.1;
 	if (cropdeplFactor >= 0.8) cropdeplFactor = 0.8;
 	return cropdeplFactor;
+}
+
+static float getEffectivePrecipitation(float dailyPrecip) {
+	float effPrecip=0;
+	 
+	if (dailyPrecip == 0) return 0.0;
+	if (dailyPrecip <= 0.2) return 0.0;
+		
+	
+	if (dailyPrecip < 8.3)
+		return (dailyPrecip * (4.17 - 0.2 * dailyPrecip) / 4.17);
+	else
+		effPrecip = dailyPrecip * .1 + 4.17;
+	return effPrecip;
 }
 
 static float getCurCropRootingDepth(MDIrrigatedCrop * pIrrCrop, int dayssinceplanted) {
@@ -661,11 +690,11 @@ static int readCropParameters(const char *filename) {
 				
 			die = strcmp (_MDirrigCropStruct [i].cropName , "Rice");
 			_MDirrigCropStruct[i].cropIsRice = 0;
-			printf ("i=%i\n",die);
+		//	printf ("i=%i\n",die);
 		//	if (strcmp(_MDirrigCropStruct[i].cropName , "Rice")==1) _MDirrigCropStruct[i].cropIsRice = 1;
 			//if (strcmp(_MDirrigCropStruct[i].cropName , "Rice")<0) _MDirrigCropStruct[i].cropIsRice = 0;
 			//_MDirrigCropStruct[i].cropIsRice = 1;
-			printf ("CropName= %s\n",_MDirrigCropStruct[i].cropName)	;
+		//	printf ("CropName= %s\n",_MDirrigCropStruct[i].cropName)	;
 	//		printf ("i=%i\n",die);
 			if (die == 0) _MDirrigCropStruct [i].cropIsRice = 1;
 			printCrops (&_MDirrigCropStruct [i]);

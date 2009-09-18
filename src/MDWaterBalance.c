@@ -88,6 +88,9 @@ static void _MDWaterBalance(int itemID) {
 		MFVarSetFloat (_MDOutIrrUptakeBalanceID, itemID, balance);
 	}
 	balance = precip + irrUptakeRiver + irrUptakeExcess - (etp + runoff + grdWaterChg + snowPackChg + soilMoistChg + smallResStorageChg);
+	if (fabs (balance) > 0.01 )
+	//	printf ("TIEM %i WaterBalance! %f precip %f Demand %f\n", itemID ,balance,precip,irrGrossDemand);
+		
 
 	MFVarSetFloat (_MDOutWaterBalanceID, itemID , balance);
 }

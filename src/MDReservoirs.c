@@ -8,6 +8,9 @@ MDReservoirs.c
 
 dominik.wisser@unh.edu
 
+Updated with a residence time dependent function 
+Feb. 2009 DW
+
 *******************************************************************************/
 
 
@@ -37,9 +40,13 @@ static void _MDReservoir (int itemID) {
 // local
 	float prevResStorage; // Reservoir storage from the previous time step [km3]
 	float dt;             // Time step length [s]
+	float beta;			  // Residence time [a]
 // Parameters
 	float drySeasonPct = .6;
 	float wetSeasonPct = 0.16;
+	
+	// wet   { -0.19 B + 0.88  Q_t } & {Q_t  > Q_m }  \\
+	// dry   {0.47 B + 1.12  Q_t } & {Q_t  \le Q_m }  \\
 	
 
 	discharge     = MFVarGetFloat (_MDInDischargeID, itemID, 0.0);
@@ -51,13 +58,13 @@ static void _MDReservoir (int itemID) {
 		MFVarSetFloat (_MDOutResReleaseID,    itemID, discharge);
 		return;
 	}
-
+	beta = resCapacity /(meanDischarge * 3600 * 24 * 365/1e9); 
 	dt = MFModelGet_dt ();
 	prevResStorage = MFVarGetFloat(_MDOutResStorageID, itemID, 0.0);
 
 	resRelease = discharge > meanDischarge ?
-		         wetSeasonPct * discharge  :
-		         drySeasonPct * discharge + (meanDischarge - discharge);
+		         - 0.19 * beta + 0.88  * discharge  :
+		           0.47 * beta + 1.12 * discharge;
 
  	resStorage = prevResStorage + (discharge - resRelease) * 86400.0 / 1e9;
 	if (resStorage > resCapacity) {

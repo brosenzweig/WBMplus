@@ -19,6 +19,7 @@ balazs.fekete@unh.edu
 // Input
 static int _MDInRainSurfRunoffID = MFUnset;
 static int _MDInSmallResUptakeID = MFUnset;
+static int _MDInWetlandUptakeID = MFUnset;
 // Output
 static int _MDOutSurfRunoffID    = MFUnset;
 
@@ -36,11 +37,18 @@ int MDSurfRunoffDef () {
 	if (_MDOutSurfRunoffID != MFUnset) return (_MDOutSurfRunoffID);
 
 	MFDefEntering ("Surface runoff");
-
+	 
+	if (((ret = MDWetlandRunoffDef ()) != MFUnset) &&
+	    ((ret == CMfailed) ||
+	     ((_MDInWetlandUptakeID = MFVarGetID (MDVarWetlandSurfROUptake, "mm",   MFInput,  MFFlux, MFBoundary)) == CMfailed)))
+	     return (CMfailed);
+	
+	
 	if (((ret = MDSmallReservoirReleaseDef ()) != MFUnset) &&
 	    ((ret == CMfailed) ||
 	     ((_MDInSmallResUptakeID = MFVarGetID (MDVarSmallResUptake, "mm",   MFInput,  MFFlux, MFBoundary)) == CMfailed)))
 	     return (CMfailed);
+	
 	if (((_MDInRainSurfRunoffID  = MDRainSurfRunoffDef ()) == CMfailed) ||
 	    ((_MDOutSurfRunoffID     = MFVarGetID (MDVarSurfRunoff,     "mm",   MFOutput, MFFlux,  MFBoundary))  == CMfailed) ||
        (MFModelAddFunction (_MDSurfRunoff) == CMfailed)) return (CMfailed);

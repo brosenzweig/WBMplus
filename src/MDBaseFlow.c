@@ -51,7 +51,9 @@ static void _MDBaseFlow (int itemID) {
 	grdWaterChg = grdWater = MFVarGetFloat (_MDOutGrdWatID,  itemID, 0.0);
 	grdWaterRecharge = MFVarGetFloat (_MDInRechargeID, itemID, 0.0);
 	grdWater = grdWater + grdWaterRecharge;
-
+float in ;
+float out;
+	
 	if ((_MDInIrrGrossDemandID != MFUnset) &&
 	    (_MDInIrrReturnFlowID  != MFUnset) &&
 	    (_MDInIrrAreaFracID    != MFUnset) &&
@@ -62,7 +64,7 @@ static void _MDBaseFlow (int itemID) {
 
 		grdWater         = grdWater         + irrReturnFlow;
 		grdWaterRecharge = grdWaterRecharge + irrReturnFlow;
-
+		//if (itemID==9)printf("Item %i, returnflow %f, demand %f, grdWater %f area %f \n",itemID,irrReturnFlow,irrDemand,grdWater,irrAreaFraction);
 		if (_MDInSmallResReleaseID    != MFUnset) irrDemand = irrDemand - MFVarGetFloat(_MDInSmallResReleaseID,itemID,0.0);
 		if (_MDOutIrrUptakeGrdWaterID != MFUnset) {
 			if (irrDemand < grdWater) {
@@ -86,6 +88,11 @@ static void _MDBaseFlow (int itemID) {
 	grdWater    = grdWater - baseFlow;
 	grdWaterChg = grdWater - grdWaterChg;
 
+//in= irrReturnFlow+grdWaterRecharge;
+//out = irrUptakeGrdWater + grdWaterChg;
+//float balance;
+//balance = in -out;
+//if (balance > 0.1)printf ("Balance %f in %f out %f rech%f \n",balance,in,out,grdWaterRecharge);
 	grdWaterUptake = baseFlow + irrUptakeGrdWater;
 
 	MFVarSetFloat (_MDOutGrdWatID,         itemID, grdWater);

@@ -66,6 +66,7 @@ enum { MDnone, MDcalculate };
 
 int MDDischLevel2Def() {
 	int optID = MFUnset, ret;
+	int optIDExcess;
 	const char *optStr, *optName = "IrrUptakeRiver";
 	const char *options [] = { MDNoneStr, MDCalculateStr, (char *) NULL };
 
@@ -75,8 +76,16 @@ int MDDischLevel2Def() {
 	if (((_MDInDischLevel3ID  = MDDischLevel3Def ()) == CMfailed) ||
 	    ((_MDOutDischLevel2ID = MFVarGetID ("__DischLevel2",  "m/3", MFOutput, MFState, false)) == CMfailed))
 	    return (CMfailed);
+	
 	if ((ret = MDIrrGrossDemandDef ()) != MFUnset) {
 		if (ret == CMfailed) return (CMfailed);
+//		if (((optStr = MFOptionGet (MDOptIrrExcessWater)) == (char *) NULL) || ((optIDExcess = CMoptLookup (options, optStr, true)) == CMfailed)) {
+//				CMmsgPrint(CMmsgUsrError,"Excess Water Demand Option not specifed! Options = 'None', 'Calculated' or 'Input' (not yet implemented!)\n");
+//				return (CMfailed);
+//			}
+		
+	 
+		
 		if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);
 		switch (optID) {
 			case MDcalculate:

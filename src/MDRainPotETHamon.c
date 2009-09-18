@@ -22,6 +22,8 @@ static int _MDOutPetID      = MFUnset;
 static void _MDRainPotETHamon (int itemID) {
 // Hamon (1963) PE in mm for day
 // Input
+	
+//	printf ("Anf Hamon \n");
 	float dayLen=0;  // daylength in fraction of day
 	float airT;		// air temperatur [degree C]
 // Local
@@ -35,6 +37,7 @@ static void _MDRainPotETHamon (int itemID) {
    rhoSat  = 2.167 * MDPETlibVPressSat (airT) / (airT + 273.15);
    pet     = 165.1 * 2.0 * dayLen * rhoSat; // 2 * DAYLEN = daylength as fraction of 12 hours
    MFVarSetFloat (_MDOutPetID,itemID,pet);
+  // printf ("End Hamon\n");
    }
 
 int MDRainPotETHamonDef () {

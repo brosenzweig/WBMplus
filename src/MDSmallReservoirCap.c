@@ -6,7 +6,7 @@ Copyright 1994-2007, University of New Hampshire
 
 MDSmallReservoirCap.c
 
-balazs.fekete@unh.edu
+dominik.wisser@unh.edu
 
 *******************************************************************************/
 

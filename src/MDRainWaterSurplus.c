@@ -42,7 +42,7 @@ static void _MDRainWaterSurplus (int itemID) {
 	
 	surplus = precip - sPackChg - evapoTrans - sMoistChg;
 	
-	//if (itemID == 10081) printf("surplus = %f, precip = %f, sPackChg = %f, evapoTrans = %f\n", surplus, precip, sPackChg, evapoTrans);
+	//if(itemID == 10081) printf("surplus = %f, precip = %f, sPackChg = %f, evapoTrans = %f\n", surplus, precip, sPackChg, evapoTrans);
 
 	MFVarSetFloat (_MDOutRainWaterSurplusID, itemID, surplus);
 }
@@ -52,17 +52,60 @@ int MDRainWaterSurplusDef () {
 
 	if (_MDOutRainWaterSurplusID != MFUnset) return (_MDOutRainWaterSurplusID);
 
+	const char *optStr;
+	const char *soilTemperatureOptions [] = { "none", "calculate", (char *) NULL };
+
+ 
+	const char *soilMoistureOptions [] = { "bucket", "layers", (char *) NULL };
+	int soilMoistureOptionID;
+	int soilTemperatureID; 
+		if (((optStr = MFOptionGet (MDOptSoilMoisture))  == (char *) NULL) || ((soilMoistureOptionID = CMoptLookup (soilMoistureOptions, optStr, true)) == CMfailed)) {
+					CMmsgPrint(CMmsgUsrError," Soil Moisture mode not specifed! Options = 'bucket' or 'layers'\n");
+					return CMfailed;
+				}
+		if (((optStr = MFOptionGet (MDOptSoilTemperature))  == (char *) NULL) || ((soilTemperatureID = CMoptLookup (soilTemperatureOptions, optStr, true)) == CMfailed)) {
+					CMmsgPrint(CMmsgUsrError," Soil TemperatureOption not specifed! Options = 'none' or 'calculate'\n");
+					return CMfailed;
+				}
+		
+		
+		if (soilTemperatureID == 1 ){
+
+				
+			
+		 		if ((ret = MDPermafrostDef()) == CMfailed){ 
+		 		printf ("Permafrost failed!\n");
+		 			return CMfailed;
+		 		}
+	 	}
+	
+	
 	MFDefEntering ("Rainfed Water Surplus");
 	if ((ret = MDIrrGrossDemandDef ()) == CMfailed) return (CMfailed);
 	if ((ret != MFUnset) &&
-			  ((_MDInIrrAreaFracID  = MDIrrigatedAreaDef ())==  CMfailed)) return (CMfailed);
+			  ((_MDInIrrAreaFracID         = MDIrrigatedAreaDef    ())==  CMfailed) )
+	     return (CMfailed);	
+ 	
+	
+	if (soilMoistureOptionID ==0){ //bucket
+		 
+		if ((ret = MDRainSMoistChgDef()) == CMfailed) return CMfailed;
+			
+		   if (( ret != MFUnset) && 
+		    		((_MDInRainSMoistChgID      = MDRainSMoistChgDef ()) == CMfailed))
+			return CMfailed;
+		}
+	
+	
+	
+	if (((_MDInPrecipID             = MDPrecipitationDef ()) == CMfailed)) return CMfailed;
+	if (((_MDInSPackChgID           = MDSPackChgDef      ()) == CMfailed)) return CMfailed;
+	if (((_MDInRainEvapoTransID     = MFVarGetID (MDVarRainEvapotranspiration, "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed)) return CMfailed;
+	
 
-	if (((_MDInPrecipID             = MDPrecipitationDef ()) == CMfailed) ||
-		((_MDInSPackChgID           = MDSPackChgDef      ()) == CMfailed) ||
-	    ((_MDInRainSMoistChgID      = MDRainSMoistChgDef ()) == CMfailed) ||
-	    ((_MDInRainEvapoTransID     = MFVarGetID (MDVarRainEvapotranspiration, "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDOutRainWaterSurplusID  = MFVarGetID (MDVarRainWaterSurplus,       "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-	    (MFModelAddFunction (_MDRainWaterSurplus) == CMfailed)) return (CMfailed);
+	
+	if (((_MDOutRainWaterSurplusID  = MFVarGetID (MDVarRainWaterSurplus,       "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed)) return CMfailed;
+	if ((MFModelAddFunction (_MDRainWaterSurplus) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Rainfed Water Surplus");
 	return (_MDOutRainWaterSurplusID);
 }

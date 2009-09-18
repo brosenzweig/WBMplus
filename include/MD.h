@@ -1,14 +1,14 @@
 /******************************************************************************
 
-GHAAS Water Balance/Transport Model V3.0
-Global Hydrologic Archive and Analysis System
-Copyright 1994-2007, University of New Hampshire
+ GHAAS Water Balance/Transport Model V3.0
+ Global Hydrologic Archive and Analysis System
+ Copyright 1994-2007, University of New Hampshire
 
-MD.h
+ MD.h
 
-balazs.fekete@unh.edu
+ balazs.fekete@unh.edu
 
-*******************************************************************************/
+ *******************************************************************************/
 
 #ifndef MD_H_INCLUDED
 #define MD_H_INCLUDED
@@ -34,6 +34,11 @@ extern "C" {
 #define MDOptMuskingum                       "Muskingum"
 #define MDOptIrrReferenceET                  "IrrReferenceETP"
 #define MDOptIrrIntensity                    "DoubleCropping"
+#define MDOptIrrExcessWater                  "ExcessWater"
+#define MDOptWetlands						 "Wetlands"	
+#define MDOptSoilMoisture					 "SoilMoisture"
+#define MDOptSoilTemperature				 "SoilTemperature"
+
 #define MDOptIrrigatedAreaMap                "IrrigatedAreaMap"
 #define MDOptIrrSmallReservoirs				 "SmallReservoirs"
 #define MDOptSoilAvailableWaterCapacity		 "SoilWaterCapacity"
@@ -94,7 +99,7 @@ extern "C" {
 
 #define MDVarIrrAreaFractionSeason1          "IrrigatedAreaFractionSeason1"
 #define MDVarIrrAreaFractionSeason2          "IrrigatedAreaFractionSeason2"
-	
+
 #define MDVarIrrEfficiency                   "IrrigationEfficiency"
 #define MDVarIrrEvapotranspiration           "IrrEvapotranspiration"
 #define MDParIrrDailyPercolationRate         "IrrDailyPercolationRate"
@@ -119,7 +124,7 @@ extern "C" {
 #define MDNonIrrigatedFraction               "NonIrrigatedFraction"	
 #define MDVarIrrDailyRicePerolationRate      "RicePercolationRate"	
 #define MDVarIrrRicePondingDepth			 "RicePondingDepth"
-	
+#define MDVarAvailableIrrigationWater		 "AvailableIrrigationWater"	
 #define	MDVarMeanElevation                   "Elevation"
 #define MDVarMuskingumC0                     "MuskingumC0"
 #define MDVarMuskingumC1                     "MuskingumC1"
@@ -128,6 +133,11 @@ extern "C" {
 #define MDVarPrecipitation                   "Precipitation"
 #define MDVarPrecipFraction                  "PrecipitationFraction"
 #define MDVarPrecipMonthly                   "MonthlyPrecipitation"
+
+#define MDVarWetlandEvapotranspiration		 "WetlandEvapotranspiration"
+#define MDVarWetlandAreaFraction			 "WetlandAreaFraction"
+#define MDVarWetlandSMChange				 "WetlandSMChange"	
+#define MDVarSoilOrganicContent				  "SoilOrganicContent"
 
 #define MDVarRainEvapotranspiration          "RainEvapotranspiration"
 #define MDVarRainInfiltration                "RainInfiltration"
@@ -144,7 +154,7 @@ extern "C" {
 #define MDVarReservoirRelease                "ReservoirRelease"
 #define MDVarReservoirStorage                "ReservoirStorage" 
 #define MDVarReservoirStorageChange          "ReservoirStorageChange"
-	
+
 #define MDVarRelHumidity                     "RelativeHumidity"
 #define MDVarRelSoilMoisture                 "RelativeSoilMoisture"	
 #define MDVarRiverbedAvgDepthMean            "RiverbedAvgDepthMean"
@@ -181,6 +191,7 @@ extern "C" {
 #define MDVarSoilMoisture                    "SoilMoisture"
 #define MDVarSoilMoistChange                 "SoilMoistureChange"
 #define MDVarSoilWiltingPoint                "WiltingPoint"
+#define MDVarSoilBulkDensity                 "SoilBulkDensity"
 
 #define MDVarSolarRadiation                  "SolarRadiation"
 #define MDVarSRadDayLength                   "DayLength"
@@ -197,22 +208,44 @@ extern "C" {
 #define MDVarWetDaysBeta                     "WetDaysBeta"
 #define MDVarWindSpeed                       "WindSpeed"
 
+#define MDVarSoilNumLayers					"NumberOfSoilLayers"
+
+#define	MDVarSaturationExcessflow			"SaturationExcessFlow"
+
+#define MDVarWetlandAreaFraction	    	"WetlandAreaFraction"
+#define MDVarWetlandEvapotranspiration	        "WetlandEvapotranspiration"
+#define MDVarWetlandSurfROUptake		        "WetlandSurfROUptake"
+#define MDVarWetlandRunoff	     		        "WetlandRunoff"
+#define MDVarWetlandStorageChange				"WetlandStorageChange"
+#define MDVarWetlandCatchmentAreaFactor		"WetlandCatchmentAreaFactor"
+#define MDVarWetlandStorage					"WetlandStorage"	
+#define MDVarWetlandWaterLevelDepth			"WetlandWaterLevelDepth"	
 #define MDParGrossRadTAU                     "GrossRadTAU"
 #define MDParGroundWatBETA                   "GroundWaterBETA"
 #define MDParSoilMoistALPHA                  "SoilMoistureALPHA"
 #define MDParInfiltrationFrac                "InfiltrationFraction"
-
+#define MDVarOutSoilDebug					"DebugOutput"
+#define MDVarInitalSoilTemperature		"InitialSoilTemperature"
+#define MDVarLiquidSoilMoisture			"LiquidSoilMoisture"
+#define MDVarActiveLayerDepth				"ActiveLayerDepth"
+#define MDVarThawingDepth					"ThawingDepth"
+#define MDVarSnowDepth						"SnowDepth"
+#define MDVarSnowDensity 					"SnowDensity"
+#define	MDVarIsInitial						"IsInitial"
+#define MDVarSoilMoistureIsInitial			"SoilMoistureIsInitial"
+#define MDVarWinterOnsetDoy					"WinterOnsetDoY"	
+#define MDVarWaterTableDepth				"WaterTableDepth"	
+#define MDVarSoilOrganicLayer				"SoilOrganicLayer"
 #define MDParInfiltrationFracSpatial         "InfiltrationFractionSpatial"
 #define MDParSnowMeltThreshold               "SnowMeltThreshold"	
 #define	MDParFallThreshold				     "SnowFallThreshold"
-	
+
 #define MDConst_m3PerSecTOm3PerDay    86400.0
 #define MDConst_m3PerSecTOmmKm2PerDay 86400000.0
 #define MDConst_mmKm2PerDayTOm3PerSec (1.0 / 86400000.0)
 #define MDConstInterceptCI  0.3	   // Interception LAI+SAI constant
 #define MDConstInterceptCH 10.0    // Interception canopy height constant 
 #define MDConstInterceptD   0.2    // Interception rain fraction of the day
-
 #define MDConstLPC          4.0    // minimum projected LAI for "closed" canopy
 #define MDConstC1           0.25   // intercept in actual/potential solar radiation to sunshine duration
 #define MDConstC2           0.5    // slope in actual/potential solar radiation to sunshine duration
@@ -230,14 +263,12 @@ extern "C" {
 #define MDConstGLMIN        0.0003 // cuticular leaf surface conductance for all sides of leaf, m/s
 #define MDConstRM        1000.0    // maximum solar radiation, at which FR = 1,  W/m2
 #define MDConstRHOTP        2.0    // ratio of total leaf surface area to projected leaf area
-
 #define MDConstCPRHO     1240.0    // volumetric heat capacity of air, J/(K m3)
 #define MDConstPSGAMMA      0.067  // psychrometric constant, kPa/K
 #define MDConstIGRATE       0.0864 // integrates W/m2 over 1 d to MJ/m2
 #define MDConstEtoM         0.4085 // converts MJ/m2 to mm of water
 #define MDConstSIGMA      5.67E-08 // Stefan-Boltzmann constant, W/(m2/K4)
 #define MDConstK            0.4    // von Karman constant
-
 #define MDMinimum(a,b) (((a) < (b)) ? (a) : (b))
 #define MDMaximum(a,b) (((a) > (b)) ? (a) : (b))
 
@@ -247,122 +278,124 @@ int MDAccumSMoistChgDef();
 int MDAccumGrdWatChgDef();
 int MDAccumRunoffDef();
 int MDAccumBalanceDef();
-int MDAvgNStepsDef ();
-int MDBaseFlowDef ();
-int MDBgcRoutingDef ();
- 
-int MDCParamAlbedoDef ();
-int MDCParamCHeightDef ();
-int MDCParamLWidthDef ();
-int MDCParamRSSDef ();
-int MDCParamR5Def ();
-int MDCParamCDDef ();
-int MDCParamCRDef ();
-int MDCParamGLMaxDef ();
-int MDCParamLPMaxDef ();
-int MDCParamZ0gDef ();
-int MDDischargeDef ();
-int MDDischLevel1Def ();
-int MDDischLevel2Def ();
-int MDDischLevel3Def ();
-int MDDischLevel3AccumulateDef ();
-int MDDischLevel3CascadeDef ();
-int MDDischLevel3MuskingumDef ();
-int MDDischLevel3MuskingumCoeffDef ();
-int MDDischMeanDef ();
-int MDEvapotranspirationDef ();
-int MDGrossRadDef ();
+int MDAvgNStepsDef();
+int MDBaseFlowDef();
+int MDBgcRoutingDef();
+
+int MDCParamAlbedoDef();
+int MDCParamCHeightDef();
+int MDCParamLWidthDef();
+int MDCParamRSSDef();
+int MDCParamR5Def();
+int MDCParamCDDef();
+int MDCParamCRDef();
+int MDCParamGLMaxDef();
+int MDCParamLPMaxDef();
+int MDCParamZ0gDef();
+int MDDischargeDef();
+int MDDischLevel1Def();
+int MDDischLevel2Def();
+int MDDischLevel3Def();
+int MDDischLevel3AccumulateDef();
+int MDDischLevel3CascadeDef();
+int MDDischLevel3MuskingumDef();
+int MDDischLevel3MuskingumCoeffDef();
+int MDDischMeanDef();
+int MDEvapotranspirationDef();
+int MDGrossRadDef();
 int MDIrrigatedAreaFracDef();
 int MDIrrigatedAreaDef();
 int MDIrrGrossDemandDef();
-int MDIrrRefEvapotransDef ();
-int MDIrrRefEvapotransFAODef ();
-int MDIrrRefEvapotransHamonDef ();
-int MDIrrSoilMoistureDef ();
-int MDIrrSoilMoistChgDef ();
-int MDIrrUptakeRiverDef ();
-int MDIrrUptakeGrdWaterDef ();
-int MDReservoirDef ();
-int MDLandCoverDef ();
-int MDLeafAreaIndexDef ();
-int MDRainInfiltrationDef ();
-int MDRainInterceptDef ();
-int MDRainPotETDef ();
-int MDRainPotETHamonDef ();
-int MDRainPotETJensenDef ();
-int MDRainPotETPstdDef ();
-int MDRainPotETPsTaylorDef ();
-int MDRainPotETPMdayDef ();
-int MDRainPotETPMdnDef ();
-int MDRainPotETSWGdayDef ();
-int MDRainPotETSWGdnDef ();
-int MDRainPotETTurcDef ();
-int MDRainSMoistChgDef ();
-int MDRainSurfRunoffDef ();
-int MDRainWaterSurplusDef ();
-
-int MDRelHumidityDef ();
-int MDRiverbedShapeExponentDef ();
-int MDRiverWidthDef ();
+int MDIrrRefEvapotransDef();
+int MDIrrRefEvapotransFAODef();
+int MDIrrRefEvapotransHamonDef();
+int MDIrrSoilMoistureDef();
+int MDIrrSoilMoistChgDef();
+int MDIrrUptakeRiverDef();
+int MDIrrUptakeGrdWaterDef();
+int MDReservoirDef();
+int MDLandCoverDef();
+int MDLeafAreaIndexDef();
+int MDRainInfiltrationDef();
+int MDRainInterceptDef();
+int MDRainPotETDef();
+int MDRainPotETHamonDef();
+int MDRainPotETJensenDef();
+int MDRainPotETPstdDef();
+int MDRainPotETPsTaylorDef();
+int MDRainPotETPMdayDef();
+int MDRainPotETPMdnDef();
+int MDRainPotETSWGdayDef();
+int MDRainPotETSWGdnDef();
+int MDRainPotETTurcDef();
+int MDRainSMoistChgDef();
+int MDRainSurfRunoffDef();
+int MDRainWaterSurplusDef();
+int MDWetlandRunoffDef();
+int MDRelHumidityDef();
+int MDRiverbedShapeExponentDef();
+int MDRiverWidthDef();
 //int MDRootDepthDef ();
-int MDRunoffDef ();
-int MDRunoffVolumeDef ();
-int MDSPackChgDef ();
-int MDSmallReservoirReleaseDef ();
-int MDSmallReservoirCapacityDef ();
-int MDSolarRadDef ();
-int MDSRadDayLengthDef ();
-int MDSRadI0HDayDef ();
-int MDSoilAvailWaterCapDef ();
-int MDSoilMoistChgDef ();
-int MDSurfRunoffDef ();
-int MDStemAreaIndexDef ();
-int MDWaterBalanceDef ();
-int MDPrecipitationDef ();
-int MDWetDaysDef ();
-
+int MDRunoffDef();
+int MDRunoffVolumeDef();
+int MDSPackChgDef();
+int MDSmallReservoirReleaseDef();
+int MDSmallReservoirCapacityDef();
+int MDSolarRadDef();
+int MDSRadDayLengthDef();
+int MDSRadI0HDayDef();
+int MDSoilAvailWaterCapDef();
+int MDSoilMoistChgDef();
+int MDSurfRunoffDef();
+int MDStemAreaIndexDef();
+int MDWaterBalanceDef();
+int MDPrecipitationDef();
+int MDWetDaysDef();
+int MDWetlandAreaDef();
+int MDPermafrostDef();
 //bool MDEvent (int,int,int);
-
+int MDRainWaterSurplusDef();
+int MDRainSMoistChgLayeredSoilDef();
 /* PET & Related Functions */
 
-float MDSRadNETLong (float,float,float,float);
+float MDSRadNETLong(float, float, float, float);
 
-float MDPETlibVPressSat   (float);
-float MDPETlibVPressDelta (float);
+float MDPETlibVPressSat(float);
+float MDPETlibVPressDelta(float);
 
-float MDWindAdjustment (float,float,float,float, float, float);
+float MDWindAdjustment(float, float, float, float, float, float);
 
-float MDPETlibLeafAreaIndex (float,float);
-float MDPETlibSteamAreaIndex (float,float);
-float MDPETlibRoughnessClosed (float,float);
-float MDPETlibRoughness (float,float,float,float,float);
-float MDPETlibZPDisplacement (float,float,float,float);
-float MDPETlibCanopySurfResistance (float,float,float,float,float,float,float,float,float);
-float MDPETlibBoundaryResistance (float,float,float,float,float,float,float);
-float MDPETlibLeafResistance (float,float, float,float,float, float,float, float);
-float MDPETlibGroundResistance (float,float,float,float,float,float,float);
+float MDPETlibLeafAreaIndex(float, float);
+float MDPETlibSteamAreaIndex(float, float);
+float MDPETlibRoughnessClosed(float, float);
+float MDPETlibRoughness(float, float, float, float, float);
+float MDPETlibZPDisplacement(float, float, float, float);
+float MDPETlibCanopySurfResistance(float, float, float, float, float, float,
+		float, float, float);
+float MDPETlibBoundaryResistance(float, float, float, float, float, float,
+		float);
+float MDPETlibLeafResistance(float, float, float, float, float, float, float,
+		float);
+float MDPETlibGroundResistance(float, float, float, float, float, float, float);
 
-float MDPETlibPenmanMontieth (float,float,float,float,float);
-float MDPETlibShuttleworthWallace (float,float,float,float,float,float,float,float,float);
+float MDPETlibPenmanMontieth(float, float, float, float, float);
+float MDPETlibShuttleworthWallace(float, float, float, float, float, float,
+		float, float, float);
 
-float MDPETJensen (float,float);
-float MDPETMcNaughtonBlack (float,float);
-float MDPETPenmanStd (float,float,float,float,float,float,float,float);
-float MDPETPenmanMonteithDN (float,float,
-									float,float,float,float,float,float,float,
-									float,float,float,float,float,float,float,
-									float,float);
-float MDPETPenmanMonteith (float,float,
-									float,float,float,float,float,
-									float,float,float,float,float, float,float,
-									float,float);
-float MDPETShuttleworthWallaceDN (float,float,
-									float,float,float,float,float,float,float,
-									float,float,float,float,float,float,float,float,float,
-									float,float);
-float MDPETPriestleyTaylor (float,float,float,float,float,float,float);
-float MDPETThornthwaite (float,float,float);
-float MDPETTurc (float,float);
+float MDPETJensen(float, float);
+float MDPETMcNaughtonBlack(float, float);
+float MDPETPenmanStd(float, float, float, float, float, float, float, float);
+float MDPETPenmanMonteithDN(float, float, float, float, float, float, float,
+		float, float, float, float, float, float, float, float, float, float,
+		float);
+float MDPETPenmanMonteith(float, float, float, float, float, float, float,
+		float, float, float, float, float, float, float, float, float);
+float MDPETShuttleworthWallaceDN(float, float, float, float, float, float,
+		float, float, float, float, float, float, float, float, float, float,
+		float, float, float, float);
+float MDPETPriestleyTaylor(float, float, float, float, float, float, float);
+float MDPETThornthwaite(float, float, float);
+float MDPETTurc(float, float);
 
 #if defined(__cplusplus)
 }
