@@ -450,22 +450,10 @@ int MDIrrGrossDemandDef () {
 				return (CMfailed);
 			break;
 		case MDcalculate:		
-//			if (((optStr = MFOptionGet (MDOptIrrExcessWater)) == (char *) NULL) || ((optIDExcess = CMoptLookup (options, optStr, true)) == CMfailed)) {
-//				CMmsgPrint(CMmsgUsrError,"Excess Water Demand Option not specifed! Options = 'None', 'Calculated' or 'Input' (not yet implemented!)\n");
-//				return (CMfailed);
-//			}
-//			
-//			if (optIDExcess == 0 ){
-//				_MDExcessWaterLimited = true; //Limit irr water to gw, small res and river water only!
-//		    if ((_MDOutIrrNetDemandID       = MFVarGetID (MDVarAvailableIrrigationWater,      "mm",   MFInput, MFFlux,  MFBoundary)) == CMfailed)return CMfailed;
-//			}
-			
 			if (((optStr = MFOptionGet (MDOptIrrIntensity)) == (char *) NULL) || ((irrDistribuedID = CMoptLookup (distrOptions, optStr, true)) == CMfailed)) {
 				CMmsgPrint(CMmsgUsrError,"Irrigation Distribution not specifed! Options = 'Distributed' or 'FirstSeason'\n");
-//				printf ("Option for rice = %i\n",_MDIntensityIsDistributed);
 				return (CMfailed);
 			}
-
 			if (((optStr = MFOptionGet (MDOptIrrigatedAreaMap))  == (char *) NULL) || ((mapOptionID = CMoptLookup (mapOptions, optStr, true)) == CMfailed)) {
 				CMmsgPrint(CMmsgUsrError,"Typ of Irr Area not specifed! Options = 'FAO' or 'IWMI'\n");
 				return (CMfailed);
@@ -478,14 +466,12 @@ int MDIrrGrossDemandDef () {
 			else { // FAO irrigated Area Map; read Irr Area and Intensity
 				if (((optStr = MFOptionGet (MDOptIrrIntensity)) == (char *) NULL) || ((irrDistribuedID = CMoptLookup (distrOptions, optStr, true)) == CMfailed)) {
 					CMmsgPrint(CMmsgUsrError,"Irrigation Distribution not specifed! Options = 'Distributed' or 'FirstSeason'\n");
-//					printf ("Option for rice = %i\n",_MDIntensityIsDistributed);
 					return CMfailed;
 				}
 				_MDIntensityDistributed = irrDistribuedID == 0 ? false : true;
 
 				if (((_MDInIrrIntensityID = MFVarGetID (MDVarIrrIntensity,           "-",    MFInput,  MFState, MFBoundary)) == CMfailed)) return (CMfailed);
 			}
-//			printf ("Option for distribution= %i\n",_MDIntensityIsDistributed);
 			if ((optStr = MFOptionGet (MDParIrrigationCropFileName)) != (char *) NULL) CropParameterFileName = optStr;
 			if (readCropParameters (CropParameterFileName) == CMfailed) {
 				CMmsgPrint(CMmsgUsrError,"Error reading crop parameter file   : %s \n", CropParameterFileName);
@@ -521,7 +507,6 @@ int MDIrrGrossDemandDef () {
 			for (i = 0; i < _MDNumberOfIrrCrops + 1;i++) {
 				sprintf (cropETName, "CropET%02d", i + 1);  // Keep track of crop ET for each crop seperately z
 				sprintf (cropGrossDemandName, "CropGrossDemand%02d", i + 1);  // Keep track of crop ET for each crop seperately z
-//				printf("Crop=%s\n",cropETName);
 				sprintf (varname, "CropSMDeficiency%02d", i + 1);  // Output Soil Moisture Deficit, crop ET and WithDrawal per croptype
 			    if ((_MDOutCropETIDs[i]     = MFVarGetID (cropETName,  "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed)return CMfailed;
 			    if ((_MDOutCropGrossDemandIDs[i]     = MFVarGetID (cropGrossDemandName,  "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed)return CMfailed;

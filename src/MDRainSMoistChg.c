@@ -119,17 +119,15 @@ int MDRainSMoistChgDef () {
 	if (((optStr = MFOptionGet (MDParSoilMoistALPHA))  != (char *) NULL) && (sscanf (optStr,"%f",&par) == 1)) _MDSoilMoistALPHA = par;
 	
 	MFDefEntering ("Rainfed Soil Moisture");
-	if ((soilTemperatureID == MFcalculate ) && ((ret = MDPermafrostDef()) == CMfailed)) return CMfailed;
+	if (soilTemperatureID == MFcalculate ) {
+		if (((ret                        = MDPermafrostDef()) == CMfailed) ||
+		    ((_MDInRelativeIceContent    = MFVarGetID ("SoilIceContent_01",     "mm",   MFOutput,  MFState, MFBoundary)) == CMfailed) ||
+			((_MDOutLiquidSoilMoistureID = MFVarGetID (MDVarLiquidSoilMoisture, "-",    MFOutput,  MFState, MFBoundary)) == CMfailed)) return CMfailed;
+	}
 
 	if ((ret = MDIrrGrossDemandDef ()) == CMfailed) return (CMfailed);
-	if ((ret != MFUnset)  &&
-	  ((_MDInIrrAreaFracID         = MDIrrigatedAreaDef    ())==  CMfailed) )
-		return (CMfailed);
-	if (soilTemperatureID == 1 ){
-//		printf ("Soiltemp = calculate \n");
-	   if(((_MDInRelativeIceContent          = MFVarGetID ("SoilIceContent_01",     "mm",   MFOutput,  MFState, MFBoundary)) == CMfailed)) return CMfailed;
-	   if (((_MDOutLiquidSoilMoistureID      = MFVarGetID (MDVarLiquidSoilMoisture, "-",    MFOutput,  MFState, MFBoundary)) == CMfailed)) return CMfailed;
-	}
+	if ((ret != MFUnset) && ((_MDInIrrAreaFracID = MDIrrigatedAreaDef ())==  CMfailed) ) return (CMfailed);
+
 	if (((_MDInPrecipID            = MDPrecipitationDef     ()) == CMfailed) ||
 	    ((_MDInSPackChgID          = MDSPackChgDef          ()) == CMfailed) ||
 	    ((_MDInPotETID             = MDRainPotETDef         ()) == CMfailed) ||
