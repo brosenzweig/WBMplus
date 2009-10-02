@@ -19,20 +19,21 @@ balazs.fekete@unh.edu
 static float _MDSoilMoistALPHA = 5.0;
 
 // Input
-static int _MDInAirTMeanID          = MFUnset;
-static int _MDInPrecipID            = MFUnset;
-static int _MDInPotETID             = MFUnset;
-static int _MDInInterceptID         = MFUnset;
-static int _MDInSPackChgID          = MFUnset;
-static int _MDInSoilAvailWaterCapID = MFUnset;
-static int _MDInIrrAreaFracID       = MFUnset;
-static int _MDInRelativeIceContent  = MFUnset;
+static int _MDInAirTMeanID            = MFUnset;
+static int _MDInPrecipID              = MFUnset;
+static int _MDInPotETID               = MFUnset;
+static int _MDInInterceptID           = MFUnset;
+static int _MDInSPackChgID            = MFUnset;
+static int _MDInSoilAvailWaterCapID   = MFUnset;
+static int _MDInIrrAreaFracID         = MFUnset;
+static int _MDInRelativeIceContent    = MFUnset;
 // Output
-static int _MDOutEvaptrsID          = MFUnset;
-static int _MDOutSoilMoistCellID    = MFUnset;
-static int _MDOutSoilMoistID        = MFUnset;
-static int _MDOutSMoistChgID        = MFUnset;
-static int _MDOutLiquidSoilMoistureID	= MFUnset;	
+static int _MDOutEvaptrsID            = MFUnset;
+static int _MDOutSoilMoistCellID      = MFUnset;
+static int _MDOutSoilMoistID          = MFUnset;
+static int _MDOutSMoistChgID          = MFUnset;
+static int _MDOutLiquidSoilMoistureID = MFUnset;
+
 static void _MDRainSMoistChg (int itemID) {	
 // Input
 	float airT;              // Air temperature [degreeC]
@@ -59,9 +60,9 @@ static void _MDRainSMoistChg (int itemID) {
 	pet          = MFVarGetFloat (_MDInPotETID,             itemID, 0.0);
 	awCap        = MFVarGetFloat (_MDInSoilAvailWaterCapID, itemID, 0.0);
 	sMoist       = MFVarGetFloat (_MDOutSoilMoistCellID,    itemID, 0.0);
-	iceContent   = MFVarGetFloat (_MDInRelativeIceContent,    itemID, 0.0);
-	intercept    = _MDInInterceptID   != MFUnset ? MFVarGetFloat (_MDInInterceptID,   itemID, 0.0) : 0.0;
-	irrAreaFrac  = _MDInIrrAreaFracID != MFUnset ? MFVarGetFloat (_MDInIrrAreaFracID, itemID, 0.0) : 0.0;
+	iceContent   = _MDInRelativeIceContent != MFUnset ? MFVarGetFloat (_MDInRelativeIceContent,  itemID, 0.0) : 0.0;
+	intercept    = _MDInInterceptID        != MFUnset ? MFVarGetFloat (_MDInInterceptID,         itemID, 0.0) : 0.0;
+	irrAreaFrac  = _MDInIrrAreaFracID      != MFUnset ? MFVarGetFloat (_MDInIrrAreaFracID,       itemID, 0.0) : 0.0;
 
 	
 	//if (iceContent> 0.0) printf ("IceContent upper Layer = %f\n",iceContent);
@@ -93,12 +94,14 @@ static void _MDRainSMoistChg (int itemID) {
 //	}
 //	else  { sMoistChg = 0.0; evapotrans = 0.0; }
 
-	MFVarSetFloat (_MDOutSoilMoistCellID, itemID, sMoist);
-	MFVarSetFloat (_MDOutEvaptrsID,       itemID, evapotrans * (1.0 - irrAreaFrac)); //RJS 01-17-08 "- impAreaFrac - H2OAreaFrac"
-	MFVarSetFloat (_MDOutSoilMoistID,     itemID, sMoist     * (1.0 - irrAreaFrac)); //RJS 01-17-08 "- impAreaFrac - H2OAreaFrac"
-	MFVarSetFloat (_MDOutSMoistChgID,     itemID, sMoistChg  * (1.0 - irrAreaFrac)); //RJS 01-17-08 "- impAreaFrac - H2OAreaFrac"
-	MFVarSetFloat (_MDOutLiquidSoilMoistureID,itemID, sMoist/awCap);
+	MFVarSetFloat (_MDOutSoilMoistCellID,     itemID, sMoist);
+	MFVarSetFloat (_MDOutEvaptrsID,           itemID, evapotrans * (1.0 - irrAreaFrac)); //RJS 01-17-08 "- impAreaFrac - H2OAreaFrac"
+	MFVarSetFloat (_MDOutSoilMoistID,         itemID, sMoist     * (1.0 - irrAreaFrac)); //RJS 01-17-08 "- impAreaFrac - H2OAreaFrac"
+	MFVarSetFloat (_MDOutSMoistChgID,         itemID, sMoistChg  * (1.0 - irrAreaFrac)); //RJS 01-17-08 "- impAreaFrac - H2OAreaFrac"
+	if (_MDOutLiquidSoilMoistureID != MFUnset) MFVarSetFloat (_MDOutLiquidSoilMoistureID,itemID, sMoist/awCap);
 }
+
+enum { MFnone, MFcalculate };
 
 int MDRainSMoistChgDef () {
 	int ret = 0;
@@ -107,29 +110,16 @@ int MDRainSMoistChgDef () {
 	if (_MDOutSMoistChgID != MFUnset) return (_MDOutSMoistChgID);
 	const char *soilTemperatureOptions [] = { "none", "calculate", (char *) NULL };
 
-
 	int soilTemperatureID;
-	if (((optStr = MFOptionGet (MDOptSoilTemperature))  == (char *) NULL) || ((soilTemperatureID = CMoptLookup (soilTemperatureOptions, optStr, true)) == CMfailed)) {
-					CMmsgPrint(CMmsgUsrError," Soil TemperatureOption not specifed! Options = 'none' or 'calculate'\n");
-					return CMfailed;
+	if (((optStr = MFOptionGet (MDOptSoilTemperature))  == (char *) NULL) ||
+	    ((soilTemperatureID = CMoptLookup (soilTemperatureOptions, optStr, true)) == CMfailed)) {
+		CMmsgPrint(CMmsgUsrError," Soil TemperatureOption not specifed! Options = 'none' or 'calculate'\n");
+		return CMfailed;
 	}
-	
-	
-	
-	
-	
+	if (((optStr = MFOptionGet (MDParSoilMoistALPHA))  != (char *) NULL) && (sscanf (optStr,"%f",&par) == 1)) _MDSoilMoistALPHA = par;
 	
 	MFDefEntering ("Rainfed Soil Moisture");
-	if (soilTemperatureID == 1 ){
-			 		if ((ret = MDPermafrostDef()) == CMfailed){ 
-			 			
-					 		printf ("Permafrost failed!\n");
-					 	
-			 			return CMfailed;
-			 		}
-	 	}
-	//printf ("Permafrost ID = %i \n", MDPermafrostDef());
-	if (((optStr = MFOptionGet (MDParSoilMoistALPHA))  != (char *) NULL) && (sscanf (optStr,"%f",&par) == 1)) _MDSoilMoistALPHA = par;
+	if ((soilTemperatureID == MFcalculate ) && ((ret = MDPermafrostDef()) == CMfailed)) return CMfailed;
 
 	if ((ret = MDIrrGrossDemandDef ()) == CMfailed) return (CMfailed);
 	if ((ret != MFUnset)  &&
@@ -138,9 +128,7 @@ int MDRainSMoistChgDef () {
 	if (soilTemperatureID == 1 ){
 //		printf ("Soiltemp = calculate \n");
 	   if(((_MDInRelativeIceContent          = MFVarGetID ("SoilIceContent_01",     "mm",   MFOutput,  MFState, MFBoundary)) == CMfailed)) return CMfailed;
-	   if (((_MDOutLiquidSoilMoistureID          = MFVarGetID (MDVarLiquidSoilMoisture,             "-", MFOutput,  MFState, MFBoundary)) == CMfailed)) return CMfailed;
-	
-	   
+	   if (((_MDOutLiquidSoilMoistureID      = MFVarGetID (MDVarLiquidSoilMoisture, "-",    MFOutput,  MFState, MFBoundary)) == CMfailed)) return CMfailed;
 	}
 	if (((_MDInPrecipID            = MDPrecipitationDef     ()) == CMfailed) ||
 	    ((_MDInSPackChgID          = MDSPackChgDef          ()) == CMfailed) ||

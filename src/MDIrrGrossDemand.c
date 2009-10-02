@@ -68,11 +68,8 @@ static int  _MDRicePoindingDepthID      = MFUnset;
 
 static int  _MDRicePercolationRateID     = MFUnset;
 static int  _MDIrrigatedAreaMap;
-//static int _MDParIrrIntensity;
 static bool _MDIntensityDistributed      = true;
-//Parameters
  
-
 static const char *CropParameterFileName;
 
 static int   getTotalSeasonLength(const MDIrrigatedCrop *);
@@ -440,7 +437,7 @@ int MDIrrGrossDemandDef () {
 
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options,optStr,true);
 
-	if ((optID == MDnone) ||(_MDOutIrrGrossDemandID != MFUnset)) return (_MDOutIrrGrossDemandID);
+	if ((optID == MDnone) || (_MDOutIrrGrossDemandID != MFUnset)) return (_MDOutIrrGrossDemandID);
    
 	
 	MFDefEntering ("Irrigation Gross Demand");
