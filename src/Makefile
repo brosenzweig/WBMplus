@@ -63,6 +63,8 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDReservoirs.o\
        $(OBJ)/MDRiverbedShapeExp.o\
        $(OBJ)/MDRiverWidth.o\
+       $(OBJ)/MDRiverLight.o\
+       $(OBJ)/MDRiverGPP.o\
        $(OBJ)/MDRunoff.o\
        $(OBJ)/MDRunoffMean.o\
        $(OBJ)/MDRunoffVolume.o\
@@ -85,6 +87,7 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDBgc_DOC.o\
        $(OBJ)/MDBgc_DIN.o\
        $(OBJ)/MDBgc_DINPLUSBIOMASS.o\
+       $(OBJ)/MDFecal.o\
        $(OBJ)/MDBgc.o
 
 all: ${TARGET}

@@ -146,7 +146,7 @@ int MDCParamLWidthDef () {
 
 static int _MDOutCParamRSSID = MFUnset; 
 
-static void _MDCParamRSS (int itemID) { MFVarSetFloat (_MDOutCParamRSSID,itemID, 500.0); }
+static void _MDCParamRSS (int itemID) { MFVarSetFloat (_MDOutCParamRSSID,itemID, MDConstRSS); }
 
 int MDCParamRSSDef () {
 	int optID = MFUnset;
