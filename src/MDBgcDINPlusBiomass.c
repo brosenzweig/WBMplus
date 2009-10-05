@@ -18,10 +18,10 @@ wil.wollheim@unh.edu
 static int _MDInDischargeID       = MFUnset;
 static int _MDInRiverWidthID      = MFUnset;
 static int _MDInWTempRiverRouteID = MFUnset; // water temperature function
-static int _MDInRiverLightID      = MFUnset;
-static int _MDInRiverGPPID      = MFUnset;
+// TODO static int _MDInRiverLightID      = MFUnset;
+// TODO static int _MDInRiverGPPID      = MFUnset;
 static int _MDInWTempID         = MFUnset; // water temperature
-static int _MDInSubGridNetworkID         = MFUnset; //define lengths of stream
+// TODO static int _MDInSubGridNetworkID         = MFUnset; //define lengths of stream
 
 static int _MDInRunoffVolumeID    = MFUnset;
 static int _MDInRunoffID          = MFUnset;
