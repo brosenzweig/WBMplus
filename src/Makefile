@@ -17,6 +17,13 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDAccumulate.o\
        $(OBJ)/MDAvgNSteps.o\
        $(OBJ)/MDBaseFlow.o\
+       $(OBJ)/MDBgc.o\
+       $(OBJ)/MDBgcDOC.o\
+       $(OBJ)/MDBgcDIN.o\
+       $(OBJ)/MDBgcDINPlusBiomass.o\
+       $(OBJ)/MDBgcFecal.o\
+       $(OBJ)/MDBgcRiverLight.o\
+       $(OBJ)/MDBgcRiverGPP.o\
        $(OBJ)/MDCParams.o\
        $(OBJ)/MDDischarge.o\
        $(OBJ)/MDDischLevel1.o\
@@ -63,8 +70,6 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDReservoirs.o\
        $(OBJ)/MDRiverbedShapeExp.o\
        $(OBJ)/MDRiverWidth.o\
-       $(OBJ)/MDRiverLight.o\
-       $(OBJ)/MDRiverGPP.o\
        $(OBJ)/MDRunoff.o\
        $(OBJ)/MDRunoffMean.o\
        $(OBJ)/MDRunoffVolume.o\
@@ -83,12 +88,7 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDWTempRiver.o\
        $(OBJ)/MDWTempRiverRoute.o\
        $(OBJ)/MDWTempGrdWater.o\
-       $(OBJ)/MDWTempSurfRunoff.o\
-       $(OBJ)/MDBgc_DOC.o\
-       $(OBJ)/MDBgc_DIN.o\
-       $(OBJ)/MDBgc_DINPLUSBIOMASS.o\
-       $(OBJ)/MDFecal.o\
-       $(OBJ)/MDBgc.o
+       $(OBJ)/MDWTempSurfRunoff.o
 
 all: ${TARGET}
 

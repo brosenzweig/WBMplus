@@ -15,38 +15,37 @@ wil.wollheim@unh.edu
 #include <MD.h>
 #include <math.h>
 
-static int _MDInDischargeID       = MFUnset;
-static int _MDInRiverWidthID      = MFUnset;
-static int _MDInWTempID           = MFUnset; // water temperature
-//static int _MDInWTempRiverRouteID = MFUnset;
+static int _MDInDischargeID            = MFUnset;
+static int _MDInRiverWidthID           = MFUnset;
+static int _MDInWTempID                = MFUnset; // water temperature
+//static int _MDInWTempRiverRouteID      = MFUnset;
 
-static int _MDInRunoffVolumeID    = MFUnset;
-static int _MDInRunoffID          = MFUnset;
-static int _MDInRunoffMeanID      = MFUnset;
-static int _MDInRiverStorageChgID = MFUnset;
-static int _MDInRiverStorageID    = MFUnset;
-//static int _MDInResCapacityID     = MFUnset;
-static int _MDInResStorageID      = MFUnset;
-static int _MDInResStorageChangeID      = MFUnset;
+static int _MDInRunoffVolumeID         = MFUnset;
+static int _MDInRunoffID               = MFUnset;
+static int _MDInRunoffMeanID           = MFUnset;
+static int _MDInRiverStorageChgID      = MFUnset;
+static int _MDInRiverStorageID         = MFUnset;
+//static int _MDInResCapacityID          = MFUnset;
+static int _MDInResStorageID           = MFUnset;
+static int _MDInResStorageChangeID     = MFUnset;
 
 //static int _MDPointSources_UrbanPopID  = MFUnset;
-//static int _MDNonPoint_DOCID      = MFUnset;
-//static int _MDPointSources_DOCID  = MFUnset;
-static int _MDInSinuosityID       = MFUnset;
-static int _MDInWetlandsID        = MFUnset;
-static int _MDInKoppenID          = MFUnset;
+//static int _MDNonPoint_DOCID           = MFUnset;
+//static int _MDPointSources_DOCID       = MFUnset;
+static int _MDInWetlandsID             = MFUnset;
+static int _MDInKoppenID               = MFUnset;
 
-static int _MDConc_DOCID             = MFUnset;
-static int _MDFlux_DOCID             = MFUnset;
-static int _MDLocalIn_DOCID          = MFUnset;
-static int _MDRemoval_DOCID          = MFUnset;
-static int _MDStorage_DOCID          = MFUnset;
-static int _MDDeltaStorage_DOCID     = MFUnset;
+static int _MDConc_DOCID               = MFUnset;
+static int _MDFlux_DOCID               = MFUnset;
+static int _MDLocalIn_DOCID            = MFUnset;
+static int _MDRemoval_DOCID            = MFUnset;
+static int _MDStorage_DOCID            = MFUnset;
+static int _MDDeltaStorage_DOCID       = MFUnset;
 
-static int _MDConcMixing_DOCID       = MFUnset;
-static int _MDFluxMixing_DOCID       = MFUnset;
-static int _MDStorageMixing_DOCID    = MFUnset;
-static int _MDDeltaStorageMixing_DOCID= MFUnset;
+static int _MDConcMixing_DOCID         = MFUnset;
+static int _MDFluxMixing_DOCID         = MFUnset;
+static int _MDStorageMixing_DOCID      = MFUnset;
+static int _MDDeltaStorageMixing_DOCID = MFUnset;
 
 static void _MDDOCRouting (int itemID) {
 //input	
@@ -57,7 +56,6 @@ static void _MDDOCRouting (int itemID) {
         float runoffVol;
         float waterStorageChange;
 		float waterStorage;
-		float sinuosity;
 		float wetlands;
 		float koppen;
 		
@@ -79,7 +77,6 @@ static void _MDDOCRouting (int itemID) {
         float DOCConcentrationMixing;
         float HL;
         float Local_QFactor;
-        
 
         float DOCRemoval;
 		float massbalance;
@@ -87,7 +84,6 @@ static void _MDDOCRouting (int itemID) {
 		float waterT;
 		
 		float ConcPre_DOC;
-			
 		
 		//removal rates, assuming saturation
 		float DOC_Umax = 0;  // mg/m2/h
@@ -95,29 +91,27 @@ static void _MDDOCRouting (int itemID) {
 		float NonpointLoadConc_DOC;
 		float PointLoadFlux_DOC;
 		float TotalVol;
-		
-		discharge                  = MFVarGetFloat (_MDInDischargeID, itemID, 0.0);
-		width                      = MFVarGetFloat (_MDInRiverWidthID, itemID, 0.0);
-		runoff             = MFVarGetFloat (_MDInRunoffID,           itemID, 0.0);   //mm
-		runoffMean         = MFVarGetFloat (_MDInRunoffMeanID,           itemID, 0.0);   //mm
-        runoffVol          = MFVarGetFloat (_MDInRunoffVolumeID,           itemID, 0.0); //m3/s
-		waterStorageChange = MFVarGetFloat (_MDInRiverStorageChgID,    itemID, 0.0);
-		waterStorage       = MFVarGetFloat (_MDInRiverStorageID,       itemID, 0.0);
-		sinuosity          = MFVarGetFloat (_MDInSinuosityID,  itemID, 0.0);
-        waterT			   = MFVarGetFloat (_MDInWTempID, itemID, 0.0);
-		wetlands           = MFVarGetFloat (_MDInWetlandsID, itemID, 0.0); //%
-		koppen             = MFVarGetFloat (_MDInKoppenID, itemID, 0.0); //%
-        //wetlands = 0;
-		//NonpointLoadConc_DOC = MFVarGetFloat (_MDNonPoint_DOCID,  itemID, 0.0);
-		PointLoadFlux_DOC    = 0;
-		
-		//Loading parameters - uses equation DOC_conc = aQ^b + (c + dlnQFactor) * wetlands  ; mg C / l
+				//Loading parameters - uses equation DOC_conc = aQ^b + (c + dlnQFactor) * wetlands  ; mg C / l
 		float a; //mean annual concentration with no wetlands - vary by biome using table 1, Mulholland 2003
 		float b = 0.282; // rate ar which DOC concentration changes with no wetlands
 		float c = 3.2;   //slope of DOC vs wetland relationship
 		float d = -0.6949; // rate at which slope of DOC vs. wetlands changes with increasing flow
 				
 				
+		discharge          = MFVarGetFloat (_MDInDischargeID,       itemID, 0.0);
+		width              = MFVarGetFloat (_MDInRiverWidthID,      itemID, 0.0);
+		runoff             = MFVarGetFloat (_MDInRunoffID,          itemID, 0.0); //mm
+		runoffMean         = MFVarGetFloat (_MDInRunoffMeanID,      itemID, 0.0); //mm
+        runoffVol          = MFVarGetFloat (_MDInRunoffVolumeID,    itemID, 0.0); //m3/s
+		waterStorageChange = MFVarGetFloat (_MDInRiverStorageChgID, itemID, 0.0);
+		waterStorage       = MFVarGetFloat (_MDInRiverStorageID,    itemID, 0.0);
+        waterT			   = MFVarGetFloat (_MDInWTempID,           itemID, 0.0);
+		wetlands           = MFVarGetFloat (_MDInWetlandsID,        itemID, 0.0); //%
+		koppen             = MFVarGetFloat (_MDInKoppenID,          itemID, 0.0); //%
+        //wetlands = 0;
+		//NonpointLoadConc_DOC = MFVarGetFloat (_MDNonPoint_DOCID,  itemID, 0.0);
+		PointLoadFlux_DOC    = 0;
+
 		//KoppenID's : 1=Taiga, 2=semi-arid,3=tundra,4=temperate,5=tropics
 		//Mullholland DOC mg/l Tundra=2,Taiga=7,Temperate=4,Semi-arid=1, WetTropics=8, DryTropics=3
 		if (koppen == 1) a = 7;
@@ -127,14 +121,10 @@ static void _MDDOCRouting (int itemID) {
 		if (koppen == 5) a = 8;
 		if (isnan(koppen)) a = 4;
 
-				
-				
-		
-		
-		DOCFlux                  = MFVarGetFloat (_MDFlux_DOCID, itemID, 0.0);
-        DOCStorage			   = MFVarGetFloat (_MDStorage_DOCID, itemID, 0.0);
-        DOCFluxMixing            = MFVarGetFloat (_MDFluxMixing_DOCID, itemID, 0.0);
-        DOCStorageMixing		   = MFVarGetFloat (_MDStorageMixing_DOCID, itemID, 0.0);
+		DOCFlux          = MFVarGetFloat (_MDFlux_DOCID, itemID, 0.0);
+        DOCStorage       = MFVarGetFloat (_MDStorage_DOCID, itemID, 0.0);
+        DOCFluxMixing    = MFVarGetFloat (_MDFluxMixing_DOCID, itemID, 0.0);
+        DOCStorageMixing = MFVarGetFloat (_MDStorageMixing_DOCID, itemID, 0.0);
         
         if (runoffMean > 0){
         Local_QFactor = runoff / runoffMean;  //ratio of runoff to runoff mean is used to drive loading
@@ -184,7 +174,7 @@ static void _MDDOCRouting (int itemID) {
 			DOC_Vf = 0;
 		}
 		}
-	    HL = (discharge * MDConst_m3PerSecTOm3PerDay) / (MFModelGetLength(itemID) * sinuosity * width); //m/d
+	    HL = (discharge * MDConst_m3PerSecTOm3PerDay) / (MFModelGetLength(itemID) * width); //m/d
 	     
 	    //if (isnan(DOCFlux) || isnan(DOCRemoval) || isnan(DOCConcentration)) printf ("itemID %i DOCFLux %f HL %f \n", itemID, DOCFlux, HL);
 
@@ -272,8 +262,8 @@ int MDDOCRoutingDef () {
 					}
 		    if (optID==1){
 		  //  	printf ("Resoption=%i\n",optID);
-		    if (((_MDInResStorageID              = MFVarGetID (MDVarReservoirStorage,      "km3",     MFInput, MFState, MFInitial))  == CMfailed) ||
-		        ((_MDInResStorageChangeID        = MFVarGetID (MDVarReservoirStorageChange,       "km3/s",     MFInput, MFState, MFBoundary))   == CMfailed))
+		    if (((_MDInResStorageID              = MFVarGetID (MDVarReservoirStorage,       "km3",   MFInput, MFState, MFInitial))  == CMfailed) ||
+		        ((_MDInResStorageChangeID        = MFVarGetID (MDVarReservoirStorageChange, "km3/s", MFInput, MFState, MFBoundary)) == CMfailed))
 		    	return CMfailed;
 		    }	
 		    
@@ -281,33 +271,32 @@ int MDDOCRoutingDef () {
 	if (//((_MDInDischargeID           = MDDischargeDef    ()) == CMfailed) ||
         //((_MDInRiverWidthID          = MDRiverWidthDef   ()) == CMfailed) ||
 	    //((_MDInRunoffVolumeID        = MDRunoffVolumeDef ()) == CMfailed) ||
-		((_MDInRunoffMeanID          = MDRunoffMeanDef ()) == CMfailed) ||
-        //((_MDInRunoffID              = MDRunoffDef ()) == CMfailed) ||
-	    //((_MDInWTempRiverRouteID     = MDWTempRiverRouteDef ()) == CMfailed) ||
-        ((_MDInDischargeID          = MFVarGetID (MDVarDischarge,            "m3/s",      MFInput, MFFlux, MFBoundary)) == CMfailed) ||
-        ((_MDInRiverWidthID          = MFVarGetID (MDVarRiverWidth,            "m",      MFInput, MFState, MFBoundary)) == CMfailed) ||
-        ((_MDInRunoffVolumeID          = MFVarGetID (MDVarRunoffVolume,            "m3/s",      MFInput, MFFlux, MFBoundary)) == CMfailed) ||
-        ((_MDInRunoffID              = MFVarGetID (MDVarRunoff,            "mm",      MFInput, MFFlux, MFBoundary)) == CMfailed) ||
-        ((_MDInWTempID               = MFVarGetID (MDVarWTemp_QxT,                "degC", MFInput, MFState, MFBoundary))  == CMfailed) ||
-        ((_MDInRiverStorageChgID     = MFVarGetID (MDVarRiverStorageChg,        "m3/s",    MFInput, MFState, MFBoundary))  == CMfailed) ||
-	    ((_MDInRiverStorageID        = MFVarGetID (MDVarRiverStorage,           "m3",      MFInput, MFState, MFInitial))   == CMfailed) ||
-	    ((_MDInSinuosityID           = MFVarGetID (MDVarSinuosity,                 MFNoUnit,   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDInWetlandsID            = MFVarGetID (MDVarWetlandProp,               MFNoUnit,   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDInKoppenID              = MFVarGetID (MDVarKoppen,                    MFNoUnit,   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-        //((_MDNonPoint_DOCID          = MFVarGetID (MDVarNonPoint_DOC,             "kg/m3",   MFInput, MFState, MFBoundary))  == CMfailed) ||
-	    //((_MDPointSources_DOCID      = MFVarGetID (MDVarPointSources_DOC,         "kg/day",  MFInput, MFState, MFBoundary))  == CMfailed) ||
+		((_MDInRunoffMeanID           = MDRunoffMeanDef ()) == CMfailed) ||
+        //((_MDInRunoffID               = MDRunoffDef ()) == CMfailed) ||
+	    //((_MDInWTempRiverRouteID      = MDWTempRiverRouteDef ()) == CMfailed) ||
+        ((_MDInDischargeID            = MFVarGetID (MDVarDischarge,              "m3/s",    MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+        ((_MDInRiverWidthID           = MFVarGetID (MDVarRiverWidth,             "m",       MFInput,  MFState, MFBoundary)) == CMfailed) ||
+        ((_MDInRunoffVolumeID         = MFVarGetID (MDVarRunoffVolume,           "m3/s",    MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+        ((_MDInRunoffID               = MFVarGetID (MDVarRunoff,                 "mm",      MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+        ((_MDInWTempID                = MFVarGetID (MDVarWTemp_QxT,              "degC",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
+        ((_MDInRiverStorageChgID      = MFVarGetID (MDVarRiverStorageChg,        "m3/s",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInRiverStorageID         = MFVarGetID (MDVarRiverStorage,           "m3",      MFInput,  MFState, MFInitial))  == CMfailed) ||
+	    ((_MDInWetlandsID             = MFVarGetID (MDVarWetlandProp,             MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInKoppenID               = MFVarGetID (MDVarKoppen,                  MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
+        //((_MDNonPoint_DOCID           = MFVarGetID (MDVarNonPoint_DOC,             "kg/m3",   MFInput, MFState, MFBoundary))  == CMfailed) ||
+	    //((_MDPointSources_DOCID       = MFVarGetID (MDVarPointSources_DOC,         "kg/day",  MFInput, MFState, MFBoundary))  == CMfailed) ||
 	    	    
 	    // Output
-	    ((_MDLocalIn_DOCID                = MFVarGetID (MDVarDOCLocalIn,                "kg/d",   MFOutput, MFFlux, MFBoundary))  == CMfailed) ||
-	    ((_MDRemoval_DOCID                = MFVarGetID (MDVarDOCRemoval,                "kg/d",   MFOutput, MFFlux, MFBoundary))  == CMfailed) ||
-        ((_MDConc_DOCID                   = MFVarGetID (MDVarDOCConcentration,          "kg/m3",   MFOutput, MFState, MFBoundary))  == CMfailed) ||
-	    ((_MDStorage_DOCID                = MFVarGetID (MDVarDOCStorage,                "kg",   MFOutput, MFState, MFInitial))  == CMfailed) ||
-	    ((_MDDeltaStorage_DOCID           = MFVarGetID (MDVarDOCDeltaStorage,           "kg/day",   MFOutput, MFFlux, MFBoundary))  == CMfailed) ||
-        ((_MDFlux_DOCID                  = MFVarGetID (MDVarDOCFlux  ,                  "kg/day",  MFRoute,  MFFlux, MFBoundary))  == CMfailed) ||
-        ((_MDConcMixing_DOCID            = MFVarGetID (MDVarDOCConcentration_Mixing,    "kg/m3",   MFOutput, MFState, MFBoundary))  == CMfailed) ||
-        ((_MDStorageMixing_DOCID         = MFVarGetID (MDVarDOCStorage_Mixing,          "kg",   MFOutput, MFState, MFInitial))  == CMfailed) ||
-        ((_MDDeltaStorageMixing_DOCID    = MFVarGetID (MDVarDOCDeltaStorage_Mixing,     "kg/day",   MFOutput, MFFlux, MFBoundary))  == CMfailed) ||
-        ((_MDFluxMixing_DOCID            = MFVarGetID (MDVarDOCFlux_Mixing ,            "kg/day",  MFRoute,  MFFlux, MFBoundary))  == CMfailed) ||
+	    ((_MDLocalIn_DOCID            = MFVarGetID (MDVarDOCLocalIn,              "kg/d",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+	    ((_MDRemoval_DOCID            = MFVarGetID (MDVarDOCRemoval,              "kg/d",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+        ((_MDConc_DOCID               = MFVarGetID (MDVarDOCConcentration,        "kg/m3",  MFOutput, MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDStorage_DOCID            = MFVarGetID (MDVarDOCStorage,              "kg",     MFOutput, MFState, MFInitial))  == CMfailed) ||
+	    ((_MDDeltaStorage_DOCID       = MFVarGetID (MDVarDOCDeltaStorage,         "kg/day", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+        ((_MDFlux_DOCID               = MFVarGetID (MDVarDOCFlux  ,               "kg/day", MFRoute,  MFFlux,  MFBoundary)) == CMfailed) ||
+        ((_MDConcMixing_DOCID         = MFVarGetID (MDVarDOCConcentration_Mixing, "kg/m3",  MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDStorageMixing_DOCID      = MFVarGetID (MDVarDOCStorage_Mixing,       "kg",     MFOutput, MFState, MFInitial))  == CMfailed) ||
+        ((_MDDeltaStorageMixing_DOCID = MFVarGetID (MDVarDOCDeltaStorage_Mixing,  "kg/day", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+        ((_MDFluxMixing_DOCID         = MFVarGetID (MDVarDOCFlux_Mixing ,         "kg/day", MFRoute,  MFFlux,  MFBoundary)) == CMfailed) ||
         (MFModelAddFunction (_MDDOCRouting) == CMfailed)) return (CMfailed); 
 
 	MFDefLeaving ("DOC Routing Calculation");

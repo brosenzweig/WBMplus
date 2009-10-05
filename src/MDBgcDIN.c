@@ -15,35 +15,34 @@ wil.wollheim@unh.edu
 #include <MD.h>
 #include <math.h>
 
-static int _MDInDischargeID       = MFUnset;
-static int _MDInRiverWidthID      = MFUnset;
-static int _MDInWTempRiverRouteID = MFUnset;
+static int _MDInDischargeID            = MFUnset;
+static int _MDInRiverWidthID           = MFUnset;
+static int _MDInWTempRiverRouteID      = MFUnset;
 
-static int _MDInRunoffVolumeID    = MFUnset;
-static int _MDInRunoffID          = MFUnset;
-static int _MDInRiverStorageChgID = MFUnset;
-static int _MDInRiverStorageID    = MFUnset;
-//static int _MDInResCapacityID     = MFUnset;
-static int _MDInResStorageID      = MFUnset;
-static int _MDInResStorageChangeID      = MFUnset;
+static int _MDInRunoffVolumeID         = MFUnset;
+static int _MDInRunoffID               = MFUnset;
+static int _MDInRiverStorageChgID      = MFUnset;
+static int _MDInRiverStorageID         = MFUnset;
+//static int _MDInResCapacityID          = MFUnset;
+static int _MDInResStorageID           = MFUnset;
+static int _MDInResStorageChangeID     = MFUnset;
 
 //static int _MDPointSources_UrbanPopID  = MFUnset;
-static int _MDNonPoint_DINID      = MFUnset;
-static int _MDPointSources_DINID  = MFUnset;
-static int _MDInSinuosityID       = MFUnset;
-static int _MDInPointScenarioID       = MFUnset;
+static int _MDNonPoint_DINID           = MFUnset;
+static int _MDPointSources_DINID       = MFUnset;
+static int _MDInPointScenarioID        = MFUnset;
 
-static int _MDConc_DINID             = MFUnset;
-static int _MDFlux_DINID             = MFUnset;
-static int _MDLocalIn_DINID          = MFUnset;
-static int _MDRemoval_DINID          = MFUnset;
-static int _MDStorage_DINID          = MFUnset;
-static int _MDDeltaStorage_DINID     = MFUnset;
+static int _MDConc_DINID               = MFUnset;
+static int _MDFlux_DINID               = MFUnset;
+static int _MDLocalIn_DINID            = MFUnset;
+static int _MDRemoval_DINID            = MFUnset;
+static int _MDStorage_DINID            = MFUnset;
+static int _MDDeltaStorage_DINID       = MFUnset;
 
-static int _MDConcMixing_DINID       = MFUnset;
-static int _MDFluxMixing_DINID       = MFUnset;
-static int _MDStorageMixing_DINID    = MFUnset;
-static int _MDDeltaStorageMixing_DINID= MFUnset;
+static int _MDConcMixing_DINID         = MFUnset;
+static int _MDFluxMixing_DINID         = MFUnset;
+static int _MDStorageMixing_DINID      = MFUnset;
+static int _MDDeltaStorageMixing_DINID = MFUnset;
 
 static void _MDDINRouting (int itemID) {
 //input	
@@ -53,7 +52,6 @@ static void _MDDINRouting (int itemID) {
 		float runoffVol;
         float waterStorageChange;
 		float waterStorage;
-		float sinuosity;
 		float PointScenario;
 
 		float DINLocalIn;
@@ -78,37 +76,32 @@ static void _MDDINRouting (int itemID) {
 		float massbalance;
 		float massbalanceMixing;
 		float waterT;
-		
 		float ConcPre_DIN;
-		
 		//LINX2 rates, EL model (log vf = a log NO3 ^ b - vf in cm/s, NO3 in ug/l)
-			//float denit_int = -2.975;
-			//float denit_slope = -0.493;
-			
-			float denit_int = -2.206;
-			float denit_slope = -0.462;
-					
+		//float denit_int = -2.975;
+		//float denit_slope = -0.493;
+		float denit_int = -2.206;
+		float denit_slope = -0.462;
 		float NonpointLoadConc_DIN;
 		float PointLoadFlux_DIN;
 		float TotalVol;
 		
-		discharge                  = MFVarGetFloat (_MDInDischargeID, itemID, 0.0);
-		width                      = MFVarGetFloat (_MDInRiverWidthID, itemID, 0.0);
-		runoff             = MFVarGetFloat (_MDInRunoffID,           itemID, 0.0);   //mm
-		runoffVol          = MFVarGetFloat (_MDInRunoffVolumeID,           itemID, 0.0); //m3/s
-		waterStorageChange = MFVarGetFloat (_MDInRiverStorageChgID,    itemID, 0.0);
-		waterStorage       = MFVarGetFloat (_MDInRiverStorageID,       itemID, 0.0);
-		sinuosity          = MFVarGetFloat (_MDInSinuosityID,  itemID, 0.0);
-	    PointScenario      = MFVarGetFloat (_MDInPointScenarioID,  itemID, 0.0);
+		discharge            = MFVarGetFloat (_MDInDischargeID,       itemID, 0.0);
+		width                = MFVarGetFloat (_MDInRiverWidthID,      itemID, 0.0);
+		runoff               = MFVarGetFloat (_MDInRunoffID,          itemID, 0.0);   //mm
+		runoffVol            = MFVarGetFloat (_MDInRunoffVolumeID,    itemID, 0.0); //m3/s
+		waterStorageChange   = MFVarGetFloat (_MDInRiverStorageChgID, itemID, 0.0);
+		waterStorage         = MFVarGetFloat (_MDInRiverStorageID,    itemID, 0.0);
+	    PointScenario        = MFVarGetFloat (_MDInPointScenarioID,   itemID, 0.0);
 
-		waterT			   = MFVarGetFloat (_MDInWTempRiverRouteID, itemID, 0.0);
-		NonpointLoadConc_DIN = MFVarGetFloat (_MDNonPoint_DINID,  itemID, 0.0);
-		PointLoadFlux_DIN    = MFVarGetFloat (_MDPointSources_DINID,         itemID, 0.0) * PointScenario;
+		waterT			     = MFVarGetFloat (_MDInWTempRiverRouteID, itemID, 0.0);
+		NonpointLoadConc_DIN = MFVarGetFloat (_MDNonPoint_DINID,      itemID, 0.0);
+		PointLoadFlux_DIN    = MFVarGetFloat (_MDPointSources_DINID,  itemID, 0.0) * PointScenario;
 	    
-		DINFlux                  = MFVarGetFloat (_MDFlux_DINID, itemID, 0.0);
-        DINStorage			   = MFVarGetFloat (_MDStorage_DINID, itemID, 0.0);
-        DINFluxMixing            = MFVarGetFloat (_MDFluxMixing_DINID, itemID, 0.0);
-        DINStorageMixing		   = MFVarGetFloat (_MDStorageMixing_DINID, itemID, 0.0);
+		DINFlux              = MFVarGetFloat (_MDFlux_DINID,          itemID, 0.0);
+        DINStorage			 = MFVarGetFloat (_MDStorage_DINID,       itemID, 0.0);
+        DINFluxMixing        = MFVarGetFloat (_MDFluxMixing_DINID,    itemID, 0.0);
+        DINStorageMixing     = MFVarGetFloat (_MDStorageMixing_DINID, itemID, 0.0);
         
         DINLocalIn = runoffVol * 86400 * NonpointLoadConc_DIN + PointLoadFlux_DIN; //kg/d
         
@@ -162,7 +155,7 @@ static void _MDDINRouting (int itemID) {
 				DIN_Vf_ref, denit_int, denit_slope, ConcPre_DIN, DIN_Vf);
 		}
 		
-		HL = (discharge * MDConst_m3PerSecTOm3PerDay) / (MFModelGetLength(itemID) * sinuosity * width);
+		HL = (discharge * MDConst_m3PerSecTOm3PerDay) / (MFModelGetLength(itemID) * width);
 	     
 	    //if (isnan(DINFlux) || isnan(DINRemoval) || isnan(DINConcentration)) printf ("itemID %i DINFLux %f HL %f \n", itemID, DINFlux, HL);
 
@@ -253,35 +246,34 @@ int MDDINRoutingDef () {
 					}
 		    if (optID==1){
 		  //  	printf ("Resoption=%i\n",optID);
-		    if (((_MDInResStorageID              = MFVarGetID (MDVarReservoirStorage,      "km3",     MFInput, MFState, MFInitial))  == CMfailed) ||
-		        ((_MDInResStorageChangeID        = MFVarGetID (MDVarReservoirStorageChange,       "km3/s",     MFInput, MFState, MFBoundary))   == CMfailed))
+		    if (((_MDInResStorageID       = MFVarGetID (MDVarReservoirStorage,       "km3",   MFInput, MFState, MFInitial))  == CMfailed) ||
+		        ((_MDInResStorageChangeID = MFVarGetID (MDVarReservoirStorageChange, "km3/s", MFInput, MFState, MFBoundary)) == CMfailed))
 		    	return CMfailed;
 		    }	
 		    
    // Input
-	if (((_MDInDischargeID           = MDDischargeDef    ()) == CMfailed) ||
-        ((_MDInRiverWidthID          = MDRiverWidthDef   ()) == CMfailed) ||
-	    ((_MDInRunoffVolumeID        = MDRunoffVolumeDef ()) == CMfailed) ||
-	    ((_MDInRunoffID              = MDRunoffDef ()) == CMfailed) ||
-	    ((_MDInWTempRiverRouteID     = MDWTempRiverRouteDef ()) == CMfailed) ||
-	    ((_MDInRiverStorageChgID     = MFVarGetID (MDVarRiverStorageChg,        "m3/s",    MFInput, MFState, MFBoundary))  == CMfailed) ||
-	    ((_MDInRiverStorageID        = MFVarGetID (MDVarRiverStorage,           "m3",      MFInput, MFState, MFInitial))   == CMfailed) ||
-	    ((_MDInSinuosityID           = MFVarGetID (MDVarSinuosity,              MFNoUnit,   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDInPointScenarioID       = MFVarGetID (MDVarPointScenario,          MFNoUnit,   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-        ((_MDNonPoint_DINID          = MFVarGetID (MDVarNonPoint_DIN,             "kg/m3",   MFInput, MFState, MFBoundary))  == CMfailed) ||
-	    ((_MDPointSources_DINID      = MFVarGetID (MDVarPointSources_DIN,         "kg/day",  MFInput, MFState, MFBoundary))  == CMfailed) ||
+	if (((_MDInDischargeID            = MDDischargeDef    ()) == CMfailed) ||
+        ((_MDInRiverWidthID           = MDRiverWidthDef   ()) == CMfailed) ||
+	    ((_MDInRunoffVolumeID         = MDRunoffVolumeDef ()) == CMfailed) ||
+	    ((_MDInRunoffID               = MDRunoffDef ()) == CMfailed) ||
+	    ((_MDInWTempRiverRouteID      = MDWTempRiverRouteDef ()) == CMfailed) ||
+	    ((_MDInRiverStorageChgID      = MFVarGetID (MDVarRiverStorageChg,         "m3/s",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInRiverStorageID         = MFVarGetID (MDVarRiverStorage,            "m3",     MFInput,  MFState, MFInitial))  == CMfailed) ||
+	    ((_MDInPointScenarioID        = MFVarGetID (MDVarPointScenario,           MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
+        ((_MDNonPoint_DINID           = MFVarGetID (MDVarBGCNonPoint_DIN,         "kg/m3",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDPointSources_DINID       = MFVarGetID (MDVarBGCPointSources_DIN,     "kg/day", MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    	    
 	    // Output
-	    ((_MDLocalIn_DINID                = MFVarGetID (MDVarDINLocalIn,                "kg/d",   MFOutput, MFFlux, MFBoundary))  == CMfailed) ||
-	    ((_MDRemoval_DINID                = MFVarGetID (MDVarDINRemoval,                "kg/d",   MFOutput, MFFlux, MFBoundary))  == CMfailed) ||
-        ((_MDConc_DINID                   = MFVarGetID (MDVarDINConcentration,          "kg/m3",   MFOutput, MFState, MFBoundary))  == CMfailed) ||
-	    ((_MDStorage_DINID                = MFVarGetID (MDVarDINStorage,                "kg",   MFOutput, MFState, MFInitial))  == CMfailed) ||
-	    ((_MDDeltaStorage_DINID           = MFVarGetID (MDVarDINDeltaStorage,           "kg/day",   MFOutput, MFFlux, MFBoundary))  == CMfailed) ||
-        ((_MDFlux_DINID                  = MFVarGetID (MDVarDINFlux  ,                  "kg/day",  MFRoute,  MFFlux, MFBoundary))  == CMfailed) ||
-        ((_MDConcMixing_DINID            = MFVarGetID (MDVarDINConcentration_Mixing,    "kg/m3",   MFOutput, MFState, MFBoundary))  == CMfailed) ||
-        ((_MDStorageMixing_DINID         = MFVarGetID (MDVarDINStorage_Mixing,          "kg",   MFOutput, MFState, MFInitial))  == CMfailed) ||
-        ((_MDDeltaStorageMixing_DINID    = MFVarGetID (MDVarDINDeltaStorage_Mixing,     "kg/day",   MFOutput, MFFlux, MFBoundary))  == CMfailed) ||
-        ((_MDFluxMixing_DINID            = MFVarGetID (MDVarDINFlux_Mixing ,            "kg/day",  MFRoute,  MFFlux, MFBoundary))  == CMfailed) ||
+	    ((_MDLocalIn_DINID            = MFVarGetID (MDVarDINLocalIn,              "kg/d",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+	    ((_MDRemoval_DINID            = MFVarGetID (MDVarDINRemoval,              "kg/d",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+        ((_MDConc_DINID               = MFVarGetID (MDVarDINConcentration,        "kg/m3",  MFOutput, MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDStorage_DINID            = MFVarGetID (MDVarDINStorage,              "kg",     MFOutput, MFState, MFInitial))  == CMfailed) ||
+	    ((_MDDeltaStorage_DINID       = MFVarGetID (MDVarDINDeltaStorage,         "kg/day", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+        ((_MDFlux_DINID               = MFVarGetID (MDVarDINFlux  ,               "kg/day", MFRoute,  MFFlux,  MFBoundary)) == CMfailed) ||
+        ((_MDConcMixing_DINID         = MFVarGetID (MDVarDINConcentration_Mixing, "kg/m3",  MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDStorageMixing_DINID      = MFVarGetID (MDVarDINStorage_Mixing,       "kg",     MFOutput, MFState, MFInitial))  == CMfailed) ||
+        ((_MDDeltaStorageMixing_DINID = MFVarGetID (MDVarDINDeltaStorage_Mixing,  "kg/day", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+        ((_MDFluxMixing_DINID         = MFVarGetID (MDVarDINFlux_Mixing ,         "kg/day", MFRoute,  MFFlux,  MFBoundary)) == CMfailed) ||
         (MFModelAddFunction (_MDDINRouting) == CMfailed)) return (CMfailed); 
 
 	MFDefLeaving ("DIN Routing Calculation");

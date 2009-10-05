@@ -32,31 +32,30 @@ static int _MDInResStorageID      = MFUnset;
 static int _MDInResStorageChangeID      = MFUnset;
 
 //static int _MDPointSources_UrbanPopID  = MFUnset;
-static int _MDNonPoint_DINID      = MFUnset;
-static int _MDPointSources_DINID  = MFUnset;
-static int _MDInSinuosityID       = MFUnset;
-static int _MDInPointScenarioID       = MFUnset;
+static int _MDNonPoint_DINID           = MFUnset;
+static int _MDPointSources_DINID       = MFUnset;
+static int _MDInPointScenarioID        = MFUnset;
 
-static int _MDConc_DINID             = MFUnset;
-static int _MDFlux_DINID             = MFUnset;
-static int _MDLocalIn_DINID          = MFUnset;
-static int _MDRemoval_DINID          = MFUnset;
-static int _MDStorage_DINID          = MFUnset;
-static int _MDDeltaStorage_DINID     = MFUnset;
+static int _MDConc_DINID               = MFUnset;
+static int _MDFlux_DINID               = MFUnset;
+static int _MDLocalIn_DINID            = MFUnset;
+static int _MDRemoval_DINID            = MFUnset;
+static int _MDStorage_DINID            = MFUnset;
+static int _MDDeltaStorage_DINID       = MFUnset;
 
-static int _MDDenit_DINID            = MFUnset;
-static int _MDAssim_DINID            = MFUnset;
-static int _MDRemin_DINID            = MFUnset;
+static int _MDDenit_DINID              = MFUnset;
+static int _MDAssim_DINID              = MFUnset;
+static int _MDRemin_DINID              = MFUnset;
 static int _MDBiomass_DINID            = MFUnset;
-static int _MDDeltaBiomass_DINID            = MFUnset;
+static int _MDDeltaBiomass_DINID       = MFUnset;
   
-static int _MDConcMixing_DINID       = MFUnset;
-static int _MDFluxMixing_DINID       = MFUnset;
-static int _MDStorageMixing_DINID    = MFUnset;
-static int _MDDeltaStorageMixing_DINID= MFUnset;
+static int _MDConcMixing_DINID         = MFUnset;
+static int _MDFluxMixing_DINID         = MFUnset;
+static int _MDStorageMixing_DINID      = MFUnset;
+static int _MDDeltaStorageMixing_DINID = MFUnset;
 
-static int _MDDrying_DINID            = MFUnset;
-static int _MDDryingMixing_DINID      = MFUnset;
+static int _MDDrying_DINID             = MFUnset;
+static int _MDDryingMixing_DINID       = MFUnset;
 
 static void _MDDINPLUSBIOMASSRouting (int itemID) {
 //input	
@@ -66,7 +65,6 @@ static void _MDDINPLUSBIOMASSRouting (int itemID) {
 		float runoffVol;
         float waterStorageChange;
 		float waterStorage;
-		float sinuosity;
 		float PointScenario;
 
 		float DINLocalIn;
@@ -141,7 +139,6 @@ static void _MDDINPLUSBIOMASSRouting (int itemID) {
 		runoffVol          = MFVarGetFloat (_MDInRunoffVolumeID,           itemID, 0.0); //m3/s
 		waterStorageChange = MFVarGetFloat (_MDInRiverStorageChgID,    itemID, 0.0);
 		waterStorage       = MFVarGetFloat (_MDInRiverStorageID,       itemID, 0.0);
-		sinuosity          = MFVarGetFloat (_MDInSinuosityID,  itemID, 0.0);
 	    PointScenario      = MFVarGetFloat (_MDInPointScenarioID,  itemID, 0.0);
 
 		waterT			     = MFVarGetFloat (_MDInWTempID, itemID, 0.0);
@@ -160,7 +157,7 @@ static void _MDDINPLUSBIOMASSRouting (int itemID) {
         //TODO what to do when discharge = 0, but storage > 0?
         if (discharge > 0.0){
     	   TotalVol = (discharge) * 86400.0 + waterStorage;  //m3 note:local runoff already included in discharge
-    	   TotalArea = MFModelGetLength(itemID) * sinuosity * width;  // How to account for mass balance with changing width	
+    	   TotalArea = MFModelGetLength(itemID) * width;  // How to account for mass balance with changing width
         }
         else {
            TotalVol = 0.0;
@@ -323,8 +320,8 @@ int MDDINPLUSBIOMASSRoutingDef () {
 					}
 		    if (optID==1){
 		  //  	printf ("Resoption=%i\n",optID);
-		    if (((_MDInResStorageID              = MFVarGetID (MDVarReservoirStorage,      "km3",     MFInput, MFState, MFInitial))  == CMfailed) ||
-		        ((_MDInResStorageChangeID        = MFVarGetID (MDVarReservoirStorageChange,       "km3/s",     MFInput, MFState, MFBoundary))   == CMfailed))
+		    if (((_MDInResStorageID       = MFVarGetID (MDVarReservoirStorage,       "km3",     MFInput, MFState, MFInitial))  == CMfailed) ||
+		        ((_MDInResStorageChangeID = MFVarGetID (MDVarReservoirStorageChange, "km3/s",   MFInput, MFState, MFBoundary)) == CMfailed))
 		    	return CMfailed;
 		    }	
 		//TODO add parallel for irrigation    
@@ -337,32 +334,31 @@ int MDDINPLUSBIOMASSRoutingDef () {
         ((_MDInWTempRiverRouteID     = MDWTempRiverRouteDef ()) == CMfailed) ||
 		//((_MDInRiverLightID          = MDRiverLightDef ()) == CMfailed) ||
         //((_MDInRiverGPPID            = MDRiverGPPDef ()) == CMfailed) ||
-        ((_MDInWTempID               = MFVarGetID (MDVarWTemp_QxT,                "degC", MFInput, MFState, MFBoundary))  == CMfailed) ||
-        ((_MDInRiverStorageChgID     = MFVarGetID (MDVarRiverStorageChg,        "m3/s",    MFInput, MFState, MFBoundary))  == CMfailed) ||
-	    ((_MDInRiverStorageID        = MFVarGetID (MDVarRiverStorage,           "m3",      MFInput, MFState, MFInitial))   == CMfailed) ||
-	    ((_MDInSinuosityID           = MFVarGetID (MDVarSinuosity,              MFNoUnit,   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDInPointScenarioID       = MFVarGetID (MDVarPointScenario,          MFNoUnit,   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-        ((_MDNonPoint_DINID          = MFVarGetID (MDVarNonPoint_DIN,             "kg/m3",   MFInput, MFState, MFBoundary))  == CMfailed) ||
-	    ((_MDPointSources_DINID      = MFVarGetID (MDVarPointSources_DIN,         "kg/day",  MFInput, MFState, MFBoundary))  == CMfailed) ||
+        ((_MDInWTempID               = MFVarGetID (MDVarWTemp_QxT,                   "degC",   MFInput, MFState, MFBoundary))  == CMfailed) ||
+        ((_MDInRiverStorageChgID     = MFVarGetID (MDVarRiverStorageChg,             "m3/s",   MFInput, MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDInRiverStorageID        = MFVarGetID (MDVarRiverStorage,                "m3",     MFInput, MFState, MFInitial))   == CMfailed) ||
+	    ((_MDInPointScenarioID       = MFVarGetID (MDVarPointScenario,               MFNoUnit, MFInput, MFState, MFBoundary))  == CMfailed) ||
+        ((_MDNonPoint_DINID          = MFVarGetID (MDVarBGCNonPoint_DIN,             "kg/m3",  MFInput, MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDPointSources_DINID      = MFVarGetID (MDVarBGCPointSources_DIN,         "kg/day", MFInput, MFState, MFBoundary))  == CMfailed) ||
 //TODO for feedbacks you should use initial	 - could refer to stocks or conditions like mean discharge  
 	    // Output
-	    ((_MDLocalIn_DINID                = MFVarGetID (MDVarDINLocalIn,                "kg/d",   MFOutput, MFFlux, MFBoundary))  == CMfailed) ||
-	    ((_MDRemoval_DINID                = MFVarGetID (MDVarDINRemoval,                "kg/d",   MFOutput, MFFlux, MFBoundary))  == CMfailed) ||
-	    ((_MDDenit_DINID                = MFVarGetID (MDVarDINDenit,                "kg/d",   MFOutput, MFFlux, MFBoundary))  == CMfailed) ||
-        ((_MDAssim_DINID                = MFVarGetID (MDVarDINAssim,                "kg/d",   MFOutput, MFFlux, MFBoundary))  == CMfailed) ||
-        ((_MDRemin_DINID                = MFVarGetID (MDVarDINRemin,                "kg/d",   MFOutput, MFFlux, MFBoundary))  == CMfailed) ||
-        ((_MDBiomass_DINID                = MFVarGetID (MDVarDINBiomass,                "kg",   MFOutput, MFState, MFInitial))  == CMfailed) ||
-        ((_MDDeltaBiomass_DINID                = MFVarGetID (MDVarDINDeltaBiomass,                "kg/day",   MFOutput, MFFlux, MFBoundary))  == CMfailed) ||
-        ((_MDConc_DINID                   = MFVarGetID (MDVarDINConcentration,          "kg/m3",   MFOutput, MFState, MFBoundary))  == CMfailed) ||
-	    ((_MDStorage_DINID                = MFVarGetID (MDVarDINStorage,                "kg",   MFOutput, MFState, MFInitial))  == CMfailed) ||
-	    ((_MDDeltaStorage_DINID           = MFVarGetID (MDVarDINDeltaStorage,           "kg/day",   MFOutput, MFFlux, MFBoundary))  == CMfailed) ||
-        ((_MDFlux_DINID                  = MFVarGetID (MDVarDINFlux  ,                  "kg/day",  MFRoute,  MFFlux, MFBoundary))  == CMfailed) ||
-        ((_MDConcMixing_DINID            = MFVarGetID (MDVarDINConcentration_Mixing,    "kg/m3",   MFOutput, MFState, MFBoundary))  == CMfailed) ||
-        ((_MDStorageMixing_DINID         = MFVarGetID (MDVarDINStorage_Mixing,          "kg",   MFOutput, MFState, MFInitial))  == CMfailed) ||
-        ((_MDDeltaStorageMixing_DINID    = MFVarGetID (MDVarDINDeltaStorage_Mixing,     "kg/day",   MFOutput, MFFlux, MFBoundary))  == CMfailed) ||
-        ((_MDDrying_DINID                = MFVarGetID (MDVarDINDrying,                  "kg/day", MFOutput, MFFlux, MFBoundary))  == CMfailed) ||
-        ((_MDDryingMixing_DINID          = MFVarGetID (MDVarDINDrying_Mixing,           "kg/day", MFOutput, MFFlux, MFBoundary))  == CMfailed) ||         		
-        ((_MDFluxMixing_DINID            = MFVarGetID (MDVarDINFlux_Mixing ,            "kg/day",  MFRoute,  MFFlux, MFBoundary))  == CMfailed) ||
+	    ((_MDLocalIn_DINID            = MFVarGetID (MDVarDINLocalIn,                 "kg/d",   MFOutput, MFFlux,  MFBoundary))  == CMfailed) ||
+	    ((_MDRemoval_DINID            = MFVarGetID (MDVarDINRemoval,                 "kg/d",   MFOutput, MFFlux,  MFBoundary))  == CMfailed) ||
+	    ((_MDDenit_DINID              = MFVarGetID (MDVarDINDenit,                   "kg/d",   MFOutput, MFFlux,  MFBoundary))  == CMfailed) ||
+        ((_MDAssim_DINID              = MFVarGetID (MDVarDINAssim,                   "kg/d",   MFOutput, MFFlux,  MFBoundary))  == CMfailed) ||
+        ((_MDRemin_DINID              = MFVarGetID (MDVarDINRemin,                   "kg/d",   MFOutput, MFFlux,  MFBoundary))  == CMfailed) ||
+        ((_MDBiomass_DINID            = MFVarGetID (MDVarDINBiomass,                 "kg",     MFOutput, MFState, MFInitial))   == CMfailed) ||
+        ((_MDDeltaBiomass_DINID       = MFVarGetID (MDVarDINDeltaBiomass,            "kg/day", MFOutput, MFFlux,  MFBoundary))  == CMfailed) ||
+        ((_MDConc_DINID               = MFVarGetID (MDVarDINConcentration,           "kg/m3",  MFOutput, MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDStorage_DINID            = MFVarGetID (MDVarDINStorage,                 "kg",     MFOutput, MFState, MFInitial))   == CMfailed) ||
+	    ((_MDDeltaStorage_DINID       = MFVarGetID (MDVarDINDeltaStorage,            "kg/day", MFOutput, MFFlux,  MFBoundary))  == CMfailed) ||
+        ((_MDFlux_DINID               = MFVarGetID (MDVarDINFlux  ,                  "kg/day", MFRoute,  MFFlux,  MFBoundary))  == CMfailed) ||
+        ((_MDConcMixing_DINID         = MFVarGetID (MDVarDINConcentration_Mixing,    "kg/m3",  MFOutput, MFState, MFBoundary))  == CMfailed) ||
+        ((_MDStorageMixing_DINID      = MFVarGetID (MDVarDINStorage_Mixing,          "kg",     MFOutput, MFState, MFInitial))   == CMfailed) ||
+        ((_MDDeltaStorageMixing_DINID = MFVarGetID (MDVarDINDeltaStorage_Mixing,     "kg/day", MFOutput, MFFlux,  MFBoundary))  == CMfailed) ||
+        ((_MDDrying_DINID             = MFVarGetID (MDVarDINDrying,                  "kg/day", MFOutput, MFFlux,  MFBoundary))  == CMfailed) ||
+        ((_MDDryingMixing_DINID       = MFVarGetID (MDVarDINDrying_Mixing,           "kg/day", MFOutput, MFFlux,  MFBoundary))  == CMfailed) ||
+        ((_MDFluxMixing_DINID         = MFVarGetID (MDVarDINFlux_Mixing ,            "kg/day", MFRoute,  MFFlux,  MFBoundary))  == CMfailed) ||
         (MFModelAddFunction (_MDDINPLUSBIOMASSRouting) == CMfailed)) return (CMfailed); 
 
 	MFDefLeaving ("DINPLUSBIOMASS Routing Calculation");

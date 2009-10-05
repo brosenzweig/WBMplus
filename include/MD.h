@@ -52,32 +52,32 @@ extern "C" {
 #define MDVarAvgNSteps                       "AverageNSteps"
 
 #define MDVarBaseFlow                        "BaseFlow"
-#define MDVarBgcNonPoint_NO3                 "NinputsNO3_nonpoint"
-#define MDVarBgcPointSources_NO3             "NinputsNO3_point" //TODO unused!
-#define MDVarBgcFlux_NO3                     "BgcFlux_NO3"
-#define MDVarBgcFlux_NH4                     "BgcFlux_NH4"
-#define MDVarBgcFlux_DON                     "BgcFlux_DON"
-#define MDVarBgcFlux_PON                     "BgcFlux_PON"
+#define MDVarBGCNonPoint_NO3                 "NinputsNO3_nonpoint"
+#define MDVarBGCPointSources_NO3             "NinputsNO3_point" //TODO unused!
+#define MDVarBGCFlux_NO3                     "BgcFlux_NO3"
+#define MDVarBGCFlux_NH4                     "BgcFlux_NH4"
+#define MDVarBGCFlux_DON                     "BgcFlux_DON"
+#define MDVarBGCFlux_PON                     "BgcFlux_PON"
 
-#define MDVarBgcStoreWater_NO3               "BgcStoreWater_NO3"
+#define MDVarBGCStoreWater_NO3               "BgcStoreWater_NO3"
 #define MDVarBgcLocalLoad_NO3                "BgcLocalLoad_NO3"
 
-#define MDVarBgcStoreWater_NH4               "BgcStoreWater_NH4"
-#define MDVarBgcLocalLoad_NH4                "BgcLocalLoad_NH4"
+#define MDVarBGCStoreWater_NH4               "BgcStoreWater_NH4"
+#define MDVarBGCLocalLoad_NH4                "BgcLocalLoad_NH4"
 
-#define MDVarBgcStoreWater_DON               "BgcStoreWater_DON"
-#define MDVarBgcLocalLoad_DON                "BgcLocalLoad_DON"
+#define MDVarBGCStoreWater_DON               "BgcStoreWater_DON"
+#define MDVarBGCLocalLoad_DON                "BgcLocalLoad_DON"
 
-#define MDVarBgcStoreWater_PON               "BgcStoreWater_PON"
-#define MDVarBgcLocalLoad_PON                "BgcLocalLoad_PON"
-#define MDVarBgcStoreSeds_PON                "BgcStoreSeds_PONkgm2"
+#define MDVarBGCStoreWater_PON               "BgcStoreWater_PON"
+#define MDVarBGCLocalLoad_PON                "BgcLocalLoad_PON"
+#define MDVarBGCStoreSeds_PON                "BgcStoreSeds_PONkgm2"
 
-#define MDVarNonPoint_NH4                    "NinputsNH4_nonpoint"
-#define MDVarPointSources_NH4                 "NinputsNH4_point"
-#define MDVarNonPoint_DON                     "NinputsDON_nonpoint"
-#define MDVarNonPoint_PON                     "NinputsPON_nonpoint"
-#define MDVarNonPoint_DIN                     "NinputsDIN_nonpoint"
-#define MDVarPointSources_DIN                 "NinputsDIN_point"
+#define MDVarBGCNonPoint_NH4                 "NinputsNH4_nonpoint"
+#define MDVarBGCPointSources_NH4             "NinputsNH4_point"
+#define MDVarBGCNonPoint_DON                 "NinputsDON_nonpoint"
+#define MDVarBGCNonPoint_PON                 "NinputsPON_nonpoint"
+#define MDVarBGCNonPoint_DIN                 "NinputsDIN_nonpoint"
+#define MDVarBGCPointSources_DIN             "NinputsDIN_point"
 
 #define MDVarCParamAlbedo                    "Albedo"
 #define MDVarCParamCHeight                   "CanopyHeight"
@@ -170,7 +170,6 @@ extern "C" {
 #define MDVarRiverStorage                    "RiverStorage"
 #define MDVarRiverStorageChg                 "RiverStorageChange"
 #define MDVarRiverWidth                      "RiverbedWidth"
-#define MDVarSinuosity						 "Sinuosity"
 
 #define MDVarRunoff                          "Runoff"
 #define MDVarRunoffMean                      "RunoffMean"
@@ -246,7 +245,7 @@ extern "C" {
 #define MDVarWTempRiver                      "RiverTemperature"
 #define MDVarWTempSurfRunoff                 "SurfaceROTemperature"
 // Routing Temperature
-#define MDVarLocalIn_QxT                     "QxT_LocalIn"
+#define MDVarBgcLocalIn_QxT                  "QxT_LocalIn"
 #define MDVarRemoval_QxT                     "QxT_Removal"
 #define MDVarFlux_QxT                        "QxT_Flux"
 #define MDVarStorage_QxT                     "QxT_Storage"

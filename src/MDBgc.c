@@ -312,30 +312,30 @@ int MDBgcRoutingDef () {
 	    ((_MDInRiverStorageChgID     = MFVarGetID (MDVarRiverStorageChg,        "m3/s",    MFInput, MFState, MFBoundary))  == CMfailed) ||
 	    ((_MDInRiverStorageID        = MFVarGetID (MDVarRiverStorage,           "m3",      MFInput, MFState, MFInitial))   == CMfailed) ||
 	    
-	    ((_MDNonPoint_NO3ID          = MFVarGetID (MDVarBgcNonPoint_NO3,             "kg/m3",   MFInput, MFState, MFBoundary))  == CMfailed) ||
-	    ((_MDPointSources_NO3ID      = MFVarGetID (MDVarBgcPointSources_NO3,         "kg/day",  MFInput, MFState, MFBoundary))  == CMfailed) ||
-	    ((_MDNonPoint_NH4ID          = MFVarGetID (MDVarNonPoint_NH4,             "kg/m3",   MFInput, MFState, MFBoundary))  == CMfailed) ||
-	    ((_MDPointSources_NH4ID      = MFVarGetID (MDVarPointSources_NH4,         "kg/day",  MFInput, MFState, MFBoundary))  == CMfailed) ||
-	    ((_MDNonPoint_DONID          = MFVarGetID (MDVarNonPoint_DON,             "kg/m3",   MFInput, MFState, MFBoundary))  == CMfailed) ||
-	    ((_MDNonPoint_PONID          = MFVarGetID (MDVarNonPoint_PON,             "kg/m3",   MFInput, MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDNonPoint_NO3ID          = MFVarGetID (MDVarBGCNonPoint_NO3,             "kg/m3",   MFInput, MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDPointSources_NO3ID      = MFVarGetID (MDVarBGCPointSources_NO3,         "kg/day",  MFInput, MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDNonPoint_NH4ID          = MFVarGetID (MDVarBGCNonPoint_NH4,             "kg/m3",   MFInput, MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDPointSources_NH4ID      = MFVarGetID (MDVarBGCPointSources_NH4,         "kg/day",  MFInput, MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDNonPoint_DONID          = MFVarGetID (MDVarBGCNonPoint_DON,             "kg/m3",   MFInput, MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDNonPoint_PONID          = MFVarGetID (MDVarBGCNonPoint_PON,             "kg/m3",   MFInput, MFState, MFBoundary))  == CMfailed) ||
 	  	 // Output
 	    ((_MDLocalLoad_NO3ID           = MFVarGetID (MDVarBgcLocalLoad_NO3,         "kg/day",  MFOutput, MFState, MFBoundary))  == CMfailed) ||
-	    ((_MDStoreWater_NO3ID          = MFVarGetID (MDVarBgcStoreWater_NO3,        "kg",      MFOutput, MFState, MFInitial))   == CMfailed) ||
+	    ((_MDStoreWater_NO3ID          = MFVarGetID (MDVarBGCStoreWater_NO3,        "kg",      MFOutput, MFState, MFInitial))   == CMfailed) ||
 	    
-	    ((_MDLocalLoad_NH4ID           = MFVarGetID (MDVarBgcLocalLoad_NH4,         "kg/day",  MFOutput, MFState, MFBoundary))  == CMfailed) ||
-	 	((_MDStoreWater_NH4ID          = MFVarGetID (MDVarBgcStoreWater_NH4,        "kg",      MFOutput, MFState, MFInitial))   == CMfailed) ||
+	    ((_MDLocalLoad_NH4ID           = MFVarGetID (MDVarBGCLocalLoad_NH4,         "kg/day",  MFOutput, MFState, MFBoundary))  == CMfailed) ||
+	 	((_MDStoreWater_NH4ID          = MFVarGetID (MDVarBGCStoreWater_NH4,        "kg",      MFOutput, MFState, MFInitial))   == CMfailed) ||
 	    
-	    ((_MDLocalLoad_DONID           = MFVarGetID (MDVarBgcLocalLoad_DON,         "kg/day",  MFOutput, MFState, MFBoundary))  == CMfailed) ||
-	    ((_MDStoreWater_DONID          = MFVarGetID (MDVarBgcStoreWater_DON,        "kg",      MFOutput, MFState, MFInitial))   == CMfailed) ||
+	    ((_MDLocalLoad_DONID           = MFVarGetID (MDVarBGCLocalLoad_DON,         "kg/day",  MFOutput, MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDStoreWater_DONID          = MFVarGetID (MDVarBGCStoreWater_DON,        "kg",      MFOutput, MFState, MFInitial))   == CMfailed) ||
 	    
-	    ((_MDLocalLoad_PONID           = MFVarGetID (MDVarBgcLocalLoad_PON,         "kg/day",  MFOutput, MFState, MFBoundary))  == CMfailed) ||
-	    ((_MDStoreWater_PONID          = MFVarGetID (MDVarBgcStoreWater_PON,        "kg",      MFOutput, MFState, MFInitial))   == CMfailed) ||
-	    ((_MDStoreSeds_PONID           = MFVarGetID (MDVarBgcStoreSeds_PON,         "kg/m2",      MFOutput, MFState, MFInitial))   == CMfailed) ||
+	    ((_MDLocalLoad_PONID           = MFVarGetID (MDVarBGCLocalLoad_PON,         "kg/day",  MFOutput, MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDStoreWater_PONID          = MFVarGetID (MDVarBGCStoreWater_PON,        "kg",      MFOutput, MFState, MFInitial))   == CMfailed) ||
+	    ((_MDStoreSeds_PONID           = MFVarGetID (MDVarBGCStoreSeds_PON,         "kg/m2",      MFOutput, MFState, MFInitial))   == CMfailed) ||
 
-	    ((_MDFlux_NH4ID                = MFVarGetID (MDVarBgcFlux_NH4  ,            "kg/day",  MFRoute,  MFState, MFBoundary))  == CMfailed) ||
-	    ((_MDFlux_DONID                = MFVarGetID (MDVarBgcFlux_DON  ,            "kg/day",  MFRoute,  MFState, MFBoundary))  == CMfailed) ||
-	    ((_MDFlux_PONID                = MFVarGetID (MDVarBgcFlux_PON  ,            "kg/day",  MFRoute,  MFState, MFBoundary))  == CMfailed) ||
-	    ((_MDFlux_NO3ID                = MFVarGetID (MDVarBgcFlux_NO3  ,            "kg/day",  MFRoute,  MFState, MFBoundary))  == CMfailed) |
+	    ((_MDFlux_NH4ID                = MFVarGetID (MDVarBGCFlux_NH4  ,            "kg/day",  MFRoute,  MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDFlux_DONID                = MFVarGetID (MDVarBGCFlux_DON  ,            "kg/day",  MFRoute,  MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDFlux_PONID                = MFVarGetID (MDVarBGCFlux_PON  ,            "kg/day",  MFRoute,  MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDFlux_NO3ID                = MFVarGetID (MDVarBGCFlux_NO3  ,            "kg/day",  MFRoute,  MFState, MFBoundary))  == CMfailed) |
    (MFModelAddFunction (_MDBgcRouting) == CMfailed)) return (CMfailed); 
 	if (((optStr = MFOptionGet (MDOptReservoirs)) != (char *) NULL) && (CMoptLookup (options,optStr,true) == CMfailed)) {
 		if (((_MDInResCapacityID       = MFVarGetID (MDVarReservoirCapacity,      "km3",     MFInput, MFState, MFBoundary))  == CMfailed) ||

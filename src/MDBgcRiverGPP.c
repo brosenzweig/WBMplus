@@ -20,34 +20,30 @@ Calculate GPP in rivers
 #include <math.h>
 
 // Model
-static int _MDRiverGPPID        = MFUnset;
-
+static int _MDRiverGPPID               = MFUnset;
 // Input
-static int _MDInRiverLightID      = MFUnset;
+static int _MDInRiverLightID           = MFUnset;
 static int _MDInDischargeID            = MFUnset;
 static int _MDInRiverWidthID           = MFUnset;
-static int _MDInSinuosityID            = MFUnset;
 static int _MDInPAR2BottomID           = MFUnset;
-static int _MDInResStorageID            = MFUnset;
-static int _MDInResStorageChangeID             = MFUnset;
+static int _MDInResStorageID           = MFUnset;
+static int _MDInResStorageChangeID     = MFUnset;
 
 // Output
-static int _MDBenthicAlgaeCHLID       = MFUnset;
-static int _MDBenthicAlgaeCID         = MFUnset;
-static int _MDBenthicGPPID            = MFUnset;
-static int _MDBenthicRaID             = MFUnset;
-static int _MDBenthicNPPID            = MFUnset;
-static int _MDBenthicMortalityID      = MFUnset;
-static int _MDBenthicAlgaeC_REACHID   = MFUnset;
-static int _MDBenthicGPP_REACHID      = MFUnset;
-static int _MDBenthicRa_REACHID       = MFUnset;
-static int _MDBenthicNPP_REACHID      = MFUnset;
+static int _MDBenthicAlgaeCHLID        = MFUnset;
+static int _MDBenthicAlgaeCID          = MFUnset;
+static int _MDBenthicGPPID             = MFUnset;
+static int _MDBenthicRaID              = MFUnset;
+static int _MDBenthicNPPID             = MFUnset;
+static int _MDBenthicMortalityID       = MFUnset;
+static int _MDBenthicAlgaeC_REACHID    = MFUnset;
+static int _MDBenthicGPP_REACHID       = MFUnset;
+static int _MDBenthicRa_REACHID        = MFUnset;
+static int _MDBenthicNPP_REACHID       = MFUnset;
 static int _MDBenthicMortality_REACHID = MFUnset;
 
 static void _MDRiverGPP (int itemID) {
      float channelWidth;
-   	 float sinuosity;
-   	 
    	 //GPP drivers/parameters
    	 float par2bottom; //MJ / m2 /d
    	 float DIN = 1; //mg/l
@@ -81,7 +77,6 @@ static void _MDRiverGPP (int itemID) {
 
      channelWidth       = MFVarGetFloat ( _MDInRiverWidthID,  itemID, 0.0);
      par2bottom         = MFVarGetFloat ( _MDInPAR2BottomID, itemID, 0.0);
-     sinuosity          = MFVarGetFloat ( _MDInSinuosityID,  itemID, 0.0);  //constant
      Ben_AlgaeCHL       = MFVarGetFloat ( _MDBenthicAlgaeCHLID, itemID, 0.0); // g Chl / m2
      Ben_AlgaeC         = MFVarGetFloat ( _MDBenthicAlgaeCID, itemID, 0.0); // g C / m2
      
@@ -108,11 +103,11 @@ static void _MDRiverGPP (int itemID) {
     		 itemID, month, day, par2bottom, Ed, Ben_GPP, Ben_Ra, Ben_NPP, Ben_MORTALITY, Ben_AlgaeC, Ben_AlgaeCHL );
      }
      
-     Ben_AlgaeC_REACH = Ben_AlgaeC * channelWidth * MFModelGetLength(itemID) * sinuosity;
-     Ben_GPP_REACH = Ben_GPP * channelWidth * MFModelGetLength(itemID) * sinuosity;
-     Ben_Ra_REACH = Ben_Ra * channelWidth * MFModelGetLength(itemID) * sinuosity;
-     Ben_NPP_REACH = Ben_NPP * channelWidth * MFModelGetLength(itemID) * sinuosity;
-     Ben_Mortality_REACH = Ben_MORTALITY * channelWidth * MFModelGetLength(itemID) * sinuosity;
+     Ben_AlgaeC_REACH = Ben_AlgaeC * channelWidth * MFModelGetLength(itemID);
+     Ben_GPP_REACH = Ben_GPP * channelWidth * MFModelGetLength(itemID);
+     Ben_Ra_REACH = Ben_Ra * channelWidth * MFModelGetLength(itemID);
+     Ben_NPP_REACH = Ben_NPP * channelWidth * MFModelGetLength(itemID);
+     Ben_Mortality_REACH = Ben_MORTALITY * channelWidth * MFModelGetLength(itemID);
      
          	MFVarSetFloat(_MDBenthicAlgaeCHLID, itemID, Ben_AlgaeCHL);
          	MFVarSetFloat(_MDBenthicAlgaeCID, itemID, Ben_AlgaeC);
@@ -125,9 +120,7 @@ static void _MDRiverGPP (int itemID) {
          	MFVarSetFloat(_MDBenthicRa_REACHID, itemID, Ben_Ra_REACH);
          	MFVarSetFloat(_MDBenthicNPP_REACHID, itemID, Ben_NPP_REACH);
          	MFVarSetFloat(_MDBenthicMortality_REACHID, itemID, Ben_Mortality_REACH);
-
     }
-
 
 int MDRiverGPPDef () {
 	int optID = MFUnset;
@@ -143,31 +136,30 @@ int MDRiverGPPDef () {
 				return CMfailed;
 			}
     if (optID==1){
-  //  	printf ("Resoption=%i\n",optID);
-    if (((_MDInResStorageID              = MFVarGetID (MDVarReservoirStorage,      "km3",     MFInput, MFState, MFInitial))  == CMfailed) ||
-        ((_MDInResStorageChangeID        = MFVarGetID (MDVarReservoirStorageChange,       "km3/s",     MFInput, MFState, MFBoundary))   == CMfailed))
+//  	printf ("Resoption=%i\n",optID);
+    if (((_MDInResStorageID           = MFVarGetID (MDVarReservoirStorage,       "km3",     MFInput, MFState, MFInitial))   == CMfailed) ||
+        ((_MDInResStorageChangeID     = MFVarGetID (MDVarReservoirStorageChange, "km3/s",   MFInput, MFState, MFBoundary))  == CMfailed))
     	return CMfailed;
     }
 	
-		//input
+//input
 	if (//((_MDInDischargeID            = MDDischargeDef    ()) == CMfailed) ||
 		 ((_MDInRiverLightID          = MDRiverLightDef ()) == CMfailed) ||
-         ((_MDInDischargeID          = MFVarGetID (MDVarDischarge,            "m3/s",      MFInput, MFState, MFBoundary)) == CMfailed) ||
-         ((_MDInRiverWidthID          = MFVarGetID (MDVarRiverWidth,            "m",      MFInput, MFState, MFBoundary)) == CMfailed) ||
-         ((_MDInSinuosityID           = MFVarGetID (MDVarSinuosity,              MFNoUnit,   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-         ((_MDInPAR2BottomID           = MFVarGetID (MDVarPAR2Bottom,            "MJ/m2/d",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+         ((_MDInDischargeID           = MFVarGetID (MDVarDischarge,              "m3/s",    MFInput, MFState,  MFBoundary)) == CMfailed) ||
+         ((_MDInRiverWidthID          = MFVarGetID (MDVarRiverWidth,             "m",       MFInput, MFState,  MFBoundary)) == CMfailed) ||
+         ((_MDInPAR2BottomID          = MFVarGetID (MDVarPAR2Bottom,             "MJ/m2/d", MFInput,  MFState, MFBoundary)) == CMfailed) ||
 // output
-     	((_MDBenthicAlgaeCHLID        = MFVarGetID (MDVarBenthicAlgaeCHL,        "g/m2", MFOutput, MFState, MFInitial)) == CMfailed) ||
-        ((_MDBenthicAlgaeCID        = MFVarGetID (MDVarBenthicAlgaeC,            "g/m2", MFOutput, MFState, MFInitial)) == CMfailed) ||
-        ((_MDBenthicGPPID           = MFVarGetID (MDVarBenthicGPP,               "g/m2/d", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-        ((_MDBenthicRaID           = MFVarGetID (MDVarBenthicRa,                 "g/m2/d", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-        ((_MDBenthicNPPID           = MFVarGetID (MDVarBenthicNPP,               "g/m2/d", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-        ((_MDBenthicMortalityID           = MFVarGetID (MDVarBenthicMortality,   "g/m2/d", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-        ((_MDBenthicAlgaeC_REACHID        = MFVarGetID (MDVarBenthicAlgaeC_REACH,            "g/m2", MFOutput, MFState, MFInitial)) == CMfailed) ||
-        ((_MDBenthicGPP_REACHID           = MFVarGetID (MDVarBenthicGPP_REACH,               "g/m2/d", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-        ((_MDBenthicRa_REACHID           = MFVarGetID (MDVarBenthicRa_REACH,                 "g/m2/d", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-        ((_MDBenthicNPP_REACHID           = MFVarGetID (MDVarBenthicNPP_REACH,               "g/m2/d", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-        ((_MDBenthicMortality_REACHID           = MFVarGetID (MDVarBenthicMortality_REACH,   "g/m2/d", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+     	((_MDBenthicAlgaeCHLID        = MFVarGetID (MDVarBenthicAlgaeCHL,        "g/m2",    MFOutput, MFState, MFInitial))  == CMfailed) ||
+        ((_MDBenthicAlgaeCID          = MFVarGetID (MDVarBenthicAlgaeC,          "g/m2",    MFOutput, MFState, MFInitial))  == CMfailed) ||
+        ((_MDBenthicGPPID             = MFVarGetID (MDVarBenthicGPP,             "g/m2/d",  MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDBenthicRaID              = MFVarGetID (MDVarBenthicRa,              "g/m2/d",  MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDBenthicNPPID             = MFVarGetID (MDVarBenthicNPP,             "g/m2/d",  MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDBenthicMortalityID       = MFVarGetID (MDVarBenthicMortality,       "g/m2/d",  MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDBenthicAlgaeC_REACHID    = MFVarGetID (MDVarBenthicAlgaeC_REACH,    "g/m2",    MFOutput, MFState, MFInitial))  == CMfailed) ||
+        ((_MDBenthicGPP_REACHID       = MFVarGetID (MDVarBenthicGPP_REACH,       "g/m2/d",  MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDBenthicRa_REACHID        = MFVarGetID (MDVarBenthicRa_REACH,        "g/m2/d",  MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDBenthicNPP_REACHID       = MFVarGetID (MDVarBenthicNPP_REACH,       "g/m2/d",  MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDBenthicMortality_REACHID = MFVarGetID (MDVarBenthicMortality_REACH, "g/m2/d",  MFOutput, MFState, MFBoundary)) == CMfailed) ||
 
 
        (MFModelAddFunction (_MDRiverGPP) == CMfailed)) return (CMfailed);
