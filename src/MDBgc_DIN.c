@@ -79,12 +79,7 @@ static void _MDDINRouting (int itemID) {
 		float massbalanceMixing;
 		float waterT;
 		
-		float TotalMassPre_DIN;
 		float ConcPre_DIN;
-			
-		//PIE rates, assuming saturation
-		float DIN_Umax = 2.9;  // mg/m2/h
-		float DIN_Ks = 0.416;  // mg/l
 		
 		//LINX2 rates, EL model (log vf = a log NO3 ^ b - vf in cm/s, NO3 in ug/l)
 			//float denit_int = -2.975;
@@ -133,7 +128,6 @@ static void _MDDINRouting (int itemID) {
 			ConcPre_DIN = 0.0;
 			}
 
-		float DIN_UmaxAdj;
 		float DIN_Tref = 20;
         float DIN_Q10 = 2;
 		//float DIN_Q10 = 1;

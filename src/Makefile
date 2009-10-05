@@ -64,6 +64,7 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDRiverbedShapeExp.o\
        $(OBJ)/MDRiverWidth.o\
        $(OBJ)/MDRunoff.o\
+       $(OBJ)/MDRunoffMean.o\
        $(OBJ)/MDRunoffVolume.o\
        $(OBJ)/MDSPackChg.o\
        $(OBJ)/MDSmallReservoirs.o\
@@ -77,6 +78,13 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDWetlands.o\
        $(OBJ)/MDWetlandArea.o\
        $(OBJ)/MDWind.o\
+       $(OBJ)/MDWTempRiver.o\
+       $(OBJ)/MDWTempRiverRoute.o\
+       $(OBJ)/MDWTempGrdWater.o\
+       $(OBJ)/MDWTempSurfRunoff.o\
+       $(OBJ)/MDBgc_DOC.o\
+       $(OBJ)/MDBgc_DIN.o\
+       $(OBJ)/MDBgc_DINPLUSBIOMASS.o\
        $(OBJ)/MDBgc.o
 
 all: ${TARGET}

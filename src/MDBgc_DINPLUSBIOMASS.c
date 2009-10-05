@@ -97,7 +97,6 @@ static void _MDDINPLUSBIOMASSRouting (int itemID) {
 		float massbalanceMixing = 0;
 		float waterT;
 		
-		float TotalMassPre_DIN;
 		float ConcPre_DIN;
 
 		//LINX2 rates, EL model (log vf = a log NO3 ^ b - vf in cm/s, NO3 in ug/l)

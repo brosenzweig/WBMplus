@@ -521,6 +521,17 @@ int MDIrrGrossDemandDef () {
 	return (_MDOutIrrGrossDemandID);
 }
 
+int MDIrrReturnFlowDef() {
+	int ret;
+
+	if (_MDOutIrrReturnFlowID != MFUnset) return (_MDOutIrrReturnFlowID);
+
+	if ((ret = MDIrrGrossDemandDef ()) == CMfailed) return (CMfailed);
+	if (ret == MFUnset) return (MFUnset);
+	_MDOutIrrReturnFlowID = MFVarGetID (MDVarIrrReturnFlow,     "mm",   MFInput, MFFlux,  MFBoundary);
+    return (_MDOutIrrReturnFlowID);
+}
+
 static int getNumGrowingSeasons(float irrIntensity){
 	return ceil(irrIntensity);
 }
