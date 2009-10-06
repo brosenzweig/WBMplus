@@ -113,7 +113,7 @@ static void _MDRiverLight (int itemID) {
 	  }
 }
 
-int MDRiverLightDef () {
+int MDBgcRiverLightDef () {
 	int optID = MFUnset;
     const char *optStr;
 		const char *options [] = { "none", "calculate", (char *) NULL };
@@ -136,7 +136,7 @@ int MDRiverLightDef () {
 		//input
 	if (//((_MDInDischargeID          = MDDischargeDef    ()) == CMfailed) ||
          // ((_MDInSolarRadID         = MDSolarRadDef     ()) == CMfailed) ||
-         ((_MDInFluxDOCID           = MDDOCRoutingDef   ()) == CMfailed) ||
+         ((_MDInFluxDOCID           = MDBgcDOCRoutingDef   ()) == CMfailed) ||
          ((_MDInSolarRadID          = MFVarGetID (MDVarSolarRadiation,     "MJ/m2/d", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
          ((_MDInDischargeID         = MFVarGetID (MDVarDischarge,          "m3/s",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
          ((_MDInConcDOCID           = MFVarGetID (MDVarDOCConcentration,   "kg/m3",   MFInput,  MFState, MFBoundary)) == CMfailed) ||

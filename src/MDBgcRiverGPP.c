@@ -122,7 +122,7 @@ static void _MDRiverGPP (int itemID) {
          	MFVarSetFloat(_MDBenthicMortality_REACHID, itemID, Ben_Mortality_REACH);
     }
 
-int MDRiverGPPDef () {
+int MDBgcRiverGPPDef () {
 	int optID = MFUnset;
     const char *optStr;
 		const char *options [] = { "none", "calculate", (char *) NULL };
@@ -144,7 +144,7 @@ int MDRiverGPPDef () {
 	
 //input
 	if (//((_MDInDischargeID            = MDDischargeDef    ()) == CMfailed) ||
-		 ((_MDInRiverLightID          = MDRiverLightDef ()) == CMfailed) ||
+		 ((_MDInRiverLightID          = MDBgcRiverLightDef ()) == CMfailed) ||
          ((_MDInDischargeID           = MFVarGetID (MDVarDischarge,              "m3/s",    MFInput, MFState,  MFBoundary)) == CMfailed) ||
          ((_MDInRiverWidthID          = MFVarGetID (MDVarRiverWidth,             "m",       MFInput, MFState,  MFBoundary)) == CMfailed) ||
          ((_MDInPAR2BottomID          = MFVarGetID (MDVarPAR2Bottom,             "MJ/m2/d", MFInput,  MFState, MFBoundary)) == CMfailed) ||

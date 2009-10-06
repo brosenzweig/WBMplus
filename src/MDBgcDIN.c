@@ -231,7 +231,7 @@ static void _MDDINRouting (int itemID) {
 	//          							discharge, DINFlux, DINLocalIn, DINStorage, DINRemoval, DINStorageNew, DINFluxNew, massbalance);
 }
 
-int MDDINRoutingDef () {
+int MDBgcDINRoutingDef () {
 	int optID = MFUnset;
 	const char *optStr;
 	const char *options [] = { "none", "calculate", (char *) NULL };

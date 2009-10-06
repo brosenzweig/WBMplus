@@ -247,7 +247,7 @@ static void _MDDOCRouting (int itemID) {
 	//          							discharge, DOCFlux, DOCLocalIn, DOCStorage, DOCRemoval, DOCStorageNew, DOCFluxNew, massbalance);
 }
 
-int MDDOCRoutingDef () {
+int MDBgcDOCRoutingDef () {
 	int optID = MFUnset;
 	const char *optStr;
 	const char *options [] = { "none", "calculate", (char *) NULL };

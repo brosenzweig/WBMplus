@@ -305,7 +305,7 @@ static void _MDDINPLUSBIOMASSRouting (int itemID) {
 	}    
 }
 
-int MDDINPLUSBIOMASSRoutingDef () {
+int MDBgcDINPlusBiomassRoutingDef () {
 	int optID = MFUnset;
 	const char *optStr;
 	const char *options [] = { "none", "calculate", (char *) NULL };

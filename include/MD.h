@@ -364,10 +364,13 @@ int MDAccumRunoffDef();
 int MDAccumBalanceDef();
 int MDAvgNStepsDef();
 int MDBaseFlowDef();
+
 int MDBgcRoutingDef();
-int MDDOCRoutingDef();
-int MDDINRoutingDef();
-int MDDINPLUSBIOMASSRoutingDef();
+int MDBgcDOCRoutingDef();
+int MDBgcDINRoutingDef();
+int MDBgcDINPlusBiomassRoutingDef();
+int MDBgcRiverLightDef();
+int MDBgcRiverGPPDef(); // TODO Not Used!
 
 int MDCParamAlbedoDef();
 int MDCParamCHeightDef();
@@ -422,8 +425,6 @@ int MDWetlandRunoffDef();
 int MDRelHumidityDef(); // TODO Not Used!
 int MDRiverbedShapeExponentDef();
 int MDRiverWidthDef();
-int MDRiverLightDef();
-int MDRiverGPPDef(); // TODO Not Used!
 
 int MDRunoffDef();
 int MDRunoffMeanDef();
