@@ -28,6 +28,7 @@ extern "C" {
 #define MDOptModel                           "Model"
 #define MDOptReservoirs                      "Reservoirs"
 #define MDOptRiverbed                        "Riverbed"
+#define MDOptRunoff							 "RunoffSwitch"		//RJS 111710
 #define MDOptRouting                         "Routing"
 #define MDOptMuskingum                       "Muskingum"
 #define MDOptIrrReferenceET                  "IrrReferenceETP"
@@ -35,6 +36,8 @@ extern "C" {
 #define MDOptIrrExcessWater                  "ExcessWater"
 #define MDOptSoilMoisture					 "SoilMoisture"
 #define MDOptSoilTemperature				 "SoilTemperature"
+#define MDOptAllWithdrawals					 "AllWithdrawals"
+
 
 #define MDOptIrrigatedAreaMap                "IrrigatedAreaMap"
 #define MDOptSoilAvailableWaterCapacity		 "SoilWaterCapacity"
@@ -144,6 +147,7 @@ extern "C" {
 #define MDVarWetlandAreaFraction			 "WetlandAreaFraction"
 
 #define MDVarRainEvapotranspiration          "RainEvapotranspiration"
+#define	MDVarRainETnotScaled                 "RainETnotScaled"
 #define MDVarRainInfiltration                "RainInfiltration"
 #define MDVarRainInterception                "RainInterception"
 #define MDVarRainPotEvapotrans               "RainPET"
@@ -175,6 +179,8 @@ extern "C" {
 #define MDVarRunoffMean                      "RunoffMean"
 #define MDVarRunoffCorretion                 "RunoffCorrection"
 #define MDVarRunoffVolume                    "RunoffVolume"
+
+#define MDVarRunofftoPerv					 "RunoffToPerv"	//RJS 042010
 
 #define MDVarSAGEVegCover                    "SAGEVegCover"
 #define MDVarSmallReservoirStorageFrac       "SmallReservoirStorageFraction"	

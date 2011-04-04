@@ -34,8 +34,8 @@ int main (int argc,char *argv []) {
 		case MDgeometry:     return (MFModelRun (argc,argv,argNum,MDRiverWidthDef));
 		case MDbgc:          return (MFModelRun (argc,argv,argNum,MDBgcRoutingDef));
 		case MDbgc_DOC:      return (MFModelRun (argc,argv,argNum,MDBgcDOCRoutingDef));
-		case MDbgc_DIN:      return (MFModelRun (argc,argv,argNum,MDBgcDINRoutingDef));
-		case MDbgc_DINPLUSBIOMASS: return (MFModelRun (argc,argv,argNum,MDBgcDINPlusBiomassRoutingDef));
+		case MDbgc_DIN:    return (MFModelRun (argc,argv,argNum,MDBgcDINRoutingDef));
+		case MDbgc_DINPLUSBIOMASS:    return (MFModelRun (argc,argv,argNum,MDBgcDINPlusBiomassRoutingDef));
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
 	return (CMfailed);

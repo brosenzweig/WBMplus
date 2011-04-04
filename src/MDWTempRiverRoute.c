@@ -128,6 +128,10 @@ static void _MDWTempRiverRoute (int itemID) {
     //   	 }
      //TODO: combine with reservoir check above - also make reservoir hydraulics generally accessible
      //TODO: add effect of water withdrawals
+
+     if(Q < 0.0)  Q = 0.0;							//RJS 120409
+     if(Q_incoming < 0.0) Q_incoming = 0.0;			//RJS 120409
+
      if(ResWaterStorage > 0.0){
      waterStorage = waterStorage + ResWaterStorage;
      waterStorageChange = waterStorageChange + ResWaterStorageChange;
