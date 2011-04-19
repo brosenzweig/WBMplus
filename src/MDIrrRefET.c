@@ -2,11 +2,11 @@
 
 GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
-Copyright 1994-2007, University of New Hampshire
+Copyright 1994-2011, UNH - CCNY/CUNY
 
 MDIrrRefET.c
 
-balazs.fekete@unh.edu
+dominink.wisser@unh.edu
 
 *******************************************************************************/
 

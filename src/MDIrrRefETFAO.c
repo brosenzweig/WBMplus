@@ -1,3 +1,14 @@
+/******************************************************************************
+
+GHAAS Water Balance/Transport Model V3.0
+Global Hydrologic Archive and Analysis System
+Copyright 1994-2011, UNH - CCNY/CUNY
+
+MDIrrRefETFAO.c
+
+dominink.wisser@unh.edu
+
+*******************************************************************************/
 #include<stdio.h>
 #include<math.h>
 #include<cm.h>
