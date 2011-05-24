@@ -288,13 +288,13 @@ int MDWTempRiverRouteDef () {
         ((_MDInWTempRiverID           = MDWTempRiverDef   ()) == CMfailed) ||
         ((_MDInRiverWidthID           = MDRiverWidthDef   ()) == CMfailed) ||
         ((_MDInRunoffVolumeID         = MDRunoffVolumeDef ()) == CMfailed) ||
-        ((_MDInDischargeIncomingID    = MFVarGetID (MDVarDischarge0,            "m3/s",       MFInput,  MFState, MFInitial)) == CMfailed) ||
+        ((_MDInDischargeIncomingID    = MFVarGetID (MDVarDischarge0,            "m3/s",       MFInput,  MFState, MFInitial))  == CMfailed) ||
         ((_MDInWindSpeedID            = MFVarGetID (MDVarWindSpeed,             "m/s",        MFInput,  MFState, MFBoundary)) == CMfailed) ||
         ((_MDInAirTemperatureID       = MFVarGetID (MDVarAirTemperature,        "degC",       MFInput,  MFState, MFBoundary)) == CMfailed) ||
-        ((_MDInCloudCoverID           = MFVarGetID (MDVarCloudCover,            "%",          MFInput,  MFState, MFBoundary)) == CMfailed) ||
-        ((_MDInRiverStorageChgID      = MFVarGetID (MDVarRiverStorageChg,       "m3/s",       MFInput,  MFState, MFBoundary)) == CMfailed) ||
+        ((_MDInCloudCoverID           = MFVarGetID (MDVarCloudCover,            "Pro%",       MFInput,  MFState, MFBoundary)) == CMfailed) ||
+        ((_MDInRiverStorageChgID      = MFVarGetID (MDVarRiverStorageChg,       "m3",         MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
         ((_MDInRiverStorageID         = MFVarGetID (MDVarRiverStorage,          "m3",         MFInput,  MFState, MFInitial))  == CMfailed) ||
-        ((_MDInSnowPackID             = MFVarGetID (MDVarSnowPack,               "mm",        MFInput,  MFState, MFBoundary)) == CMfailed) ||
+        ((_MDInSnowPackID             = MFVarGetID (MDVarSnowPack,               "mm",        MFInput,  MFState, MFInitial)) == CMfailed) ||
 
         // output
         ((_MDLocalIn_QxTID            = MFVarGetID (MDVarBgcLocalIn_QxT,         "m3*degC/d", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
