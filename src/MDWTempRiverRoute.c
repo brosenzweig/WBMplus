@@ -294,7 +294,7 @@ int MDWTempRiverRouteDef () {
         ((_MDInCloudCoverID           = MFVarGetID (MDVarCloudCover,            "Pro%",       MFInput,  MFState, MFBoundary)) == CMfailed) ||
         ((_MDInRiverStorageChgID      = MFVarGetID (MDVarRiverStorageChg,       "m3",         MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
         ((_MDInRiverStorageID         = MFVarGetID (MDVarRiverStorage,          "m3",         MFInput,  MFState, MFInitial))  == CMfailed) ||
-        ((_MDInSnowPackID             = MFVarGetID (MDVarSnowPack,               "mm",        MFInput,  MFState, MFInitial)) == CMfailed) ||
+        ((_MDInSnowPackID             = MFVarGetID (MDVarSnowPack,              "mm",         MFInput,  MFState, MFInitial))  == CMfailed) ||
 
         // output
         ((_MDLocalIn_QxTID            = MFVarGetID (MDVarBgcLocalIn_QxT,         "m3*degC/d", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||

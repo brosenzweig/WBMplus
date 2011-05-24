@@ -68,8 +68,8 @@ int MDWTempSurfRunoffDef () {
 
 	if (((_MDInPrecipID       = MDPrecipitationDef ()) == CMfailed) ||
 	    ((_MDInSnowMeltID     = MDSPackMeltDef     ()) == CMfailed) ||
-	    ((_MDInSnowPackID     = MFVarGetID (MDVarSnowPack,        "mm",   MFInput,  MFState, MFBoundary))  == CMfailed) ||
-	    ((_MDInAirTempID      = MFVarGetID (MDVarAirTemperature,  "degC", MFInput,  MFState, MFBoundary))  == CMfailed) ||
+	    ((_MDInSnowPackID     = MFVarGetID (MDVarSnowPack,        "mm",   MFInput,  MFState, MFInitial))  == CMfailed) ||
+	    ((_MDInAirTempID      = MFVarGetID (MDVarAirTemperature,  "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDOutWTempSurfROID = MFVarGetID (MDVarWTempSurfRunoff, "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||	
         (MFModelAddFunction (_MDWTempSurfRunoff) == CMfailed)) return (CMfailed);
 
