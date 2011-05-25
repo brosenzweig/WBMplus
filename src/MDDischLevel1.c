@@ -33,17 +33,14 @@ static void _MDDischLevel1 (int itemID) {
 }
 
 int MDDischLevel1Def() {
-	const char *optStr;
-	const char *options [] = { MDNoneStr, (char *) NULL };
 
 	if (_MDOutDischLevel1ID != MFUnset) return (_MDOutDischLevel1ID);
 
 	MFDefEntering ("Discharge Level 1");
 	if ((_MDInDischLevel2ID = MDDischLevel2Def ()) == CMfailed) return (CMfailed);
 
-	if (((optStr = MFOptionGet (MDOptReservoirs)) != (char *) NULL) && (CMoptLookup (options,optStr,true) == CMfailed)) {
-		if ((_MDInDischReleasedID = MDReservoirDef ()) == CMfailed) return (CMfailed);
-	}
+	if ((_MDInDischReleasedID = MDReservoirDef ()) == CMfailed) return (CMfailed);
+
 	if (((_MDOutDischLevel1ID = MFVarGetID ("__DischLevel1", "m3/s",  MFOutput,  MFState, MFBoundary)) == CMfailed) ||
 	    (MFModelAddFunction (_MDDischLevel1) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Discharge Level 1");

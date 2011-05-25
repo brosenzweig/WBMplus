@@ -34,6 +34,7 @@ static int _MDInWindSpeedID            = MFUnset;
 static int _MDInCloudCoverID           = MFUnset;
 static int _MDInAirTemperatureID       = MFUnset;
 static int _MDInSnowPackID             = MFUnset;
+static int _MDInDischReleasedID        = MFUnset;
 static int _MDInResStorageChangeID     = MFUnset;
 static int _MDInResStorageID           = MFUnset;
 // Output
@@ -261,58 +262,42 @@ static void _MDWTempRiverRoute (int itemID) {
 }
 
 int MDWTempRiverRouteDef () {
-	int optID = MFUnset;
-    const char *optStr;
-		const char *options [] = { "none", "calculate", (char *) NULL };
-
 	if (_MDWTempRiverRouteID != MFUnset) return (_MDWTempRiverRouteID);
 
 	MFDefEntering ("Route river temperature");
-	
-	if (((optStr = MFOptionGet (MDOptReservoirs))  == (char *) NULL) || ((optID = CMoptLookup ( options, optStr, true)) == CMfailed)) {
-				CMmsgPrint(CMmsgUsrError,"Reservoir Option not specified! Option none or calculate \n");
-				return CMfailed;
-			}
-    if (optID==1){
-  //  	printf ("Resoption=%i\n",optID);
-    if (((_MDInResStorageID           = MFVarGetID (MDVarReservoirStorage,       "km3",     MFInput, MFState, MFInitial))  == CMfailed) ||
-        ((_MDInResStorageChangeID     = MFVarGetID (MDVarReservoirStorageChange, "km3/s",   MFInput, MFState, MFBoundary)) == CMfailed))
-    	return CMfailed;
-    }
-	
-		
-		//input
+	    //input
 	if (((_MDInDischargeID            = MDDischargeDef    ()) == CMfailed) ||
 	    ((_MDInSolarRadID             = MDSolarRadDef     ()) == CMfailed) ||
        
         ((_MDInWTempRiverID           = MDWTempRiverDef   ()) == CMfailed) ||
         ((_MDInRiverWidthID           = MDRiverWidthDef   ()) == CMfailed) ||
         ((_MDInRunoffVolumeID         = MDRunoffVolumeDef ()) == CMfailed) ||
-        ((_MDInDischargeIncomingID    = MFVarGetID (MDVarDischarge0,            "m3/s",       MFInput,  MFState, MFInitial))  == CMfailed) ||
-        ((_MDInWindSpeedID            = MFVarGetID (MDVarWindSpeed,             "m/s",        MFInput,  MFState, MFBoundary)) == CMfailed) ||
-        ((_MDInAirTemperatureID       = MFVarGetID (MDVarAirTemperature,        "degC",       MFInput,  MFState, MFBoundary)) == CMfailed) ||
-        ((_MDInCloudCoverID           = MFVarGetID (MDVarCloudCover,            "Pro%",       MFInput,  MFState, MFBoundary)) == CMfailed) ||
-        ((_MDInRiverStorageChgID      = MFVarGetID (MDVarRiverStorageChg,       "m3",         MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-        ((_MDInRiverStorageID         = MFVarGetID (MDVarRiverStorage,          "m3",         MFInput,  MFState, MFInitial))  == CMfailed) ||
-        ((_MDInSnowPackID             = MFVarGetID (MDVarSnowPack,              "mm",         MFInput,  MFState, MFInitial))  == CMfailed) ||
-
+        ((_MDInDischargeIncomingID    = MFVarGetID (MDVarDischarge0,            "m3/s",       MFInput,  MFState, MFInitial))  == CMfailed)   ||
+        ((_MDInWindSpeedID            = MFVarGetID (MDVarWindSpeed,             "m/s",        MFInput,  MFState, MFBoundary)) == CMfailed)   ||
+        ((_MDInAirTemperatureID       = MFVarGetID (MDVarAirTemperature,        "degC",       MFInput,  MFState, MFBoundary)) == CMfailed)   ||
+        ((_MDInCloudCoverID           = MFVarGetID (MDVarCloudCover,            "Pro%",       MFInput,  MFState, MFBoundary)) == CMfailed)   ||
+        ((_MDInRiverStorageChgID      = MFVarGetID (MDVarRiverStorageChg,       "m3",         MFInput,  MFFlux,  MFBoundary)) == CMfailed)   ||
+        ((_MDInRiverStorageID         = MFVarGetID (MDVarRiverStorage,          "m3",         MFInput,  MFState, MFInitial))  == CMfailed)   ||
+        ((_MDInSnowPackID             = MFVarGetID (MDVarSnowPack,              "mm",         MFInput,  MFState, MFInitial))  == CMfailed)   ||
+        ((_MDInDischReleasedID        = MDReservoirDef ())                                                                    == CMfailed)   ||
+        ((_MDInDischReleasedID       != MFUnset) &&
+         (((_MDInResStorageID         = MFVarGetID (MDVarReservoirStorage,       "km3",       MFInput, MFState,  MFInitial))  == CMfailed)   ||
+          ((_MDInResStorageChangeID   = MFVarGetID (MDVarReservoirStorageChange, "km3/s",     MFInput, MFState,  MFBoundary)) == CMfailed))) ||
         // output
-        ((_MDLocalIn_QxTID            = MFVarGetID (MDVarBgcLocalIn_QxT,         "m3*degC/d", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-        ((_MDRemoval_QxTID            = MFVarGetID (MDVarRemoval_QxT,            "m3*degC/d", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-        ((_MDFlux_QxTID               = MFVarGetID (MDVarFlux_QxT,               "m3*degC/d", MFRoute,  MFFlux,  MFBoundary)) == CMfailed) ||
-        ((_MDStorage_QxTID            = MFVarGetID (MDVarStorage_QxT,            "m3*degC",   MFOutput, MFState, MFInitial))  == CMfailed) ||
-        ((_MDDeltaStorage_QxTID       = MFVarGetID (MDVarDeltaStorage_QxT,       "m3*degC/d", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-        ((_MDWTemp_QxTID              = MFVarGetID (MDVarWTemp_QxT,              "degC",      MFOutput, MFState, MFBoundary)) == CMfailed) ||
-        ((_MDWTempDeltaT_QxTID        = MFVarGetID (MDVarWTempDeltaT_QxT,        "degC",      MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDLocalIn_QxTID            = MFVarGetID (MDVarBgcLocalIn_QxT,         "m3*degC/d", MFOutput, MFFlux,  MFBoundary)) == CMfailed)   ||
+        ((_MDRemoval_QxTID            = MFVarGetID (MDVarRemoval_QxT,            "m3*degC/d", MFOutput, MFFlux,  MFBoundary)) == CMfailed)   ||
+        ((_MDFlux_QxTID               = MFVarGetID (MDVarFlux_QxT,               "m3*degC/d", MFRoute,  MFFlux,  MFBoundary)) == CMfailed)   ||
+        ((_MDStorage_QxTID            = MFVarGetID (MDVarStorage_QxT,            "m3*degC",   MFOutput, MFState, MFInitial))  == CMfailed)   ||
+        ((_MDDeltaStorage_QxTID       = MFVarGetID (MDVarDeltaStorage_QxT,       "m3*degC/d", MFOutput, MFFlux,  MFBoundary)) == CMfailed)   ||
+        ((_MDWTemp_QxTID              = MFVarGetID (MDVarWTemp_QxT,              "degC",      MFOutput, MFState, MFBoundary)) == CMfailed)   ||
+        ((_MDWTempDeltaT_QxTID        = MFVarGetID (MDVarWTempDeltaT_QxT,        "degC",      MFOutput, MFState, MFBoundary)) == CMfailed)   ||
         
         //output mixing
-        ((_MDFluxMixing_QxTID         = MFVarGetID (MDVarFluxMixing_QxT,         "m3*degC/d", MFRoute,  MFFlux,  MFBoundary)) == CMfailed) ||
-        ((_MDStorageMixing_QxTID      = MFVarGetID (MDVarStorageMixing_QxT,      "m3*degC",   MFOutput, MFState, MFInitial))  == CMfailed) ||
-        ((_MDDeltaStorageMixing_QxTID = MFVarGetID (MDVarDeltaStorageMixing_QxT, "m3*degC/d", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-        ((_MDWTempMixing_QxTID        = MFVarGetID (MDVarWTempMixing_QxT,        "degC",      MFOutput, MFState, MFBoundary)) == CMfailed) ||
-                
-           
-       (MFModelAddFunction (_MDWTempRiverRoute) == CMfailed)) return (CMfailed);
+        ((_MDFluxMixing_QxTID         = MFVarGetID (MDVarFluxMixing_QxT,         "m3*degC/d", MFRoute,  MFFlux,  MFBoundary)) == CMfailed)   ||
+        ((_MDStorageMixing_QxTID      = MFVarGetID (MDVarStorageMixing_QxT,      "m3*degC",   MFOutput, MFState, MFInitial))  == CMfailed)   ||
+        ((_MDDeltaStorageMixing_QxTID = MFVarGetID (MDVarDeltaStorageMixing_QxT, "m3*degC/d", MFOutput, MFFlux,  MFBoundary)) == CMfailed)   ||
+        ((_MDWTempMixing_QxTID        = MFVarGetID (MDVarWTempMixing_QxT,        "degC",      MFOutput, MFState, MFBoundary)) == CMfailed)   ||
+        (MFModelAddFunction (_MDWTempRiverRoute) == CMfailed)) return (CMfailed);
       
 	   MFDefLeaving ("Route river temperature");
 	   return (_MDWTemp_QxTID);
