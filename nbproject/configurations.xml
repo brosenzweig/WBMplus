@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="79">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df name="WBMplus" root=".">
+      <df name="bin">
+      </df>
+      <df name="include">
+        <in>MD.h</in>
+        <in>wbm.h</in>
+      </df>
+      <df name="obj">
+      </df>
+      <df name="src">
+        <in>MDAccBalance.c</in>
+        <in>MDAccumulate.c</in>
+        <in>MDAvgNSteps.c</in>
+        <in>MDBaseFlow.c</in>
+        <in>MDBgc.c</in>
+        <in>MDBgcDIN.c</in>
+        <in>MDBgcDINPlusBiomass.c</in>
+        <in>MDBgcDOC.c</in>
+        <in>MDBgcFecal.c</in>
+        <in>MDBgcRiverGPP.c</in>
+        <in>MDBgcRiverLight.c</in>
+        <in>MDCParams.c</in>
+        <in>MDDischLevel1.c</in>
+        <in>MDDischLevel2.c</in>
+        <in>MDDischLevel3.c</in>
+        <in>MDDischLevel3Accum.c</in>
+        <in>MDDischLevel3Cascade.c</in>
+        <in>MDDischLevel3Muskingum.c</in>
+        <in>MDDischLevel3MuskingumCoeff.c</in>
+        <in>MDDischMean.c</in>
+        <in>MDDischarge.c</in>
+        <in>MDEvapotransp.c</in>
+        <in>MDGrossRad.c</in>
+        <in>MDIrrGrossDemand.c</in>
+        <in>MDIrrRefET.c</in>
+        <in>MDIrrRefETFAO.c</in>
+        <in>MDIrrRefETHamon.c</in>
+        <in>MDIrrSoilMoistChg.c</in>
+        <in>MDIrrSoilMoisture.c</in>
+        <in>MDIrrUptakeGrdWater.c</in>
+        <in>MDIrrUptakeRiver.c</in>
+        <in>MDIrrigatedArea.c</in>
+        <in>MDLSAreaIndex.c</in>
+        <in>MDLandCover.c</in>
+        <in>MDPermafrost.c</in>
+        <in>MDPotETHamon.c</in>
+        <in>MDPotETlib.c</in>
+        <in>MDPrecipitation.c</in>
+        <in>MDRainInfiltration.c</in>
+        <in>MDRainIntercept.c</in>
+        <in>MDRainPotET.c</in>
+        <in>MDRainPotETHamon.c</in>
+        <in>MDRainPotETJensen.c</in>
+        <in>MDRainPotETPMday.c</in>
+        <in>MDRainPotETPMdn.c</in>
+        <in>MDRainPotETPsTaylor.c</in>
+        <in>MDRainPotETPstd.c</in>
+        <in>MDRainPotETSWGday.c</in>
+        <in>MDRainPotETSWGdn.c</in>
+        <in>MDRainPotETTurc.c</in>
+        <in>MDRainSMoistChg.c</in>
+        <in>MDRainSMoistLayered.c</in>
+        <in>MDRainSurfRunoff.c</in>
+        <in>MDRainWaterSurplus.c</in>
+        <in>MDRelHumidity.c</in>
+        <in>MDReservoirs.c</in>
+        <in>MDRiverStorage.c</in>
+        <in>MDRiverWidth.c</in>
+        <in>MDRiverbedShapeExp.c</in>
+        <in>MDRunoff.c</in>
+        <in>MDRunoffMean.c</in>
+        <in>MDRunoffVolume.c</in>
+        <in>MDSMoistChg.c</in>
+        <in>MDSPackChg.c</in>
+        <in>MDSmallReservoirCap.c</in>
+        <in>MDSmallReservoirs.c</in>
+        <in>MDSoilAvailWaterCap.c</in>
+        <in>MDSolarRad.c</in>
+        <in>MDSurfRunoff.c</in>
+        <in>MDWTempGrdWater.c</in>
+        <in>MDWTempRiver.c</in>
+        <in>MDWTempRiverRoute.c</in>
+        <in>MDWTempSurfRunoff.c</in>
+        <in>MDWaterBalance.c</in>
+        <in>MDWetDays.c</in>
+        <in>MDWetlandArea.c</in>
+        <in>MDWetlands.c</in>
+        <in>MDWind.c</in>
+        <in>WBMMain.c</in>
+      </df>
+    </df>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
+  <sourceRootList>
+    <Elem>.</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>default</compilerSet>
+      </toolsSet>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>.</buildCommandWorkingDir>
+          <buildCommand>${MAKE} -f Makefile</buildCommand>
+          <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
+          <executablePath></executablePath>
+          <cTool>
+            <incDir>
+              <pElem>include</pElem>
+            </incDir>
+          </cTool>
+        </makeTool>
+      </makefileType>
+      <item path="include/MD.h" ex="true" tool="3" flavor="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
