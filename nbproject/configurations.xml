@@ -118,16 +118,16 @@
           <executablePath></executablePath>
           <cTool>
             <incDir>
-              <pElem>/Users/ecr/balazs/NetBeans/CMlib/include</pElem>
-              <pElem>/Users/ecr/balazs/NetBeans/MFlib/include</pElem>
-              <pElem>/Users/ecr/balazs/NetBeans/WBMplus/include</pElem>
+              <pElem>../CMlib/include</pElem>
+              <pElem>../MFlib/include</pElem>
+              <pElem>include</pElem>
             </incDir>
           </cTool>
           <ccTool>
             <incDir>
-              <pElem>/Users/ecr/balazs/NetBeans/CMlib/include</pElem>
-              <pElem>/Users/ecr/balazs/NetBeans/MFlib/include</pElem>
-              <pElem>/Users/ecr/balazs/NetBeans/WBMplus/include</pElem>
+              <pElem>../CMlib/include</pElem>
+              <pElem>../MFlib/include</pElem>
+              <pElem>include</pElem>
             </incDir>
           </ccTool>
         </makeTool>
