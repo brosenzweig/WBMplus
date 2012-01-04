@@ -33,12 +33,14 @@ static void _MDWTempRiver (int itemID) {
 	 float SurfaceRO;
 	 float GrdWaterRO;
 	 float TemperatureRO;
-	 
+
    	 RechargeT          = MFVarGetFloat (_MDInWTempSurfRunoffID, itemID, 0.0);
-   	 GrdWaterT          = MFVarGetFloat (_MDInWTempGrdWaterID, itemID, 0.0);
+  	 GrdWaterT          = MFVarGetFloat (_MDInWTempGrdWaterID, itemID, 0.0);
    	 SurfaceRO          = MFVarGetFloat (_MDInSurfRunoffID, itemID, 0.0);
    	 GrdWaterRO         = MFVarGetFloat (_MDInBaseFlowID, itemID, 0.0);
  
+
+
   // 	 if (itemID == 5132){
   //      	printf("Stop itemID %d day %d \n", itemID, MFDateGetCurrentDay());
   // 	 }
@@ -47,25 +49,30 @@ static void _MDWTempRiver (int itemID) {
         SurfaceRO = MDMaximum(0, SurfaceRO);
         GrdWaterRO = MDMaximum(0, GrdWaterRO);
                 
- 	 if(!isnan(SurfaceRO) && !isnan(GrdWaterRO) && !isnan(RechargeT) && !isnan(GrdWaterT) && 
- 			   (SurfaceRO + GrdWaterRO) > 0){
+// 	 if(!isnan(SurfaceRO) && !isnan(GrdWaterRO) && !isnan(RechargeT) && !isnan(GrdWaterT) && 			//here
+// 			   (SurfaceRO + GrdWaterRO) > 0){															//here
  		// if (GrdWaterT > 30){
  		//        	printf("Stop itemID %d day %d \n", itemID, MFDateGetCurrentDay());
  		//        }//	if (itemID == 499){
  	//	        		    printf("Stop: itemID %d \n", itemID);}
    	    TemperatureRO = MDMaximum((((SurfaceRO * RechargeT) + (GrdWaterRO * GrdWaterT)) / (SurfaceRO + GrdWaterRO)),0.0);
    	    
-  // 	 if (TemperatureRO > 20){
+    // 	 if (TemperatureRO > 20){
    	//        	printf("Stop itemID %d day %d \n", itemID, MFDateGetCurrentDay());
    //	    printf("itemID %d day %d TemperatureRO %f SurfaceRO %f RechargeT %f GrdWaterRO %f GrdWaterT %f \n", 
    //	    		itemID, MFDateGetCurrentDay(), TemperatureRO, SurfaceRO, RechargeT, GrdWaterRO, GrdWaterT);
    //	 }
    	   //TemperatureRO = MDMinimum(TemperatureRO, 40);
    	    MFVarSetFloat(_MDOutWTempRiverID,itemID,TemperatureRO); 
-     }
- 	 else {
-  	    MFVarSetMissingVal(_MDOutWTempRiverID,itemID);
- 	 }
+
+//   	    if (itemID == 60646) printf("TempRO = %f, RechargeT = %f, GrdWaterT = %f, SurfaceRO = %f, GrdWaterRO = %f\n", TemperatureRO, RechargeT, GrdWaterT, SurfaceRO, GrdWaterRO);	//RJS 061611
+//  	    if (TemperatureRO > 1000) printf("itemID = %d, TempRO = %f, RechargeT = %f, GrdWaterT = %f, SurfaceRO = %f, GrdWaterRO = %f\n", itemID, TemperatureRO, RechargeT, GrdWaterT, SurfaceRO, GrdWaterRO);	//RJS 061611
+
+
+//	 }															//here
+// 	 else {														//here
+//  	    MFVarSetMissingVal(_MDOutWTempRiverID,itemID);		//here
+// 	 }															//here
 
 }
 

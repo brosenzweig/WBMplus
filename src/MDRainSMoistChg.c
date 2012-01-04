@@ -94,6 +94,9 @@ static void _MDRainSMoistChg (int itemID) {
 //	}
 //	else  { sMoistChg = 0.0; evapotrans = 0.0; }
 
+//		if (itemID == 25014) printf("! sMoist cell = %f, sMoist = %f, evapotrans = %f, sMoistChg = %f, pet = %f, awCap = %f, waterIn = %f\n", sMoist, sMoist * (1.0 - irrAreaFrac), evapotrans, sMoistChg, pet, awCap, waterIn);
+//		if (itemID == 25014) printf("! precip = %f, intercept = %f, sPackChg = %f\n", precip, intercept, sPackChg);
+
 	MFVarSetFloat (_MDOutSoilMoistCellID,     itemID, sMoist);
 	MFVarSetFloat (_MDOutEvaptrsID,           itemID, evapotrans * (1.0 - irrAreaFrac)); //RJS 01-17-08 "- impAreaFrac - H2OAreaFrac"
 	MFVarSetFloat (_MDOutSoilMoistID,         itemID, sMoist     * (1.0 - irrAreaFrac)); //RJS 01-17-08 "- impAreaFrac - H2OAreaFrac"

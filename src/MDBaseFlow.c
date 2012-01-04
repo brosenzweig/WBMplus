@@ -49,6 +49,7 @@ static void _MDBaseFlow (int itemID) {
 // Local
                      
 	grdWaterChg = grdWater = MFVarGetFloat (_MDOutGrdWatID,  itemID, 0.0);
+	if (grdWater < 0.0) grdWaterChg = grdWater = 0.0;			//RJS 071511
 	grdWaterRecharge = MFVarGetFloat (_MDInRechargeID, itemID, 0.0);
 	grdWater = grdWater + grdWaterRecharge;
 
@@ -85,6 +86,8 @@ static void _MDBaseFlow (int itemID) {
 	baseFlow    = grdWater * _MDGroundWatBETA;
 	grdWater    = grdWater - baseFlow;
 	grdWaterChg = grdWater - grdWaterChg;
+
+//	if ((itemID == 25014)) printf("m = %d, d = %d, @@@@@@@@@@@@@ baseFlow = %f, grdWater = %f, grdWaterChg = %f, grdWaterRecharge = %f\n", MFDateGetCurrentMonth(), MFDateGetCurrentDay(), baseFlow * 100000, grdWater * 100000, grdWaterChg * 100000, grdWaterRecharge * 100000);	//RJS 071511
 
 //in= irrReturnFlow+grdWaterRecharge;
 //out = irrUptakeGrdWater + grdWaterChg;

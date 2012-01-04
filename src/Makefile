@@ -88,7 +88,8 @@ OBJS = $(OBJ)/WBMMain.o\
        $(OBJ)/MDWTempRiver.o\
        $(OBJ)/MDWTempRiverRoute.o\
        $(OBJ)/MDWTempGrdWater.o\
-       $(OBJ)/MDWTempSurfRunoff.o
+       $(OBJ)/MDWTempSurfRunoff.o\
+       $(OBJ)/MDThermalInputs.o
 
 all: ${TARGET}
 

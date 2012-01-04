@@ -41,6 +41,7 @@ extern "C" {
 
 #define MDOptIrrigatedAreaMap                "IrrigatedAreaMap"
 #define MDOptSoilAvailableWaterCapacity		 "SoilWaterCapacity"
+#define MDOptThermalInputs					 "ThermalInputs"
 
 #define MDVarAccBalance                      "AccumBalance"
 #define MDVarAccPrecipitation                "AccumPrecipitation"
@@ -201,6 +202,10 @@ extern "C" {
 #define MDVarSoilMoistChange                 "SoilMoistureChange"
 #define MDVarSoilWiltingPoint                "WiltingPoint"
 #define MDVarSoilBulkDensity                 "SoilBulkDensity"
+#define	MDVarTransferEffRip					 "TransferEffRip"	//RJS 061511
+#define MDVarTransferEffSep					 "TransferEffSep"	//RJS 061511
+
+#define MDVarThermalWdl						 "ThermalWdl"		//RJS 081711
 
 #define MDVarLakeArea                        "LakeArea" // TODO I think this is Wil's addition but not used yet
 #define MDVarReservoirArea                   "ReservoirArea" // TODO I think this is Wil's addition but not used yet
@@ -215,6 +220,7 @@ extern "C" {
 #define MDVarSurfRunoff                      "SurfaceRunoff"
 #define MDVarVaporPressure                   "VaporPressure"
 #define MDVarTEMVegCover                     "TEMVegCover"
+#define MDVarWarmingTemp					 "WarmingTemp"
 #define MDVarWBMCover                        "WBMCover"
 #define MDVarWaterBalance                    "WaterBalance"
 #define MDVarWetDays                         "WetDays"
@@ -231,7 +237,9 @@ extern "C" {
 #define MDVarWetlandStorageChange           "WetlandStorageChange"
 #define MDVarWetlandCatchmentAreaFactor		"WetlandCatchmentAreaFactor"
 #define MDVarWetlandStorage					"WetlandStorage"	
-#define MDVarWetlandWaterLevelDepth			"WetlandWaterLevelDepth"	
+#define MDVarWetlandWaterLevelDepth			"WetlandWaterLevelDepth"
+
+#define MDVarBeaverPondArea						"BeaverPondArea"			//RJS 120211
 
 #define MDVarBenthicAlgaeCHL                "BenthicAlgaeCHL"
 #define MDVarBenthicAlgaeC                  "BenthicAlgaeC"
@@ -258,6 +266,8 @@ extern "C" {
 #define MDVarDeltaStorage_QxT                "QxT_DeltaStorage"
 #define MDVarWTemp_QxT                       "QxT_WaterTemp"
 #define MDVarWTempDeltaT_QxT                 "QxT_deltaT"
+
+#define MDVarWithdrawal_QxT					 "Withdrawal_QxT"	//081311
 
 #define MDVarFluxMixing_QxT                  "QxT_FluxMixing"
 #define MDVarStorageMixing_QxT               "QxT_StorageMixing"
@@ -454,6 +464,7 @@ int MDPermafrostDef();
 int MDWTempGrdWaterDef();
 int MDWTempRiverDef();
 int MDWTempRiverRouteDef();
+int MDThermalInputsDef();
 
 int MDWTempSurfRunoffDef();
 
