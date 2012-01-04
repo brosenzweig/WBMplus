@@ -462,12 +462,12 @@ int MDWTempRiverRouteDef () {
 	
 		//input
 	if (((_MDInDischargeID            = MDDischargeDef     ()) == CMfailed) ||
+       (( waterBalanceID             = MDWaterBalanceDef  ()) == CMfailed) ||
        ((_MDInSolarRadID             = MDSolarRadDef      ()) == CMfailed) ||
        ((_MDInWTempRiverID           = MDWTempRiverDef    ()) == CMfailed) ||
        ((_MDInRiverWidthID           = MDRiverWidthDef    ()) == CMfailed) ||
        ((_MDInRunoffVolumeID         = MDRunoffVolumeDef  ()) == CMfailed) ||
        ((_MDInWdl_QxTID	             = MDThermalInputsDef ()) == CMfailed) ||	//RJS 072011
-       (( waterBalanceID             = MDWaterBalanceDef  ()) == CMfailed) ||
        ((_MDInDischargeIncomingID    = MFVarGetID (MDVarDischarge0,             "m3/s",       MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
        ((_MDInWindSpeedID            = MFVarGetID (MDVarWindSpeed,              "m/s",        MFInput,  MFState, MFBoundary)) == CMfailed) ||
        ((_MDInAirTemperatureID       = MFVarGetID (MDVarAirTemperature,         "degC",       MFInput,  MFState, MFBoundary)) == CMfailed) ||
