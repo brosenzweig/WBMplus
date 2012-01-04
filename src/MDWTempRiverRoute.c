@@ -127,9 +127,16 @@ static void _MDWTempRiverRoute (int itemID) {
      SnowPack              = MFVarGetFloat (_MDInSnowPackID,          itemID, 0.0);
  	
      if (_MDInResStorageID != MFUnset){
-      ResWaterStorageChange = MFVarGetFloat ( _MDInResStorageChangeID, itemID, 0.0) * pow(1000,3); // convert to m3/
-      ResWaterStorage       = MFVarGetFloat ( _MDInResStorageID,       itemID, 0.0) * pow(1000,3); // convert to m3 
+         ResWaterStorageChange = MFVarGetFloat ( _MDInResStorageChangeID, itemID, 0.0) * pow(1000,3); // convert to m3/
+         ResWaterStorage       = MFVarGetFloat ( _MDInResStorageID,       itemID, 0.0) * pow(1000,3); // convert to m3 
+         resCapacity           = MFVarGetFloat (_MDInResCapacityID,       itemID, 0.0);	//RJS 071511
      }
+     else
+     {
+         ResWaterStorageChange =
+         ResWaterStorage       = 
+         resCapacity           = 0.0;	//RJS 071511
+    }
      
      waterStorageChange    = MFVarGetFloat ( _MDInRiverStorageChgID,  itemID, 0.0);
    	 waterStorage          = MFVarGetFloat ( _MDInRiverStorageID,     itemID, 0.0);
@@ -143,7 +150,6 @@ static void _MDWTempRiverRoute (int itemID) {
      StorexT               = MFVarGetFloat (_MDStorage_QxTID,         itemID, 0.0);
      QxT_mix               = MFVarGetFloat (_MDFluxMixing_QxTID,      itemID, 0.0);
      StorexT_mix           = MFVarGetFloat (_MDStorageMixing_QxTID,   itemID, 0.0);
-     resCapacity		   = MFVarGetFloat (_MDInResCapacityID,       itemID, 0.0);	//RJS 071511
      warmingTemp	   = MFVarGetFloat (_MDInWarmingTempID,    itemID, 0.0);	//RJS 072011
      wdl_QxT		   = MFVarGetFloat (_MDInWdl_QxTID,        itemID, 0.0);	//RJS 072011
      thermal_wdl	   = MFVarGetFloat (_MDInThermalWdlID, 	   itemID, 0.0)* 1000000 / 365 / 86400;	//RJS 072011
