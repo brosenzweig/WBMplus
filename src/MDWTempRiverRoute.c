@@ -454,13 +454,13 @@ int MDWTempRiverRouteDef () {
 		return CMfailed;
    }
    if (optID==1) {
-      if (((_MDInResStorageChangeID     = MFVarGetID (MDVarReservoirStorageChange, "km3",     MFInput,  MFState, MFBoundary)) == CMfailed) ||	//RJS 071511
+      if ((( waterBalanceID             = MDWaterBalanceDef  ()) == CMfailed) ||
+          ((_MDInResStorageChangeID     = MFVarGetID (MDVarReservoirStorageChange, "km3",     MFInput,  MFState, MFBoundary)) == CMfailed) ||	//RJS 071511
           ((_MDInResStorageID           = MFVarGetID (MDVarReservoirStorage,       "km3",     MFInput,  MFState, MFInitial))  == CMfailed) ||	//RJS 121311 changed from MFBoundary to MFInitial
           ((_MDInResCapacityID          = MFVarGetID (MDVarReservoirCapacity,      "km3",     MFInput,  MFState, MFBoundary)) == CMfailed))
          return (CMfailed);
     }
-	
-		//input
+	//input
 	if (((_MDInDischargeID            = MDDischargeDef     ()) == CMfailed) ||
        (( waterBalanceID             = MDWaterBalanceDef  ()) == CMfailed) ||
        ((_MDInSolarRadID             = MDSolarRadDef      ()) == CMfailed) ||
