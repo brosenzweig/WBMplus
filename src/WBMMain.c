@@ -29,8 +29,8 @@ int main (int argc,char *argv []) {
 		case MDinfiltration: return (MFModelRun (argc,argv,argNum,MDRainInfiltrationDef));
 		case MDrunoff:       return (MFModelRun (argc,argv,argNum,MDRunoffDef));
 		case MDdischarge:    return (MFModelRun (argc,argv,argNum,MDDischargeDef));
-		case MDwatertemp:    return (MFModelRun (argc,argv,argNum,MDWTempRiverRouteDef));
 		case MDbalance:      return (MFModelRun (argc,argv,argNum,MDWaterBalanceDef));
+		case MDwatertemp:    return (MFModelRun (argc,argv,argNum,MDWTempRiverRouteDef));
 		case MDgeometry:     return (MFModelRun (argc,argv,argNum,MDRiverWidthDef));
 		case MDbgc:          return (MFModelRun (argc,argv,argNum,MDBgcRoutingDef));
 		case MDbgc_DOC:      return (MFModelRun (argc,argv,argNum,MDBgcDOCRoutingDef));
