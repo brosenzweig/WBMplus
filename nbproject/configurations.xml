@@ -80,6 +80,7 @@
         <in>MDSoilAvailWaterCap.c</in>
         <in>MDSolarRad.c</in>
         <in>MDSurfRunoff.c</in>
+        <in>MDThermalInputs.c</in>
         <in>MDWTempGrdWater.c</in>
         <in>MDWTempRiver.c</in>
         <in>MDWTempRiverRoute.c</in>

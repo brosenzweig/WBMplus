@@ -442,15 +442,16 @@ int MDWTempRiverRouteDef () {
 
 	MFDefEntering ("Route river temperature");
 	
-	if (((optStr = MFOptionGet (MDOptReservoirs))  == (char *) NULL) || ((optID = CMoptLookup ( options, optStr, true)) == CMfailed)) {
-				CMmsgPrint(CMmsgUsrError,"Reservoir Option not specified! Option none or calculate \n");
-				return CMfailed;
-			}
-    if (optID==1){
-  //  	printf ("Resoption=%i\n",optID);
-   // if (((_MDInResStorageID           = MFVarGetID (MDVarReservoirStorage,       "km3",     MFInput, MFState, MFInitial))  == CMfailed) ||		//RJS commented out 3 lines (including this one, down)
-   //     ((_MDInResStorageChangeID     = MFVarGetID (MDVarReservoirStorageChange, "km3/s",   MFInput, MFState, MFInitial)) == CMfailed))			//RJS MFboundary to MFInitial
-   // 	return CMfailed;
+	if (((optStr = MFOptionGet (MDOptReservoirs))  == (char *) NULL) ||
+       ((optID  = CMoptLookup ( options, optStr, true)) == CMfailed)) {
+      CMmsgPrint(CMmsgUsrError,"Reservoir Option not specified! Option none or calculate");
+		return CMfailed;
+   }
+   if (optID==1) {
+      if (((_MDInResStorageChangeID     = MFVarGetID (MDVarReservoirStorageChange, "km3",     MFInput,  MFState, MFBoundary)) == CMfailed) ||	//RJS 071511
+          ((_MDInResStorageID           = MFVarGetID (MDVarReservoirStorage,       "km3",     MFInput,  MFState, MFInitial))  == CMfailed) ||	//RJS 121311 changed from MFBoundary to MFInitial
+          ((_MDInResCapacityID          = MFVarGetID (MDVarReservoirCapacity,      "km3",     MFInput,  MFState, MFBoundary)) == CMfailed))
+         return (CMfailed);
     }
 	
 		//input
@@ -468,11 +469,6 @@ int MDWTempRiverRouteDef () {
         ((_MDInRiverStorageChgID      = MFVarGetID (MDVarRiverStorageChg,       "m3/s",       MFInput,  MFState, MFBoundary)) == CMfailed) ||
         ((_MDInRiverStorageID         = MFVarGetID (MDVarRiverStorage,          "m3",         MFInput,  MFState, MFInitial))  == CMfailed) ||
         ((_MDInSnowPackID             = MFVarGetID (MDVarSnowPack,               "mm",        MFInput,  MFState, MFBoundary)) == CMfailed) ||
-      //  ((_MDInResStorageChangeID     = MFVarGetID (MDVarReservoirStorageChange, "km3",       MFInput,  MFState, MFInitial)) == CMfailed) ||	//RJS 121311 changed from MFBoundary to MFInitial
-        ((_MDInResStorageChangeID     = MFVarGetID (MDVarReservoirStorageChange, "km3",       MFInput,  MFState, MFBoundary)) == CMfailed) ||	//RJS 071511
-        ((_MDInResStorageID           = MFVarGetID (MDVarReservoirStorage,       "km3",       MFInput,  MFState, MFInitial)) == CMfailed) ||	//RJS 121311 changed from MFBoundary to MFInitial
-        //((_MDInResStorageID           = MFVarGetID (MDVarReservoirStorage,       "km3",       MFInput,  MFState, MFBoundary)) == CMfailed) ||	//RJS 071511
-        ((_MDInResCapacityID          = MFVarGetID (MDVarReservoirCapacity,      "km3",  	  MFInput,  MFState, MFBoundary)) == CMfailed) ||	//RJS 071511
 	((_MDInWarmingTempID	      = MFVarGetID (MDVarWarmingTemp,		 "degC",	MFInput, MFState, MFBoundary)) == CMfailed) ||	//RJS 072011
 	((_MDInThermalWdlID	      = MFVarGetID (MDVarThermalWdl, 		"-", MFInput, MFState, MFBoundary)) == CMfailed) ||	//RJS 072011
 
